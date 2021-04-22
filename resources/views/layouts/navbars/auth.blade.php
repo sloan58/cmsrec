@@ -67,6 +67,12 @@
                 </a>
             </li>
             <hr>
+            <li class="{{ $elementActive == 'cms' ? 'active' : '' }}">
+                <a href="{{ route('cms.index') }}">
+                    <i class="fa fa-server"></i>
+                    <p>{{ __('CMS Servers') }}</p>
+                </a>
+            </li>
             <li class="{{ $elementActive == 'users' ? 'active' : '' }}">
                 <a href="{{ route('user.index') }}">
                     <i class="nc-icon nc-single-02"></i>

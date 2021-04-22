@@ -22,6 +22,9 @@ Route::group(['middleware' => 'auth'], function () {
     // Home Route
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+    // CMS Routes
+    Route::resource('cms', App\Http\Controllers\CmsController::class, ['except' => ['show']])->parameters(['cms' => 'cms']);;
+
     // Users Routes
     Route::resource('user', App\Http\Controllers\UserController::class, ['except' => ['show']]);
 
