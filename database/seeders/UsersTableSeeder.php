@@ -23,6 +23,6 @@ class UsersTableSeeder extends Seeder
             'updated_at' => now()
         ]);
 
-        \App\Models\User::factory()->count(300)->create();
+//        \App\Models\User::factory()->count(300)->create();
     }
 }
