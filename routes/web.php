@@ -17,7 +17,6 @@ Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
     Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
 });
 

@@ -35,7 +35,15 @@
                                         {{$user->email}}
                                     </td>
                                     <td class="text-right">
-                                        Do Something
+                                        <button class="btn btn-primary btn-fab btn-icon btn-round">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-danger btn-fab btn-icon btn-round deleteUser"
+                                                data-route="{{ route('user.destroy', $user->id) }}"
+                                                data-toggle="modal"
+                                                data-target="#x-modal">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 @empty
@@ -53,4 +61,10 @@
             </div>
         </div>
     </div>
+
+    @include(
+    'components.delete-modal', [
+        'heading' => 'Delete User',
+        'body' => "Are you sure you'd like to delete this user?"
+    ])
 @endsection

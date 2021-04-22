@@ -17,4 +17,16 @@ class UserController extends Controller
     {
         return view('users.index', ['users' => $model->paginate(15)]);
     }
+
+    /**
+     * Display a listing of the users
+     *
+     * @param User $user
+     * @return View
+     */
+    public function destroy(User $user)
+    {
+        $user->delete();
+        return redirect()->route('user.index');
+    }
 }
