@@ -27,12 +27,6 @@
                 </a>
                 <div class="collapse show" id="laravelExamples">
                     <ul class="nav">
-                        <li class="{{ $elementActive == 'profile' ? 'active' : '' }}">
-                            <a href="{{ route('profile.edit') }}">
-                                <span class="sidebar-mini-icon">{{ __('UP') }}</span>
-                                <span class="sidebar-normal">{{ __(' User Profile ') }}</span>
-                            </a>
-                        </li>
                         <li class="{{ $elementActive == 'user' ? 'active' : '' }}">
                             <a href="{{ route('page.index', 'user') }}">
                                 <span class="sidebar-mini-icon">{{ __('U') }}</span>
@@ -72,10 +66,11 @@
                     <p>{{ __('Typography') }}</p>
                 </a>
             </li>
-            <li class="active-pro {{ $elementActive == 'upgrade' ? 'active' : '' }}">
-                <a href="{{ route('page.index', 'upgrade') }}" class="bg-danger">
-                    <i class="nc-icon nc-spaceship text-white"></i>
-                    <p class="text-white">{{ __('Upgrade to PRO') }}</p>
+            <hr>
+            <li class="{{ $elementActive == 'users' ? 'active' : '' }}">
+                <a href="{{ route('user.index') }}">
+                    <i class="nc-icon nc-single-02"></i>
+                    <p>{{ __('Users') }}</p>
                 </a>
             </li>
         </ul>
