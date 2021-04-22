@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\View\View;
-use App\Http\Requests\PasswordRequest;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -28,6 +31,39 @@ class UserController extends Controller
         }
 
         return view('users.index', compact('users', 'q'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        return view('users.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param UserRequest $request
+     * @param User $user
+     * @return void
+     */
+    public function store(UserRequest $request, User $user)
+    {
+        try {
+            $user->create(
+                $request->merge([
+                    'password' => Hash::make($request->get('password'))
+                ])->all()
+            );
+            flash()->success('User Added!');
+            return redirect()->route('user.index');
+        } catch(Exception $e) {
+            flash()->error("Could not create User ({$e->getMessage()})")->important();
+            return back()->withInput();
+        }
     }
 
     /**
@@ -55,14 +91,20 @@ class UserController extends Controller
     }
 
     /**
-     * @param PasswordRequest $request
+     * @param Request $request
      * @param User $user
      * @return mixed
      */
-    public function update(PasswordRequest $request, User $user)
+    // TODO: Fix PasswordRequest
+    public function update(Request $request, User $user)
     {
-        $user->update(['password' => \Hash::make($request->get('password'))]);
-        flash()->success('Password Updated!');
-        return back();
+        $user->update(
+            $request->merge(['password' => Hash::make($request->get('password'))])
+                ->except(
+                    [$request->get('password') ? '' : 'password']
+                )
+        );
+        flash()->success('User Updated!');
+        return redirect()->back();
     }
 }

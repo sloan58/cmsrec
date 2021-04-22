@@ -11,6 +11,11 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">Users</h4>
+                        <a href="{{ route('user.create') }}" class="btn btn-success btn-fab btn-icon btn-round">
+                            <i class="fa fa-plus"></i>
+                        </a>
+                    </div>
+                    <div class="card-header d-flex justify-content-end">
                         <form action="{{ route('user.index') }}" class="form-inline my-2 my-lg-0" method="GET">
                             <input class="form-control mr-sm-2" name="q" type="search" placeholder="Search" value="{{ $q }}" aria-label="Search">
                             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
