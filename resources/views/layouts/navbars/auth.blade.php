@@ -73,6 +73,12 @@
                     <p>{{ __('Users') }}</p>
                 </a>
             </li>
+            <li class="{{ $elementActive == 'settings' ? 'active' : '' }}">
+                <a href="{{ route('settings.index') }}">
+                    <i class="nc-icon nc-settings-gear-65"></i>
+                    <p>{{ __('Settings') }}</p>
+                </a>
+            </li>
         </ul>
     </div>
 </div>
