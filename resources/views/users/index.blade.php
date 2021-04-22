@@ -36,9 +36,7 @@
                                         {{$user->email}}
                                     </td>
                                     <td class="text-right">
-                                        <button class="btn btn-primary btn-fab btn-icon btn-round">
-                                            <i class="fa fa-edit"></i>
-                                        </button>
+                                        <a href="{{ route('user.edit', $user->id) }}" class="btn btn-primary btn-fab btn-icon btn-round"><i class="fa fa-edit"></i></a>
                                         <button class="btn btn-danger btn-fab btn-icon btn-round deleteUser"
                                                 data-route="{{ route('user.destroy', $user->id) }}"
                                                 data-toggle="modal"
