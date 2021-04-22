@@ -9,8 +9,12 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">Users</h4>
+                        <form action="{{ route('user.index') }}" class="form-inline my-2 my-lg-0" method="GET">
+                            <input class="form-control mr-sm-2" name="q" type="search" placeholder="Search" value="{{ $q }}" aria-label="Search">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        </form>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

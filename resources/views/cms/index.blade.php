@@ -11,7 +11,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">CMS Servers</h4>
-                        <a href="{{ route('cms.create') }}" class="btn btn-primary btn-fab btn-icon btn-round">
+                        <a href="{{ route('cms.create') }}" class="btn btn-success btn-fab btn-icon btn-round">
                             <i class="fa fa-plus"></i>
                         </a>
                     </div>

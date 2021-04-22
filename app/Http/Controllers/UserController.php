@@ -16,7 +16,18 @@ class UserController extends Controller
      */
     public function index(User $user)
     {
-        return view('users.index', ['users' => $user->paginate(15)]);
+        if(request()->has('q')) {
+            $q = request()->get('q');
+            $filter = sprintf('%%%s%%', $q);
+            $users = $user->where('email', 'like', $filter)
+                ->orWhere('name', 'like', $filter)
+                ->paginate(15);
+        } else {
+            $q = '';
+            $users = $user->paginate(15);
+        }
+
+        return view('users.index', compact('users', 'q'));
     }
 
     /**
