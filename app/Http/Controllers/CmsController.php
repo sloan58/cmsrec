@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Cms;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\CmsRequest;
 
@@ -27,18 +27,25 @@ class CmsController extends Controller
      */
     public function create()
     {
-        //
+        return view('cms.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
-     * @return Response
+     * @param CmsRequest $request
+     * @return void
      */
-    public function store(Request $request)
+    public function store(CmsRequest $request)
     {
-        //
+        try {
+            Cms::create($request->all());
+            flash()->success('CMS Create!');
+            return redirect()->route('cms.index');
+        } catch (Exception $e) {
+            flash()->error("Could not create CMS server ({$e->getMessage()})")->important();
+            return back()->withInput();
+        }
     }
 
     /**

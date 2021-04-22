@@ -9,8 +9,11 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between">
                         <h4 class="card-title">CMS Servers</h4>
+                        <a href="{{ route('cms.create') }}" class="btn btn-primary btn-fab btn-icon btn-round">
+                            <i class="fa fa-plus"></i>
+                        </a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
