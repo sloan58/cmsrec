@@ -27,6 +27,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
+        flash()->success('User Deleted!');
         return redirect()->route('user.index');
     }
 }

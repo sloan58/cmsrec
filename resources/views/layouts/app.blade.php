@@ -44,7 +44,6 @@ The above copyright notice and this permission notice shall be included in all c
 </head>
 
 <body class="{{ $class }}">
-    
     @auth()
         @include('layouts.page_templates.auth')
     @endauth
@@ -71,7 +70,10 @@ The above copyright notice and this permission notice shall be included in all c
 
     @include('layouts.navbars.fixed-plugin-js')
 
-    @stack('js')
+    <script>
+        $('div.alert').not('.alert-important').delay(3000).fadeOut(350);
+    </script>
+
 </body>
 
 </html>

@@ -27,7 +27,7 @@
     </div>
 </div>
 
-@push('js')
+@push('scripts')
     <script>
         $(document).on('click','.deleteUser',function(){
             const action = $(this).attr('data-route');
