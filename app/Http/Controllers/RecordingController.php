@@ -15,9 +15,7 @@ class RecordingController extends Controller
      */
     public function index()
     {
-        $spacesWithRecordings = auth()->user()->myRecordings(
-            request()->has('space') && request()->get('space')
-        );
+        $spacesWithRecordings = auth()->user()->myRecordings(request()->get('space'));
         return view('recordings.index', compact('spacesWithRecordings'));
     }
 
