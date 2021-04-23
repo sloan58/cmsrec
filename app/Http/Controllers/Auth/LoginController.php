@@ -38,13 +38,31 @@ class LoginController extends Controller
     protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
+     * @var bool|resource
+     */
+    private $ldapConnection;
+
+    /**
+     * @var LdapSettings
+     */
+    private $ldapSettings;
+
+    /**
      * Create a new controller instance.
      *
-     * @return void
+     * @param LdapSettings $ldapSettings
      */
-    public function __construct()
+    public function __construct(LdapSettings $ldapSettings)
     {
         $this->middleware('guest')->except('logout');
+
+        $this->ldapSettings = $ldapSettings;
+
+        if ($this->ldapSettings->name) {
+            $this->ldapConnection = $this->getLdapConnection();
+        } else {
+            $this->ldapConnection = null;
+        }
     }
 
     /**
@@ -72,20 +90,34 @@ class LoginController extends Controller
             return $this->sendLockoutResponse($request);
         }
 
-        if ($this->attemptLogin($request)) {
-            return $this->sendLoginResponse($request);
-        }
-
-        if ($ldapSettings->name) {
-            $ldapconn = ldap_connect($ldapSettings->host);
-            ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
-            ldap_set_option($ldapconn, LDAP_OPT_NETWORK_TIMEOUT, 3);
-            try {
-                ldap_bind($ldapconn, $credentials['email'], $credentials['password']);
-                Auth::login($user);
+        if ($user) {
+            if ($this->attemptLogin($request)) {
                 return $this->sendLoginResponse($request);
-            } catch (Exception $e) {
-                $message = substr($e->getMessage(), strrpos($e->getMessage(), ':') + 1);
+            }
+
+            if ($this->ldapConnection) {
+                $result = ldap_search(
+                    $this->ldapConnection,
+                    $this->ldapSettings->searchBase,
+                    "(mail=$credentials[email])",
+                    ['distinguishedname']
+                );
+
+                $userDistinguishedName = ldap_get_entries($this->ldapConnection, $result);
+
+                if (!$userDistinguishedName['count']) {
+                    return $this->sendFailedLoginResponse($request, 'These credentials do not match our records');
+                }
+                
+                ldap_set_option($this->ldapConnection, LDAP_OPT_PROTOCOL_VERSION, 3);
+                ldap_set_option($this->ldapConnection, LDAP_OPT_NETWORK_TIMEOUT, 3);
+                try {
+                    ldap_bind($this->ldapConnection, $userDistinguishedName[0]['distinguishedname'][0], $credentials['password']);
+                    Auth::login($user);
+                    return $this->sendLoginResponse($request);
+                } catch (Exception $e) {
+                    $message = substr($e->getMessage(), strrpos($e->getMessage(), ':') + 1);
+                }
             }
         }
 
@@ -95,5 +127,29 @@ class LoginController extends Controller
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request, $message ?? '');
+    }
+
+    private function getLdapConnection()
+    {
+        $connection = ldap_connect($this->ldapSettings->host);
+
+        ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($connection, LDAP_OPT_NETWORK_TIMEOUT, 3);
+
+        try {
+            ldap_bind(
+                $connection,
+                $this->ldapSettings->bindDN,
+                $this->ldapSettings->password
+            );
+            info("Ldap@bind: LDAP bind succeeded");
+
+            return $connection;
+
+        } catch (Exception $e) {
+            logger()->error("Ldap@bind: LDAP bind unsuccessful", [$e->getMessage()]);
+
+            return false;
+        }
     }
 }
