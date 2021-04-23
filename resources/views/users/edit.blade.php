@@ -80,6 +80,23 @@
                     </div>
                 </form>
             </div>
+            <div class="col-md-4 text-center">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="title">{{ __('CMS Recordings') }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            @foreach($user->cmsCoSpaces as $coSpace)
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ $coSpace->name }}
+                                    <span class="badge badge-primary badge-pill">14</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

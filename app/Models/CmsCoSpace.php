@@ -26,8 +26,8 @@ class CmsCoSpace extends Model
      *
      * @return BelongsTo
      */
-    public function user()
+    public function owner()
     {
-        return $this->belongsTo(User::class, 'ownerId', 'cms_space_id');
+        return $this->belongsTo(User::class, 'ownerId', 'cms_owner_id');
     }
 }

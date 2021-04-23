@@ -50,6 +50,6 @@ class User extends Authenticatable
      */
     public function cmsCoSpaces()
     {
-        return $this->hasMany(CmsCoSpace::class, 'ownerId', 'cms_space_id');
+        return $this->hasMany(CmsCoSpace::class, 'ownerId', 'cms_owner_id');
     }
 }

@@ -24,10 +24,11 @@ class UserController extends Controller
             $filter = sprintf('%%%s%%', $q);
             $users = $user->where('email', 'like', $filter)
                 ->orWhere('name', 'like', $filter)
+                ->withCount('cmsCoSpaces')
                 ->paginate(15);
         } else {
             $q = '';
-            $users = $user->paginate(15);
+            $users = $user->withCount('cmsCoSpaces')->paginate(15);
         }
 
         return view('users.index', compact('users', 'q'));

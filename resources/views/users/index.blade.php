@@ -31,6 +31,9 @@
                                 <th>
                                     Email
                                 </th>
+                                <th>
+                                    CMS CoSpaces
+                                </th>
                                 <th class="text-right">
                                     Actions
                                 </th>
@@ -43,6 +46,9 @@
                                     </td>
                                     <td>
                                         {{$user->email}}
+                                    </td>
+                                    <td>
+                                        {{$user->cms_co_spaces_count}}
                                     </td>
                                     <td class="text-right">
                                         <a href="{{ route('user.edit', $user->id) }}" class="btn btn-primary btn-fab btn-icon btn-round"><i class="fa fa-edit"></i></a>
