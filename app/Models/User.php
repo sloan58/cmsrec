@@ -73,15 +73,11 @@ class User extends Authenticatable
                         'fileSize' => bytesToHuman(
                             \Storage::disk('recordings')->size($recording)
                         ),
-                        'lastModified' => sprintf('%s (%s)', \Carbon\Carbon::createFromTimestamp(
+                        'lastModified' => \Carbon\Carbon::createFromTimestamp(
                             \Storage::disk('recordings')->lastModified(
                                 $recording
                             )
-                        )->diffForHumans(), \Carbon\Carbon::createFromTimestamp(
-                            \Storage::disk('recordings')->lastModified(
-                                $recording
-                            )
-                        )->toDateTimeString())
+                        )->toDayDateTimeString()
                     ];
                 }, \Storage::disk('recordings')->files("/$coSpace->space_id"))
             ];
