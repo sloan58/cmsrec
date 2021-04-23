@@ -50,11 +50,10 @@ class LoginController extends Controller
     /**
      * Handle a login request to the application.
      *
-     * @param Request $request
-     * @param LdapSettings $ldapSettings
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      *
-     * @throws ValidationException
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function login(Request $request, LdapSettings $ldapSettings)
     {
