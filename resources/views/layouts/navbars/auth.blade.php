@@ -32,6 +32,12 @@
                     <p>{{ __('CMS Servers') }}</p>
                 </a>
             </li>
+            <li class="{{ $elementActive == 'cospaces' ? 'active' : '' }}">
+                <a href="{{ route('cospaces.index') }}">
+                    <i class="fa fa-crop"></i>
+                    <p>{{ __('CMS CoSpaces') }}</p>
+                </a>
+            </li>
             <li class="{{ $elementActive == 'users' ? 'active' : '' }}">
                 <a href="{{ route('user.index') }}">
                     <i class="nc-icon nc-single-02"></i>

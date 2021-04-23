@@ -25,6 +25,9 @@ Route::group(['middleware' => ['auth', 'hasCoSpacesOrIsAdmin']], function () {
     // CMS Routes
     Route::resource('cms', App\Http\Controllers\CmsController::class, ['except' => ['show']])->parameters(['cms' => 'cms']);;
 
+    // CMS CoSpace Routes
+    Route::get('cospaces', [App\Http\Controllers\CoSpaceController::class, 'index'])->name('cospaces.index');
+
     // Users Routes
     Route::resource('user', App\Http\Controllers\UserController::class, ['except' => ['show']]);
 

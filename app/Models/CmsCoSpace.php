@@ -40,4 +40,14 @@ class CmsCoSpace extends Model
     {
         return \Storage::disk('recordings')->files($this->space_id);
     }
+
+    public function size()
+    {
+        $size = 0;
+        $files = \Storage::disk('recordings')->files($this->space_id);
+        array_walk($files, function($file) use (&$size) {
+            $size += \Storage::disk('recordings')->size($file);
+        });
+        return bytesToHuman($size);
+    }
 }
