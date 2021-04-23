@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'class' => 'login-page',
-    'backgroundImagePath' => 'img/bg/fabio-mangione.jpg'
+    'backgroundImagePath' => 'img/bg/jan-sendereks.jpg'
 ])
 
 @section('content')
@@ -12,7 +12,16 @@
                     <div class="card card-login">
                         <div class="card-header ">
                             <div class="card-header ">
-                                <h3 class="header text-center">{{ __('Login') }}</h3>
+                                <div class="text-center text-muted mb-4">
+                                    <img
+                                        style="margin-bottom: -30px"
+                                        width='150'
+                                        height='150'
+                                        src='/img/cms.png'
+                                        alt='Phoenix'
+                                    />
+                                </div>
+                                <h5 class="header text-center mt-5">{{ env('APP_NAME', 'Laravel') }} Login</h5>
                             </div>
                         </div>
                         <div class="card-body ">
