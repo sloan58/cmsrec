@@ -76,7 +76,7 @@ class LoginController extends Controller
         if ($this->attemptLogin($request)) {
             return $this->sendLoginResponse($request);
         }
-        
+
         if ($ldapSettings->name) {
             $ldapconn = ldap_connect($ldapSettings->host);
             ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);

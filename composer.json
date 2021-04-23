@@ -6,17 +6,18 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-json": "*",
+        "ext-ldap": "*",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "imanghafoori/laravel-video": "^2.1",
         "laracasts/flash": "^3.2",
         "laravel-frontend-presets/paper": "^1.0",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.2",
-        "spatie/laravel-settings": "^2.1",
-        "ext-json": "*",
-        "ext-ldap": "*"
+        "spatie/laravel-settings": "^2.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

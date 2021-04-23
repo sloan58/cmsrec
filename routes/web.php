@@ -28,9 +28,12 @@ Route::group(['middleware' => ['auth', 'hasCoSpacesOrIsAdmin']], function () {
     // Users Routes
     Route::resource('user', App\Http\Controllers\UserController::class, ['except' => ['show']]);
 
+    // Recordings Routes
+    Route::get('recordings/play', [App\Http\Controllers\RecordingController::class, 'play'])->middleware('canAccessRecording');
+    Route::get('recordings', [App\Http\Controllers\RecordingController::class, 'index'])->name('recordings.index');
+
     // Settings Routes
     Route::get('settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
-
     Route::put('ldap-settings', [App\Http\Controllers\SettingController::class, 'updateLdapSettings'])->name('ldap.settings.update');
 });
 

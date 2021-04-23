@@ -17,7 +17,7 @@
                     </div>
                     <div class="card-header d-flex justify-content-end">
                         <form action="{{ route('user.index') }}" class="form-inline my-2 my-lg-0" method="GET">
-                            <input class="form-control mr-sm-2" name="q" type="search" placeholder="Search" value="{{ $q }}" aria-label="Search">
+                            <input class="form-control mr-sm-2" name="q" type="search" placeholder="Search" value="{{ $q ?? '' }}" aria-label="Search">
                             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                         </form>
                     </div>
@@ -39,7 +39,7 @@
                                 </th>
                                 </thead>
                                 <tbody>
-                                @forelse($users as $user)
+                                @foreach($users as $user)
                                 <tr>
                                     <td>
                                         {{$user->name}}
@@ -60,8 +60,7 @@
                                         </button>
                                     </td>
                                 </tr>
-                                @empty
-                                @endforelse
+                                @endforeach
                                 </tbody>
                             </table>
                             <div class="row">

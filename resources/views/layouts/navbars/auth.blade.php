@@ -18,7 +18,7 @@
                 </a>
             </li>
             <li class="{{ $elementActive == 'recordings' ? 'active' : '' }}">
-                <a href="#">
+                <a href="{{ route('recordings.index') }}">
                     <i class="fa fa-video-camera"></i>
                     <p>{{ __('My Recordings') }}</p>
                 </a>
