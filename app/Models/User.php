@@ -66,7 +66,7 @@ class User extends Authenticatable
                     return [
                         'baseName' => basename($recording),
                         'sanitizedFilename' => preg_replace("/[^A-Za-z0-9 ]/", '', explode('.', basename($recording))[0]),
-                        'url' => $recording,
+                        'url' => urlencode($recording),
                         'fileSize' => bytesToHuman(
                             \Storage::disk('recordings')->size($recording)
                         ),
