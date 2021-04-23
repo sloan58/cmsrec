@@ -9,6 +9,7 @@
         <div class="row">
             <div class="col-md-12">
                 @foreach($spacesWithRecordings as $space)
+                @if(count($space['recordings']))
                 <h1 class="display-4">{{ $space['spaceName'] }}</h1>
                 <hr>
                 <div class='col-sm-12 col-md-10 col-lg-12 justify-content-between'>
@@ -36,6 +37,7 @@
                         @endforeach
                     </div>
                 </div>
+                @endif
                 @endforeach
             </div>
         </div>
