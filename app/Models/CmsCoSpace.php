@@ -30,4 +30,14 @@ class CmsCoSpace extends Model
     {
         return $this->belongsTo(User::class, 'ownerId', 'cms_owner_id');
     }
+
+    /**
+     * Get recordings for this space
+     *
+     * @return mixed
+     */
+    public function recordings()
+    {
+        return \Storage::disk('recordings')->files($this->space_id);
+    }
 }

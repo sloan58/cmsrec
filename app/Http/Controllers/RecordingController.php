@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Iman\Streamer\VideoStreamer;
 use Illuminate\Contracts\View\View;
 
@@ -14,7 +15,9 @@ class RecordingController extends Controller
      */
     public function index()
     {
-        $spacesWithRecordings = auth()->user()->myRecordings();
+        $spacesWithRecordings = auth()->user()->myRecordings(
+            request()->has('space') && request()->get('space')
+        );
         return view('recordings.index', compact('spacesWithRecordings'));
     }
 

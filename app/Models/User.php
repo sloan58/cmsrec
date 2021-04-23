@@ -55,11 +55,14 @@ class User extends Authenticatable
     /**
      * A User Has Many CMS CoSpaces
      *
+     * @param null $spaceId
      * @return bool
      */
-    public function myRecordings()
+    public function myRecordings($spaceId = null)
     {
-        return $this->cmsCoSpaces->map(function ($coSpace) {
+        return $this->cmsCoSpaces->when($spaceId, function ($query) use ($spaceId) {
+                return $query->where('space_id', $spaceId);
+            })->map(function ($coSpace) {
             return [
                 'spaceName' => $coSpace->name,
                 'recordings' => array_map(function ($recording) {

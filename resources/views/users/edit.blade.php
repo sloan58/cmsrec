@@ -89,8 +89,8 @@
                         <ul class="list-group">
                             @foreach($user->cmsCoSpaces as $coSpace)
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{ $coSpace->name }}
-                                    <span class="badge badge-primary badge-pill">14</span>
+                                    <a href="/recordings?space={{ $coSpace->space_id }}">{{ $coSpace->name }}</a>
+                                    <span class="badge badge-primary badge-pill">{{ count($coSpace->recordings()) }}</span>
                                 </li>
                             @endforeach
                         </ul>
