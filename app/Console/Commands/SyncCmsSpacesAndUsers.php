@@ -41,8 +41,8 @@ class SyncCmsSpacesAndUsers extends Command
     {
         Cms::each(function($cms) {
             $cmsApi = new CmsRest($cms);
-            $cmsApi->getCmsUserIds();
-//            $cmsApi->getCoSpaces();
+//            $cmsApi->getCmsUserIds();
+            $cmsApi->getCoSpaces();
         });
 
         return true;
