@@ -108,7 +108,7 @@ class LoginController extends Controller
                 if (!$userDistinguishedName['count']) {
                     return $this->sendFailedLoginResponse($request, 'These credentials do not match our records');
                 }
-                
+
                 ldap_set_option($this->ldapConnection, LDAP_OPT_PROTOCOL_VERSION, 3);
                 ldap_set_option($this->ldapConnection, LDAP_OPT_NETWORK_TIMEOUT, 3);
                 try {

@@ -65,7 +65,7 @@ class User extends Authenticatable
                 'recordings' => array_map(function ($recording) {
                     return [
                         'baseName' => basename($recording),
-                        'baseNameWithoutExt' => explode('.', basename($recording))[0],
+                        'baseNameHash' => \Hash::make(explode('.', basename($recording))[0]),
                         'url' => $recording,
                         'fileSize' => bytesToHuman(
                             \Storage::disk('recordings')->size($recording)
