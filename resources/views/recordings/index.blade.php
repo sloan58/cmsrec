@@ -53,7 +53,7 @@
                                                 {{ $recording['lastModified'] }}
                                             </td>
                                             <td class="text-right">
-                                                <button class="btn btn-success btn-fab btn-icon btn-round watchVideo" data-video="{{ $recording['baseNameHash'] }}">
+                                                <button class="btn btn-success btn-fab btn-icon btn-round watchVideo" data-video="{{ $recording['sanitizedFilename'] }}">
                                                     <i class="fa fa-video-camera"></i>
                                                 </button>
                                             </td>
@@ -62,7 +62,7 @@
                                             <td></td>
                                             <td></td>
                                             <td>
-                                                <video id="{{ $recording['baseNameHash'] }}" controls width="500" style="display: none;">
+                                                <video id="{{ $recording['sanitizedFilename'] }}" controls width="500" style="display: none;">
                                                     <source src="/recordings/play?file={{ $recording['url'] }}"
                                                             type="video/mp4"
                                                     >

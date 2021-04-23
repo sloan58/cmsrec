@@ -65,7 +65,7 @@ class User extends Authenticatable
                 'recordings' => array_map(function ($recording) {
                     return [
                         'baseName' => basename($recording),
-                        'baseNameHash' => \Hash::make(explode('.', basename($recording))[0]),
+                        'sanitizedFilename' => preg_replace("/[^A-Za-z0-9 ]/", '', explode('.', basename($recording))[0]),
                         'url' => $recording,
                         'fileSize' => bytesToHuman(
                             \Storage::disk('recordings')->size($recording)
