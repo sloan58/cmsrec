@@ -25,7 +25,7 @@
                             </div>
                         </div>
                         <div class="card-body ">
-
+                            @include('components.flash-message')
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">

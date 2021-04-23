@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(CmsCoSpace::class, 'ownerId', 'cms_owner_id');
     }
+
+    public function isAdmin()
+    {
+        return in_array(auth()->user()->email, ['admin@paper.com']);
+    }
 }

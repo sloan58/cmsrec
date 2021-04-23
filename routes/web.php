@@ -18,7 +18,7 @@ Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLogi
 Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => ['auth', 'hasCoSpacesOrIsAdmin']], function () {
     // Home Route
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
