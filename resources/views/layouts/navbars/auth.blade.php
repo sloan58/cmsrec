@@ -11,18 +11,21 @@
     </div>
     <div class="sidebar-wrapper">
         <ul class="nav">
+            @if(auth()->user()->isAdmin())
             <li class="{{ $elementActive == 'dashboard' ? 'active' : '' }}">
-                <a href="{{ route('page.index', 'dashboard') }}">
+                <a href="{{ route('home') }}">
                     <i class="nc-icon nc-bank"></i>
                     <p>{{ __('Dashboard') }}</p>
                 </a>
             </li>
+            @endif
             <li class="{{ $elementActive == 'recordings' ? 'active' : '' }}">
                 <a href="{{ route('recordings.index') }}">
                     <i class="fa fa-video-camera"></i>
                     <p>{{ __('My Recordings') }}</p>
                 </a>
             </li>
+            @if(auth()->user()->isAdmin())
             <li class="{{ $elementActive == 'cms' ? 'active' : '' }}">
                 <a href="{{ route('cms.index') }}">
                     <i class="fa fa-server"></i>
@@ -41,6 +44,7 @@
                     <p>{{ __('Settings') }}</p>
                 </a>
             </li>
+            @endif
         </ul>
     </div>
 </div>

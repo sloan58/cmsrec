@@ -21,6 +21,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard');
+        if(auth()->user()->isAdmin()) {
+            return view('pages.dashboard');
+        } else {
+            return redirect()->route('recordings.index');
+        }
     }
 }

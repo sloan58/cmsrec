@@ -94,6 +94,9 @@ class User extends Authenticatable
      */
     public function isAdmin()
     {
-        return in_array(auth()->user()->email, ['admin@paper.com', 'martin_sloan@ao.uscourts.gov']);
+        return in_array(
+            auth()->user()->email,
+            env('ADMIN_USERS') ? explode(',', env('ADMIN_USERS')) : [])
+            ;
     }
 }
