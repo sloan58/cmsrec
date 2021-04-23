@@ -19,12 +19,30 @@ class RecordingController extends Controller
     }
 
     /**
+     * Stream the video recording to the UI
+     *
      * @throws \Exception
      */
     public function play()
     {
         try {
             return VideoStreamer::streamFile(\Storage::disk('recordings')->path(request()->get('file')));
+        } catch (Exception $e) {
+            logger()->error('Could not play recording', [
+                'errorMessage' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Download the video recording
+     *
+     * @throws \Exception
+     */
+    public function download()
+    {
+        try {
+            return \Storage::disk('recordings')->download(request()->get('file'));
         } catch (Exception $e) {
             logger()->error('Could not play recording', [
                 'errorMessage' => $e->getMessage()

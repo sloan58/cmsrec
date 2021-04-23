@@ -30,6 +30,7 @@ Route::group(['middleware' => ['auth', 'hasCoSpacesOrIsAdmin']], function () {
 
     // Recordings Routes
     Route::get('recordings/play', [App\Http\Controllers\RecordingController::class, 'play'])->middleware('canAccessRecording');
+    Route::get('recordings/download', [App\Http\Controllers\RecordingController::class, 'download'])->middleware('canAccessRecording');
     Route::get('recordings', [App\Http\Controllers\RecordingController::class, 'index'])->name('recordings.index');
 
     // Settings Routes

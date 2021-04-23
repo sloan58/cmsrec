@@ -10,11 +10,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between">
-                        <h4 class="card-title">Recordings</h4>
-                        <form action="{{ route('recordings.index') }}" class="form-inline my-2 my-lg-0" method="GET">
-                            <input class="form-control mr-sm-2" name="q" type="search" placeholder="Search" value="{{ $q ?? '' }}" aria-label="Search">
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                        </form>
+                        <h4 class="card-title">My Recordings</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -56,6 +52,9 @@
                                                 <button class="btn btn-success btn-fab btn-icon btn-round watchVideo" data-video="{{ $recording['sanitizedFilename'] }}">
                                                     <i class="fa fa-video-camera"></i>
                                                 </button>
+                                                <a href="/recordings/download?file={{ $recording['url'] }}" class="btn btn-info btn-fab btn-icon btn-round">
+                                                    <i class="fa fa-download"></i>
+                                                </a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -76,11 +75,6 @@
                                 @endforeach
                                 </tbody>
                             </table>
-                            <div class="row">
-                                <div class="col-12">
-{{--                                    {{ $users->links('vendor.pagination.bootstrap-4') }}--}}
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
