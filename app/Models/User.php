@@ -83,7 +83,7 @@ class User extends Authenticatable
                     ];
                 }, array_filter(
                     \Storage::disk('recordings')->files(
-                        "/b9965863-56b0-43b6-a613-c19997c9e6f5"
+                        "/{$coSpace->space_id}"
                     ),
                     function ($file) {
                         return 0 !== strpos(basename($file), '.');
