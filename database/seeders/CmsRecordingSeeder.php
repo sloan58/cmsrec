@@ -33,9 +33,9 @@ class CmsRecordingSeeder extends Seeder
         $coSpace = CmsCoSpace::first();
 
         // Remove current videos to start fresh
-        foreach($disk->files($coSpace->space_id) as $vidOnDisk) {
-            $disk->delete($vidOnDisk);
-        }
+//        foreach($disk->files($coSpace->space_id) as $vidOnDisk) {
+//            $disk->delete($vidOnDisk);
+//        }
 
         // Create new recordings and link demo videos
         foreach($demoVideos as $demoVideo) {
