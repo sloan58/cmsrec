@@ -7,9 +7,10 @@ use Exception;
 use Livewire\Component;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class CoSpaceVideosCard extends Component
+class CmsRecordingCard extends Component
 {
-    public $space;
+    public $recording;
+    public $editing = false;
     public $newRecordingName;
     public $currentRecordingName;
     public $newRecordingNameError = '';
@@ -18,14 +19,13 @@ class CoSpaceVideosCard extends Component
     /**
      * Set the current filename being edited
      * and make that the default for the new filename
-     *
-     * @param $recordingName
      */
-    public function loadRecordingNames($recordingName)
+    public function loadRecordingNames()
     {
+        $this->editing = true;
         $this->newRecordingNameHasErrors = false;
-        $this->currentRecordingName = $recordingName;
-        $this->newRecordingName = $recordingName;
+        $this->currentRecordingName = $this->recording['baseName'];
+        $this->newRecordingName = $this->recording['baseName'];
     }
 
     /**
@@ -33,26 +33,25 @@ class CoSpaceVideosCard extends Component
      */
     public function saveNewRecordingName()
     {
-        foreach($this->space['recordings'] as $index => $recording) {
-            if($recording['baseName'] === $this->currentRecordingName) {
-                try {
-                    Storage::disk('recordings')->move(
-                        "{$this->space['space_id']}/$this->currentRecordingName",
-                        "{$this->space['space_id']}/$this->newRecordingName"
-                    );
-                    $this->space['recordings'][$index]['baseName'] = $this->newRecordingName;
-                } catch(Exception $e) {
-                    if(!substr($e->getMessage(), 0, 27 ) === "File already exists at path") {
-                        info('error', [$e->getMessage()]);
-                        $this->newRecordingNameHasErrors = true;
-                        $this->newRecordingNameError = 'There was an error updating the filename';
-                    }
-                }
-                $this->currentRecordingName = '';
-                $this->newRecordingName = '';
-
+        try {
+            Storage::disk('recordings')->move(
+                "{$this->recording['space_id']}/$this->currentRecordingName",
+                "{$this->recording['space_id']}/$this->newRecordingName"
+            );
+            $this->recording['baseName'] = $this->newRecordingName;
+            $this->recording['urlSafeFilename'] = urlencode(basename($this->recording['baseName']));
+            $this->recording['sanitizedFilename'] = preg_replace("/[^A-Za-z0-9 ]/", '', explode('.', basename($this->recording['baseName']))[0]);
+            $this->editing = false;
+        } catch(Exception $e) {
+            if(!substr($e->getMessage(), 0, 27 ) === "File already exists at path") {
+                info('error', [$e->getMessage()]);
+                $this->newRecordingNameHasErrors = true;
+                $this->newRecordingNameError = 'There was an error updating the filename';
             }
+            $this->editing = false;
         }
+        $this->currentRecordingName = '';
+        $this->newRecordingName = '';
     }
 
     /**
@@ -90,10 +89,12 @@ class CoSpaceVideosCard extends Component
      */
     public function downloadRecording($recording)
     {
-        $downloadUrl = "{$this->space['space_id']}/$recording";
-        return response()->streamDownload(function() use($downloadUrl) {
-            file_get_contents(Storage::disk('recordings')->path($downloadUrl));
-        }, $recording);
+        // TODO: Fix these broken downloads
+        $downloadUrl = "{$this->recording['space_id']}/$recording";
+        return \Storage::disk('recordings')->download($downloadUrl);
+//        return response()->streamDownload(function() use($downloadUrl) {
+//            file_get_contents(Storage::disk('recordings')->path($downloadUrl));
+//        }, $recording);
     }
 
     /**
@@ -106,6 +107,6 @@ class CoSpaceVideosCard extends Component
 
     public function render()
     {
-        return view('livewire.co-space-videos-card');
+        return view('livewire.cms-recording-card');
     }
 }

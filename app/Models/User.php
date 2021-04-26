@@ -64,10 +64,11 @@ class User extends Authenticatable
                 return $query->where('space_id', $spaceId);
             })->map(function ($coSpace) {
             return [
-                'space_id' => $coSpace->space_id,
                 'spaceName' => $coSpace->name,
-                'recordings' => array_map(function ($recording) {
+                'recordings' => array_map(function ($recording) use ($coSpace) {
                     return [
+                        'space_id' => $coSpace->space_id,
+                        'spaceName' => $coSpace->name,
                         'baseName' => basename($recording),
                         'sanitizedFilename' => preg_replace("/[^A-Za-z0-9 ]/", '', explode('.', basename($recording))[0]),
                         'urlSafeFilename' => urlencode(basename($recording)),
@@ -80,7 +81,14 @@ class User extends Authenticatable
                             )
                         )->toDayDateTimeString()
                     ];
-                }, \Storage::disk('recordings')->files("/$coSpace->space_id"))
+                }, array_filter(
+                    \Storage::disk('recordings')->files(
+                        "/b9965863-56b0-43b6-a613-c19997c9e6f5"
+                    ),
+                    function ($file) {
+                        return 0 !== strpos(basename($file), '.');
+                    }
+                ))
             ];
         });
     }
