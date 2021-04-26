@@ -16,6 +16,8 @@ class CmsRecordingCard extends Component
     public $newRecordingNameError = '';
     public $newRecordingNameHasErrors = false;
 
+    public $shareLinkCreated = false;
+
     /**
      * Set the current filename being edited
      * and make that the default for the new filename
@@ -89,12 +91,9 @@ class CmsRecordingCard extends Component
      */
     public function downloadRecording($recording)
     {
-        // TODO: Fix these broken downloads
+        // TODO: Configure proper PHP memory limits!
         $downloadUrl = "{$this->recording['space_id']}/$recording";
         return \Storage::disk('recordings')->download($downloadUrl);
-//        return response()->streamDownload(function() use($downloadUrl) {
-//            file_get_contents(Storage::disk('recordings')->path($downloadUrl));
-//        }, $recording);
     }
 
     /**
@@ -103,6 +102,7 @@ class CmsRecordingCard extends Component
     public function createShareLink()
     {
         info('creating share link');
+        $this->shareLinkCreated = true;
     }
 
     public function render()

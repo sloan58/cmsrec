@@ -30,6 +30,11 @@
             <footer class="blockquote-footer"><b>Created:</b> {{ $recording['lastModified'] }}</footer>
             <footer class="blockquote-footer"><b>Size:</b> {{ $recording['fileSize'] }}</footer>
         </div>
+        @if($shareLinkCreated)
+        <div class="text-center">
+            <h3>Coming soon!</h3>
+        </div>
+        @endif
         <div class="card-footer text-left d-flex justify-content-between">
             <button wire:loading.remove wire:click="downloadRecording('{{ $recording['urlSafeFilename'] }}')" class="btn btn-primary btn-round">
                 <i class="fa fa-download"></i> Download
