@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Iman\Streamer\VideoStreamer;
 use Illuminate\Contracts\View\View;
 
@@ -27,25 +26,9 @@ class RecordingController extends Controller
     public function play()
     {
         try {
-            return VideoStreamer::streamFile(\Storage::disk('recordings')->path(request()->get('file')));
-        } catch (Exception $e) {
-            logger()->error('Could not play recording', [
-                'errorMessage' => $e->getMessage()
-            ]);
-        }
-    }
-
-    /**
-     * Download the video recording
-     *
-     * @throws \Exception
-     */
-    public function download()
-    {
-        try {
-            $downloadUrl = request()->get('space') . '/' . request()->get('file');
-            return \Storage::disk('recordings')->download($downloadUrl);
-        } catch (Exception $e) {
+            $streamUrl = request()->get('space') . '/' . request()->get('file');
+            return VideoStreamer::streamFile(\Storage::disk('recordings')->path($streamUrl));
+        } catch (\Exception $e) {
             logger()->error('Could not play recording', [
                 'errorMessage' => $e->getMessage()
             ]);

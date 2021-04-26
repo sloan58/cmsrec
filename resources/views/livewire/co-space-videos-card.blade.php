@@ -6,7 +6,7 @@
                 <div class="col mb-4" style="max-width: 400px;">
                     <div class="card h-100 shadow">
                         <video id="{{ $recording['sanitizedFilename'] }}" preload="none" controls>
-                            <source src="/recordings/play?file={{ $recording['urlSafeFilename'] }}"
+                            <source src="{{ route('recordings.play', ['space' => $space['space_id'], 'file' => $recording['urlSafeFilename']]) }}"
                                     type="video/mp4"
                             >
                             Sorry, your browser doesn't support embedded videos.
