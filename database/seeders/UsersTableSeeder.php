@@ -15,10 +15,11 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'name' => 'Admin Admin',
+            'name' => 'Admin',
             'email' => 'admin@cmsrec.com',
             'email_verified_at' => now(),
             'password' => Hash::make('secret'),
+            'cms_owner_id' => \Str::uuid(),
             'created_at' => now(),
             'updated_at' => now()
         ]);
