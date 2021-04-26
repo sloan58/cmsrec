@@ -18,7 +18,7 @@ class CmsCoSpaceSeeder extends Seeder
     public function run()
     {
         $coSpace = CmsCoSpace::create([
-            'space_id' => 'b9965863-56b0-43b6-a613-c19997c9e6f5',
+            'space_id' => '529416e8-7a91-4367-8ec2-2ff236ac934d',
             'name' => 'Admin Demo Space',
             'ownerId' => User::first()->cms_owner_id
         ]);
