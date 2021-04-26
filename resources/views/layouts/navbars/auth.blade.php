@@ -5,7 +5,7 @@
                 <img src="/img/cms.png">
             </div>
         </a>
-        <a href="http://www.creative-tim.com" class="simple-text logo-normal">
+        <a href="/" class="simple-text logo-normal">
             {{ __('CMS Rec') }}
         </a>
     </div>

@@ -10,33 +10,7 @@
             <div class="col-md-12">
                 @foreach($spacesWithRecordings as $space)
                 @if(count($space['recordings']))
-                <h1 class="display-4 mb-3"><span style="border-bottom: 2px solid #ddd;">{{ $space['spaceName'] }}</span></h1>
-{{--                <hr class="mt-1">--}}
-                <div class='col-sm-12 col-md-10 col-lg-12 justify-content-between'>
-                    <div class='row row-cols-1 row-cols-md-4'>
-                        @foreach($space['recordings'] as $recording)
-                        <div class="col mb-4" style="max-width: 313px;">
-                            <div class="card h-100 shadow">
-                                <video id="{{ $recording['sanitizedFilename'] }}" preload="none" controls>
-                                    <source src="/recordings/play?file={{ $recording['url'] }}"
-                                            type="video/mp4"
-                                    >
-                                    Sorry, your browser doesn't support embedded videos.
-                                </video>
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ $recording['baseName'] }}</h5>
-                                    <p class="card-text">in <b>{{ $space['spaceName'] }}</b></p>
-                                    <footer class="blockquote-footer"><b>Created:</b> {{ $recording['lastModified'] }}</footer>
-                                    <footer class="blockquote-footer"><b>Size:</b> {{ $recording['fileSize'] }}</footer>
-                                </div>
-                                <div class="card-footer text-left">
-                                    <a href="/recordings/download?file={{ $recording['url'] }}" class="btn btn-primary"><i class="fa fa-download mr-2"></i>Download</a>
-                                </div>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
+                    <livewire:video-card :space="$space"/>
                 @endif
                 @endforeach
             </div>

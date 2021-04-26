@@ -64,6 +64,7 @@ class User extends Authenticatable
                 return $query->where('space_id', $spaceId);
             })->map(function ($coSpace) {
             return [
+                'space_id' => $coSpace->space_id,
                 'spaceName' => $coSpace->name,
                 'recordings' => array_map(function ($recording) {
                     return [
