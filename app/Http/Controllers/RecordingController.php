@@ -43,7 +43,8 @@ class RecordingController extends Controller
     public function download()
     {
         try {
-            return \Storage::disk('recordings')->download(request()->get('file'));
+            $downloadUrl = request()->get('space') . '/' . request()->get('file');
+            return \Storage::disk('recordings')->download($downloadUrl);
         } catch (Exception $e) {
             logger()->error('Could not play recording', [
                 'errorMessage' => $e->getMessage()

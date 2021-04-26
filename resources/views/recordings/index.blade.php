@@ -9,9 +9,9 @@
         <div class="row">
             <div class="col-md-12">
                 @foreach($spacesWithRecordings as $space)
-                @if(count($space['recordings']))
-                    <livewire:video-card :space="$space"/>
-                @endif
+                    @if(count($space['recordings']))
+                        <livewire:co-space-videos-card :space="$space"/>
+                    @endif
                 @endforeach
             </div>
         </div>

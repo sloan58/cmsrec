@@ -2,9 +2,12 @@
 
 namespace App\Http\Livewire;
 
+use Storage;
+use Exception;
 use Livewire\Component;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class VideoCard extends Component
+class CoSpaceVideosCard extends Component
 {
     public $space;
     public $newRecordingName;
@@ -33,12 +36,12 @@ class VideoCard extends Component
         foreach($this->space['recordings'] as $index => $recording) {
             if($recording['baseName'] === $this->currentRecordingName) {
                 try {
-                    \Storage::disk('recordings')->move(
+                    Storage::disk('recordings')->move(
                         "{$this->space['space_id']}/$this->currentRecordingName",
                         "{$this->space['space_id']}/$this->newRecordingName"
                     );
                     $this->space['recordings'][$index]['baseName'] = $this->newRecordingName;
-                } catch(\Exception $e) {
+                } catch(Exception $e) {
                     if(!substr($e->getMessage(), 0, 27 ) === "File already exists at path") {
                         info('error', [$e->getMessage()]);
                         $this->newRecordingNameHasErrors = true;
@@ -79,8 +82,30 @@ class VideoCard extends Component
         }
     }
 
+    /**
+     * Download the recording
+     *
+     * @param $recording
+     * @return StreamedResponse
+     */
+    public function downloadRecording($recording)
+    {
+        $downloadUrl = "{$this->space['space_id']}/$recording";
+        return response()->streamDownload(function() use($downloadUrl) {
+            file_get_contents(Storage::disk('recordings')->path($downloadUrl));
+        }, $recording);
+    }
+
+    /**
+     * Create a shareable link for a recording
+     */
+    public function createShareLink()
+    {
+        info('creating share link');
+    }
+
     public function render()
     {
-        return view('livewire.video-card');
+        return view('livewire.co-space-videos-card');
     }
 }

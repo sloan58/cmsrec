@@ -6,7 +6,7 @@
                 <div class="col mb-4" style="max-width: 400px;">
                     <div class="card h-100 shadow">
                         <video id="{{ $recording['sanitizedFilename'] }}" preload="none" controls>
-                            <source src="/recordings/play?file={{ $recording['url'] }}"
+                            <source src="/recordings/play?file={{ $recording['urlSafeFilename'] }}"
                                     type="video/mp4"
                             >
                             Sorry, your browser doesn't support embedded videos.
@@ -36,8 +36,15 @@
                             <footer class="blockquote-footer"><b>Size:</b> {{ $recording['fileSize'] }}</footer>
                         </div>
                         <div class="card-footer text-left d-flex justify-content-between">
-                            <a href="/recordings/download?file={{ $recording['url'] }}" class="btn btn-outline-primary"><i class="fa fa-download mr-2"></i>Download</a>
-                            <button class="btn btn-outline-primary btn-round">
+                            <button wire:loading.remove wire:click="downloadRecording('{{ $recording['urlSafeFilename'] }}')" class="btn btn-primary btn-round">
+                                <i class="fa fa-download"></i> Download
+                            </button>
+                            <button wire:loading wire:target="downloadRecording" class="btn btn-primary btn-round" type="button" disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span class="sr-only">Downloading...</span>
+                                Downloading
+                            </button>
+                            <button wire:click="createShareLink('{{ $recording['urlSafeFilename'] }}')" class="btn btn-primary btn-round">
                                 <i class="fa fa-share"></i> Share
                             </button>
                         </div>
