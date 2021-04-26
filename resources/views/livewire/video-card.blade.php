@@ -35,8 +35,11 @@
                             <footer class="blockquote-footer"><b>Created:</b> {{ $recording['lastModified'] }}</footer>
                             <footer class="blockquote-footer"><b>Size:</b> {{ $recording['fileSize'] }}</footer>
                         </div>
-                        <div class="card-footer text-left">
-                            <a href="/recordings/download?file={{ $recording['url'] }}" class="btn btn-primary"><i class="fa fa-download mr-2"></i>Download</a>
+                        <div class="card-footer text-left d-flex justify-content-between">
+                            <a href="/recordings/download?file={{ $recording['url'] }}" class="btn btn-outline-primary"><i class="fa fa-download mr-2"></i>Download</a>
+                            <button class="btn btn-outline-primary btn-round">
+                                <i class="fa fa-share"></i> Share
+                            </button>
                         </div>
                     </div>
                 </div>
