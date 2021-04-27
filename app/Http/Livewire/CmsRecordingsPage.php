@@ -13,13 +13,17 @@ class CmsRecordingsPage extends Component
     {
         $cmsRecordings = CmsRecording::when($this->term, function ($query) {
             $query->where('filename', 'like', '%' . $this->term . '%');
-        })->get()->sortBy(function ($recording) {
-                return $recording->cmsCoSpace->name;
-            });
+        });
 
-        info('recordings', [
-            $cmsRecordings->count()
-        ]);
+        if(!auth()->user()->isAdmin()) {
+            $cmsRecordings = $cmsRecordings->with('owner')->whereHas('owner', function($query) {
+                $query->where('id', auth()->user()->id);
+            });
+        }
+
+        $cmsRecordings = $cmsRecordings->get()->sortBy(function ($recording) {
+            return $recording->cmsCoSpace->name;
+        });
 
         return view('livewire.cms-recordings-page', [
             'cmsRecordings' => $cmsRecordings

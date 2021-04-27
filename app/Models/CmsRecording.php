@@ -20,6 +20,7 @@ class CmsRecording extends Model
         'filename',
         'shared',
         'cms_co_space_id',
+        'user_id'
     ];
 
     /**
@@ -61,7 +62,7 @@ class CmsRecording extends Model
      */
     public function owner()
     {
-        return $this->cmsCoSpace->owner;
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     /**
