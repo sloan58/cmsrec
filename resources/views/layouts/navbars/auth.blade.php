@@ -22,7 +22,7 @@
             <li class="{{ $elementActive == 'recordings' ? 'active' : '' }}">
                 <a href="{{ route('recordings.index') }}">
                     <i class="fa fa-video-camera"></i>
-                    <p>{{ __('My Recordings') }}</p>
+                    <p>{{ __('CMS Recordings') }}</p>
                 </a>
             </li>
             @if(auth()->user()->isAdmin())

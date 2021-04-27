@@ -14,24 +14,11 @@ class UserController extends Controller
     /**
      * Display a listing of the users
      *
-     * @param User $user
      * @return View
      */
-    public function index(User $user)
+    public function index()
     {
-        if(request()->has('q')) {
-            $q = request()->get('q');
-            $filter = sprintf('%%%s%%', $q);
-            $users = $user->where('email', 'like', $filter)
-                ->orWhere('name', 'like', $filter)
-                ->withCount('cmsCoSpaces')
-                ->paginate(15);
-        } else {
-            $q = '';
-            $users = $user->withCount('cmsCoSpaces')->paginate(15);
-        }
-
-        return view('users.index', compact('users', 'q'));
+        return view('users.index');
     }
 
     /**
