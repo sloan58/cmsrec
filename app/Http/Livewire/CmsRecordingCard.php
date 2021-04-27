@@ -16,8 +16,6 @@ class CmsRecordingCard extends Component
     public $newRecordingNameError = '';
     public $newRecordingNameHasErrors = false;
 
-    public $shareLinkCreated = false;
-
     /**
      * Set the current filename being edited
      * and make that the default for the new filename
@@ -107,12 +105,16 @@ class CmsRecordingCard extends Component
     }
 
     /**
-     * Create a shareable link for a recording
+     * Manage Recording share settings
+     *
+     * @param $bool
      */
-    public function createShareLink()
+    public function toggleSharing($bool)
     {
+        $this->recording->update([
+            'shared' => $bool
+        ]);
         info('creating share link');
-        $this->shareLinkCreated = true;
     }
 
     public function render()

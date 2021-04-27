@@ -17,15 +17,23 @@ class CmsCoSpaceSeeder extends Seeder
      */
     public function run()
     {
-        $coSpace = CmsCoSpace::create([
-            'space_id' => '529416e8-7a91-4367-8ec2-2ff236ac934d',
-            'name' => 'Admin Demo Space',
-            'ownerId' => User::first()->cms_owner_id
-        ]);
+        $coSpaceIds = [
+            '529416e8-7a91-4367-8ec2-2ff236ac934e',
+            '529416e8-7a91-4367-8ec2-2ff236ac934f',
+            '529416e8-7a91-4367-8ec2-2ff236ac934g',
+        ];
 
-        $storagePath = Storage::disk('recordings')->path($coSpace->space_id);
-        if(!file_exists($storagePath)) {
-            mkdir($storagePath);
+        foreach($coSpaceIds as $index => $coSpaceId) {
+            $coSpace = CmsCoSpace::create([
+                'space_id' => $coSpaceId,
+                'name' => 'Admin Demo Space ' . ($index + 1),
+                'ownerId' => User::first()->cms_owner_id
+            ]);
+
+            $storagePath = Storage::disk('recordings')->path($coSpace->space_id);
+            if(!file_exists($storagePath)) {
+                mkdir($storagePath);
+            }
         }
     }
 }

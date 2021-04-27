@@ -18,7 +18,7 @@ class CreateCmsRecordingsTable extends Migration
             $table->string('filename');
             $table->integer('size');
             $table->dateTime('last_modified');
-            $table->boolean('is_shared')->default(false);
+            $table->boolean('shared')->default(false);
             $table->unsignedBigInteger('cms_co_space_id')->index();
             $table->foreign('cms_co_space_id')
                 ->references('id')

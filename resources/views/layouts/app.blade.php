@@ -69,8 +69,6 @@ The above copyright notice and this permission notice shall be included in all c
     <script src="{{ asset('paper') }}/js/paper-dashboard.min.js?v=2.0.0" type="text/javascript"></script>
 
     <script src="{{ asset('paper') }}/demo/demo.js"></script>
-    <!-- Sharrre libray -->
-    <script src="../assets/demo/jquery.sharrre.js"></script>
 
     @stack('scripts')
 
@@ -81,6 +79,9 @@ The above copyright notice and this permission notice shall be included in all c
     </script>
 
     @livewireScripts
+
+    <script src="{{ mix('/js/app.js') }}"></script>
+
 </body>
 
 </html>

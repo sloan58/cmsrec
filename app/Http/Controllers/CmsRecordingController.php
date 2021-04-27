@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Storage;
+use Exception;
+use App\Models\CmsRecording;
 use Iman\Streamer\VideoStreamer;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\View\View;
 
-class RecordingController extends Controller
+class CmsRecordingController extends Controller
 {
     /**
      * Return the Recordings view with CMS Recordings
@@ -24,14 +28,14 @@ class RecordingController extends Controller
     /**
      * Stream the video recording to the UI
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function play()
     {
         try {
             $streamUrl = request()->get('space') . '/' . request()->get('file');
-            return VideoStreamer::streamFile(\Storage::disk('recordings')->path($streamUrl));
-        } catch (\Exception $e) {
+            return VideoStreamer::streamFile(Storage::disk('recordings')->path($streamUrl));
+        } catch (Exception $e) {
             logger()->error('Could not play recording', [
                 'errorMessage' => $e->getMessage()
             ]);
@@ -41,14 +45,16 @@ class RecordingController extends Controller
     /**
      * Stream the shared video recording to the UI
      *
-     * @throws \Exception
+     * @param CmsRecording $cmsRecording
+     * @return void
+     * @throws Exception
      */
-    public function shared()
+    public function shared(CmsRecording $cmsRecording)
     {
-        if (! request()->hasValidSignature()) {
-            return response()->json('bad', 401);
+        if (request()->hasValidSignature() && $cmsRecording->shared) {
+            return VideoStreamer::streamFile(Storage::disk('recordings')->path($cmsRecording->urlSafeFullPath));
         } else {
-            return response()->json('good', 200);
+            abort(401);
         }
     }
 }

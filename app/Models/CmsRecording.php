@@ -17,7 +17,7 @@ class CmsRecording extends Model
      */
     protected $fillable = [
         'filename',
-        'is_shared',
+        'shared',
         'cms_co_space_id',
     ];
 
@@ -36,6 +36,7 @@ class CmsRecording extends Model
      * @var array
      */
     protected $appends = [
+        'signedRoute',
         'friendlySize',
         'urlSafeFilename',
         'urlSafeFullPath',
@@ -90,5 +91,15 @@ class CmsRecording extends Model
     public function getSanitizedFilenameAttribute()
     {
         return preg_replace("/[^A-Za-z0-9 ]/", '', explode('.', basename($this->filename))[0]);
+    }
+
+    /**
+     * Return the signed route for this resource
+     *
+     * @return mixed
+     */
+    public function getSignedRouteAttribute()
+    {
+        return \URL::signedRoute('recordings.shared', ['cmsRecording' => $this->id]);
     }
 }

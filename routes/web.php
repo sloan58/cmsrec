@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\RecordingController;
+use App\Http\Controllers\CmsRecordingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +19,7 @@ Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLogi
 Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-Route::get('recordings/shared/{recording}', [App\Http\Controllers\RecordingController::class, 'shared'])
+Route::get('recordings/shared/{cmsRecording}', [App\Http\Controllers\CmsRecordingController::class, 'shared'])
     ->name('recordings.shared');
 
 Route::group(['middleware' => ['auth', 'hasCoSpacesOrIsAdmin']], function () {
@@ -36,13 +36,13 @@ Route::group(['middleware' => ['auth', 'hasCoSpacesOrIsAdmin']], function () {
     Route::resource('user', App\Http\Controllers\UserController::class, ['except' => ['show']]);
 
     // Recordings Routes
-    Route::get('recordings/play', [App\Http\Controllers\RecordingController::class, 'play'])
+    Route::get('recordings/play', [App\Http\Controllers\CmsRecordingController::class, 'play'])
         ->name('recordings.play')
         ->middleware('canAccessRecording');
-    Route::get('recordings/download', [App\Http\Controllers\RecordingController::class, 'download'])
+    Route::get('recordings/download', [App\Http\Controllers\CmsRecordingController::class, 'download'])
         ->name('recordings.download')
         ->middleware('canAccessRecording');
-    Route::get('recordings', [App\Http\Controllers\RecordingController::class, 'index'])->name('recordings.index');
+    Route::get('recordings', [App\Http\Controllers\CmsRecordingController::class, 'index'])->name('recordings.index');
 
     // Settings Routes
     Route::get('settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');

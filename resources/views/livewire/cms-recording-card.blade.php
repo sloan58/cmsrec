@@ -30,11 +30,6 @@
             <footer class="blockquote-footer"><b>Created:</b> {{ $recording->last_modified->toDayDateTimeString() }}</footer>
             <footer class="blockquote-footer"><b>Size:</b> {{ $recording->friendlySize }}</footer>
         </div>
-        @if($shareLinkCreated)
-        <div class="text-center">
-            <h3>Coming soon!</h3>
-        </div>
-        @endif
         <div class="card-footer text-left d-flex justify-content-between">
             <button wire:loading.remove wire:click="downloadRecording('{{ $recording->urlSafeFilename }}')" class="btn btn-primary btn-round">
                 <i class="fa fa-download"></i> Download
@@ -44,9 +39,25 @@
                 <span class="sr-only">Downloading...</span>
                 Downloading
             </button>
-            <button wire:click="createShareLink('{{ $recording->urlSafeFilename }}')" class="btn btn-primary btn-round">
+            @if($recording->shared)
+            <div class="dropdown">
+                <button class="btn btn-warning btn-round dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Share Settings
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a x-data="{ input: '{{ $recording->signedRoute }}' }" @click="$clipboard(input)" class="dropdown-item" href="#">
+                        <i class="fa fa-copy mr-2 text-success"></i>Copy Share Link
+                    </a>
+                    <a wire:click="toggleSharing(false)" class="dropdown-item" href="#">
+                        <i class="fa fa-times mr-2 text-danger"></i>Disable Sharing
+                    </a>
+                </div>
+            </div>
+            @else
+            <button wire:click="toggleSharing(true)" class="btn btn-primary btn-round">
                 <i class="fa fa-share"></i> Share
             </button>
+            @endif
         </div>
     </div>
 </div>
