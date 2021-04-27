@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CmsCoSpace;
 use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory;
 
-class CoSpaceController extends Controller
+class CmsCoSpaceController extends Controller
 {
     /**
      * Display a listing of the CmsCoSpaces
@@ -14,8 +13,6 @@ class CoSpaceController extends Controller
      */
     public function index()
     {
-        $coSpaces = CmsCoSpace::all();
-
-        return view('cospaces.index', compact('coSpaces'));
+        return view('cospaces.index');
     }
 }

@@ -24,6 +24,16 @@ class UsersTableSeeder extends Seeder
             'updated_at' => now()
         ]);
 
+        DB::table('users')->insert([
+            'name' => 'Marty Sloan',
+            'email' => 'marty@cmsrec.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('secret'),
+            'cms_owner_id' => \Str::uuid(),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
 //        \App\Models\User::factory()->count(300)->create();
     }
 }
