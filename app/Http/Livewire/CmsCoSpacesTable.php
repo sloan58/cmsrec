@@ -16,6 +16,7 @@ class CmsCoSpacesTable extends Component
                 $query->where('name', 'like', '%'.$this->term.'%');
             });
         })->paginate(10);
+
         return view('livewire.cms-co-spaces-table', [
             'cmsCoSpaces' => $cmsCoSpaces
         ]);

@@ -54,6 +54,16 @@ class CmsRecording extends Model
     }
 
     /**
+     * The User that owns this recording
+     *
+     * @return mixed
+     */
+    public function owner()
+    {
+        return $this->cmsCoSpace->owner();
+    }
+
+    /**
      * Format the file size in human readable format
      *
      * @return string

@@ -6,7 +6,6 @@ use Storage;
 use Exception;
 use App\Models\CmsRecording;
 use Iman\Streamer\VideoStreamer;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\View\View;
 
 class CmsRecordingController extends Controller
@@ -18,11 +17,7 @@ class CmsRecordingController extends Controller
      */
     public function index()
     {
-        $spaceId = request()->get('space');
-        $cmsCoSpaces = auth()->user()->cmsCoSpaces()->when(request()->get('space'), function($query) use ($spaceId) {
-            return $query->where('space_id', $spaceId);
-        })->get();
-        return view('recordings.index', compact('cmsCoSpaces'));
+        return view('recordings.index');
     }
 
     /**

@@ -6,7 +6,7 @@
             >
             Sorry, your browser doesn't support embedded videos.
         </video>
-        <div class="card-body">
+        <div class="card-body mb-0 pb-0">
             @if($editing)
                 <div class="d-flex mb-2">
                     <input wire:model="newRecordingName" @if(!$newRecordingNameHasErrors) wire:keydown.enter="saveNewRecordingName" @endif type="text" name="name" class="form-control {{ !$newRecordingNameHasErrors ?: 'is-invalid' }}" value="{{ $recording->filename }}">
@@ -27,9 +27,11 @@
                 </span>
             @endif
             <p class="card-text text-center">in <b>{{ $recording->cmsCoSpace->name }}</b></p>
-            <footer class="blockquote-footer"><b>Created:</b> {{ $recording->last_modified->toDayDateTimeString() }}</footer>
-            <footer class="blockquote-footer"><b>Size:</b> {{ $recording->friendlySize }}</footer>
+            <footer class="blockquote-footer text-left mt-3"><b>Created:</b> {{ $recording->last_modified->toDayDateTimeString() }}</footer>
+            <footer class="blockquote-footer text-left"><b>Size:</b> {{ $recording->friendlySize }}</footer>
+            <footer class="blockquote-footer text-left"><b>Owner:</b> {{ $recording->owner->name }}</footer>
         </div>
+        <hr class="mt-0">
         <div class="card-footer text-left d-flex justify-content-between">
             <button wire:loading.remove wire:click="downloadRecording('{{ $recording->urlSafeFilename }}')" class="btn btn-primary btn-round">
                 <i class="fa fa-download"></i> Download
