@@ -28,7 +28,7 @@
             @endif
             <p class="card-text text-center">in <b>{{ $recording->cmsCoSpace->name }}</b></p>
             <footer class="blockquote-footer"><b>Created:</b> {{ $recording->last_modified->toDayDateTimeString() }}</footer>
-            <footer class="blockquote-footer"><b>Size:</b> {{ $recording->size }}</footer>
+            <footer class="blockquote-footer"><b>Size:</b> {{ $recording->friendlySize }}</footer>
         </div>
         @if($shareLinkCreated)
         <div class="text-center">

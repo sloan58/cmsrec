@@ -36,6 +36,7 @@ class CmsRecording extends Model
      * @var array
      */
     protected $appends = [
+        'friendlySize',
         'urlSafeFilename',
         'urlSafeFullPath',
         'sanitizedFilename',
@@ -51,6 +52,15 @@ class CmsRecording extends Model
         return $this->belongsTo(CmsCoSpace::class);
     }
 
+    /**
+     * Format the file size in human readable format
+     *
+     * @return string
+     */
+    public function getFriendlySizeAttribute()
+    {
+        return bytesToHuman($this->size);
+    }
     /**
      * Format filename for URL's
      *
