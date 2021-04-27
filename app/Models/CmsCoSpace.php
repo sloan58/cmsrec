@@ -53,16 +53,6 @@ class CmsCoSpace extends Model
     }
 
     /**
-     * Get recordings for this space
-     *
-     * @return mixed
-     */
-    public function recordings()
-    {
-        return Storage::disk('recordings')->files($this->space_id);
-    }
-
-    /**
      * Format storage folder for URL's
      *
      * @return string
