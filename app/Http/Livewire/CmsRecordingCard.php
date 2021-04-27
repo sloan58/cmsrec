@@ -5,14 +5,14 @@ namespace App\Http\Livewire;
 use Storage;
 use Exception;
 use Livewire\Component;
+use App\Models\CmsRecording;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CmsRecordingCard extends Component
 {
-    public $recording;
+    public CmsRecording $recording;
     public $editing = false;
     public $newRecordingName;
-    public $currentRecordingName;
     public $newRecordingNameError = '';
     public $newRecordingNameHasErrors = false;
 
@@ -26,8 +26,7 @@ class CmsRecordingCard extends Component
     {
         $this->editing = true;
         $this->newRecordingNameHasErrors = false;
-        $this->currentRecordingName = $this->recording['baseName'];
-        $this->newRecordingName = $this->recording['baseName'];
+        $this->newRecordingName = $this->recording->filename;
     }
 
     /**
@@ -35,25 +34,37 @@ class CmsRecordingCard extends Component
      */
     public function saveNewRecordingName()
     {
+
         try {
+
             Storage::disk('recordings')->move(
-                "{$this->recording['space_id']}/$this->currentRecordingName",
-                "{$this->recording['space_id']}/$this->newRecordingName"
+                "{$this->recording->cmsCoSpace->space_id}/{$this->recording->filename}",
+                "{$this->recording->cmsCoSpace->space_id}/{$this->newRecordingName}"
             );
-            $this->recording['baseName'] = $this->newRecordingName;
-            $this->recording['urlSafeFilename'] = urlencode(basename($this->recording['baseName']));
-            $this->recording['sanitizedFilename'] = preg_replace("/[^A-Za-z0-9 ]/", '', explode('.', basename($this->recording['baseName']))[0]);
-            $this->editing = false;
+
+            try {
+                $this->recording->update([
+                    'filename' => $this->newRecordingName
+                ]);
+                $this->editing = false;
+                $this->newRecordingName = '';
+            } catch(Exception $e) {
+                info('error', [$e->getMessage()]);
+                $this->newRecordingName = '';
+                $this->newRecordingNameHasErrors = true;
+                $this->newRecordingNameError = 'There was an error updating the filename';
+                $this->editing = false;
+            }
+
         } catch(Exception $e) {
+            $this->editing = false;
             if(!substr($e->getMessage(), 0, 27 ) === "File already exists at path") {
                 info('error', [$e->getMessage()]);
+                $this->newRecordingName = '';
                 $this->newRecordingNameHasErrors = true;
                 $this->newRecordingNameError = 'There was an error updating the filename';
             }
-            $this->editing = false;
         }
-        $this->currentRecordingName = '';
-        $this->newRecordingName = '';
     }
 
     /**
@@ -62,7 +73,6 @@ class CmsRecordingCard extends Component
     public function cancelNewRecordingName()
     {
         $this->newRecordingNameHasErrors = false;
-        $this->currentRecordingName = '';
         $this->newRecordingName = '';
     }
 
@@ -92,7 +102,7 @@ class CmsRecordingCard extends Component
     public function downloadRecording($recording)
     {
         // TODO: Configure proper PHP memory limits!
-        $downloadUrl = "{$this->recording['space_id']}/$recording";
+        $downloadUrl = "{$this->recording->cmsCoSpace->space_id}/{$recording}";
         return \Storage::disk('recordings')->download($downloadUrl);
     }
 
