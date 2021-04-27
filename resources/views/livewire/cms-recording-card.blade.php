@@ -29,10 +29,10 @@
             <p class="card-text text-center">in <b>{{ $recording->cmsCoSpace->name }}</b></p>
             <footer class="blockquote-footer text-left mt-3"><b>Created:</b> {{ $recording->last_modified->toDayDateTimeString() }}</footer>
             <footer class="blockquote-footer text-left"><b>Size:</b> {{ $recording->friendlySize }}</footer>
-            <footer class="blockquote-footer text-left"><b>Owner:</b> {{ $recording->owner->name }}</footer>
+            <footer class="blockquote-footer text-left"><b>Owner:</b> {{ $recording->owner()->name }}</footer>
         </div>
         <hr class="mt-0">
-        <div class="card-footer text-left d-flex justify-content-between">
+        <div class="card-footer text-left d-flex justify-content-between px-2">
             <button wire:loading.remove wire:click="downloadRecording('{{ $recording->urlSafeFilename }}')" class="btn btn-primary btn-round">
                 <i class="fa fa-download"></i> Download
             </button>

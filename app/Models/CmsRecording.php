@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use URL;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -60,7 +61,7 @@ class CmsRecording extends Model
      */
     public function owner()
     {
-        return $this->cmsCoSpace->owner();
+        return $this->cmsCoSpace->owner;
     }
 
     /**
@@ -110,6 +111,6 @@ class CmsRecording extends Model
      */
     public function getSignedRouteAttribute()
     {
-        return \URL::signedRoute('recordings.shared', ['cmsRecording' => $this->id]);
+        return URL::signedRoute('recordings.shared', ['cmsRecording' => $this->id]);
     }
 }
