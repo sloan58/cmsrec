@@ -72,48 +72,6 @@ class User extends Authenticatable
     }
 
     /**
-     * A User Has Many CMS CoSpaces
-     *
-     * @param null $spaceId
-     * @return bool
-     */
-    public function myRecordings($spaceId = null)
-    {
-        return $this->cmsCoSpaces->when($spaceId, function ($query) use ($spaceId) {
-                return $query->where('space_id', $spaceId);
-            })->map(function ($coSpace) {
-            return [
-                'spaceName' => $coSpace->name,
-                'recordings' => array_map(function ($recording) use ($coSpace) {
-                    return [
-                        'space_id' => $coSpace->space_id,
-                        'spaceName' => $coSpace->name,
-                        'baseName' => basename($recording),
-                        'sanitizedFilename' => preg_replace("/[^A-Za-z0-9 ]/", '', explode('.', basename($recording))[0]),
-                        'urlSafeFilename' => urlencode(basename($recording)),
-                        'fileSize' => bytesToHuman(
-                            Storage::disk('recordings')->size($recording)
-                        ),
-                        'lastModified' => Carbon::createFromTimestamp(
-                            Storage::disk('recordings')->lastModified(
-                                $recording
-                            )
-                        )->toDayDateTimeString()
-                    ];
-                }, array_filter(
-                    Storage::disk('recordings')->files(
-                        "/{$coSpace->space_id}"
-                    ),
-                    function ($file) {
-                        return 0 !== strpos(basename($file), '.');
-                    }
-                ))
-            ];
-        });
-    }
-
-
-    /**
      * Check if the user is an admin
      *
      * @return bool
