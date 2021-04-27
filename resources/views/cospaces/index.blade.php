@@ -6,6 +6,6 @@
 @section('content')
     <div class="content">
         @include('components.flash-message')
-        <livewire:cms-co-space-table />
+        <livewire:cms-co-spaces-table />
     </div>
 @endsection

@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\CmsCoSpace;
 use Livewire\Component;
 
-class CmsCoSpaceTable extends Component
+class CmsCoSpacesTable extends Component
 {
     public $term = '';
 
@@ -16,7 +16,7 @@ class CmsCoSpaceTable extends Component
                 $query->where('name', 'like', '%'.$this->term.'%');
             });
         })->paginate(10);
-        return view('livewire.cms-co-space-table', [
+        return view('livewire.cms-co-spaces-table', [
             'cmsCoSpaces' => $cmsCoSpaces
         ]);
     }
