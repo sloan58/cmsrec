@@ -22,6 +22,26 @@ class CmsRecording extends Model
     ];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'last_modified' => 'datetime',
+    ];
+
+    /**
+     * The attributes that should be appended to the model.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'urlSafeFilename',
+        'urlSafeFullPath',
+        'sanitizedFilename',
+    ];
+
+    /**
      * A CmsRecording Belongs To a CmsCoSpace
      *
      * @return BelongsTo
@@ -29,5 +49,36 @@ class CmsRecording extends Model
     public function cmsCoSpace()
     {
         return $this->belongsTo(CmsCoSpace::class);
+    }
+
+    /**
+     * Format filename for URL's
+     *
+     * @return string
+     */
+    public function getUrlSafeFullPathAttribute()
+    {
+        return $this->cmsCoSpace->urlSafeFolder . '/' . $this->urlSafeFilename;
+    }
+
+    /**
+     * Format filename for URL's
+     *
+     * @return string
+     */
+    public function getUrlSafeFilenameAttribute()
+    {
+        return urlencode($this->filename);
+    }
+
+    /**
+     * Remove special characters from
+     * the recordings filename
+     *
+     * @return string|string[]|null
+     */
+    public function getSanitizedFilenameAttribute()
+    {
+        return preg_replace("/[^A-Za-z0-9 ]/", '', explode('.', basename($this->filename))[0]);
     }
 }

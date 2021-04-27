@@ -24,6 +24,15 @@ class CmsCoSpace extends Model
     ];
 
     /**
+     * The attributes that should be appended to the model.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'urlSafeFolder'
+    ];
+
+    /**
      * A CMS CoSpace belongs to a User
      *
      * @return BelongsTo
@@ -54,17 +63,22 @@ class CmsCoSpace extends Model
     }
 
     /**
+     * Format storage folder for URL's
+     *
+     * @return string
+     */
+    public function getUrlSafeFolderAttribute()
+    {
+        return urlencode($this->space_id);
+    }
+
+    /**
      * Return the storage size of a CmsCoSpace
      *
      * @return string
      */
     public function size()
     {
-        $size = 0;
-        $files = Storage::disk('recordings')->files($this->space_id);
-        array_walk($files, function($file) use (&$size) {
-            $size += Storage::disk('recordings')->size($file);
-        });
-        return bytesToHuman($size);
+        return bytesToHuman($this->cmsRecordings()->sum('size'));
     }
 }

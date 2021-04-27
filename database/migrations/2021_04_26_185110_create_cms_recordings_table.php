@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateCmsRecordingsTable extends Migration
 {
@@ -16,7 +16,9 @@ class CreateCmsRecordingsTable extends Migration
         Schema::create('cms_recordings', function (Blueprint $table) {
             $table->id();
             $table->string('filename');
-            $table->boolean('is_shared');
+            $table->integer('size');
+            $table->dateTime('last_modified');
+            $table->boolean('is_shared')->default(false);
             $table->unsignedBigInteger('cms_co_space_id')->index();
             $table->foreign('cms_co_space_id')
                 ->references('id')

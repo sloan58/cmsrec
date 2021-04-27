@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Storage;
+use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class User extends Authenticatable
 {
@@ -53,6 +56,22 @@ class User extends Authenticatable
     }
 
     /**
+     * A User Has Many CmsRecordings Through a CmsCoSpace
+     *
+     * @return HasManyThrough
+     */
+    public function cmsRecordings()
+    {
+        return $this->hasManyThrough(
+            CmsRecording::class,
+            CmsCoSpace::class,
+            'ownerId',
+            'cms_co_space_id',
+            'cms_owner_id'
+        );
+    }
+
+    /**
      * A User Has Many CMS CoSpaces
      *
      * @param null $spaceId
@@ -73,16 +92,16 @@ class User extends Authenticatable
                         'sanitizedFilename' => preg_replace("/[^A-Za-z0-9 ]/", '', explode('.', basename($recording))[0]),
                         'urlSafeFilename' => urlencode(basename($recording)),
                         'fileSize' => bytesToHuman(
-                            \Storage::disk('recordings')->size($recording)
+                            Storage::disk('recordings')->size($recording)
                         ),
-                        'lastModified' => \Carbon\Carbon::createFromTimestamp(
-                            \Storage::disk('recordings')->lastModified(
+                        'lastModified' => Carbon::createFromTimestamp(
+                            Storage::disk('recordings')->lastModified(
                                 $recording
                             )
                         )->toDayDateTimeString()
                     ];
                 }, array_filter(
-                    \Storage::disk('recordings')->files(
+                    Storage::disk('recordings')->files(
                         "/{$coSpace->space_id}"
                     ),
                     function ($file) {

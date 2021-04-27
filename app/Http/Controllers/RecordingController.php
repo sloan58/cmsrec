@@ -14,8 +14,11 @@ class RecordingController extends Controller
      */
     public function index()
     {
-        $spacesWithRecordings = auth()->user()->myRecordings(request()->get('space'));
-        return view('recordings.index', compact('spacesWithRecordings'));
+        $spaceId = request()->get('space');
+        $cmsCoSpaces = auth()->user()->cmsCoSpaces()->when(request()->get('space'), function($query) use ($spaceId) {
+            return $query->where('space_id', $spaceId);
+        })->get();
+        return view('recordings.index', compact('cmsCoSpaces'));
     }
 
     /**
@@ -32,6 +35,20 @@ class RecordingController extends Controller
             logger()->error('Could not play recording', [
                 'errorMessage' => $e->getMessage()
             ]);
+        }
+    }
+
+    /**
+     * Stream the shared video recording to the UI
+     *
+     * @throws \Exception
+     */
+    public function shared()
+    {
+        if (! request()->hasValidSignature()) {
+            return response()->json('bad', 401);
+        } else {
+            return response()->json('good', 200);
         }
     }
 }
