@@ -1,11 +1,5 @@
 <div class="col-auto mb-4">
     <div class="card shadow" style="height: 370px; width: 375px;">
-{{--        <video id="{{ $recording->sanitizedFilename }}" preload="none" controls>--}}
-{{--            <source src="{{ route('recordings.play', ['space' => $recording->cmsCoSpace->space_id, 'file' => $recording->urlSafeFilename]) }}"--}}
-{{--                    type="video/mp4"--}}
-{{--            >--}}
-{{--            Sorry, your browser doesn't support embedded videos.--}}
-{{--        </video>--}}
         <div class="card-header card-header-danger">
             <button wire:click="$emit('playRecording', '{{ $recording->id }}')" class="btn btn-lg btn-success btn-fab btn-icon btn-round">
                 <i class="fa fa-play"></i>
