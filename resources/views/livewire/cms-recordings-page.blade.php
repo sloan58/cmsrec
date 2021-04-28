@@ -50,17 +50,6 @@
                 </div>
             </div>
             <div class="d-flex">
-                @if(auth()->user()->isAdmin())
-                <div class="form-check  mt-3 mr-3">
-                    <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox">
-                        Show All Users Recordings
-                        <span wire:click="$toggle('showAll')" class="form-check-sign">
-                            <span class="check"></span>
-                        </span>
-                    </label>
-                </div>
-                @endif
                 <div class="dropdown">
                     <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Show: {{ $paginate }}
@@ -73,6 +62,19 @@
                 </div>
             </div>
         </div>
+        @if(auth()->user()->isAdmin())
+        <div class="row justify-content-center">
+            <div class="d-flex text-left">
+                <div class="form-check mt-3 mr-3">
+                    <label class="form-check-label pl-0">
+                        <input wire:click="$toggle('showAll')" type="radio" class="form-radio" name="rank"
+                               value="1" {{ $showAll ? 'checked' : '' }}>
+                        Show{{ $showAll ? 'ing' : ''}} All Users Recordings
+                    </label>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
     <div class="row justify-content-center mt-4">
         <div class='col-sm-12 col-md-10 offset-md-1 text-center'>
