@@ -5,7 +5,7 @@
             <h3>{{ $recordingInPlayback->filename }}</h3>
         </div>
         <div class="col-md-12 justify-content-center d-flex">
-            <video id="1" width="50%" height="100%" controls autoplay>
+            <video id="1" width="75%" height="100%" controls autoplay>
                 <source src="{{ route('recordings.play', ['space' => $recordingInPlayback->cmsCoSpace->space_id, 'file' => $recordingInPlayback->urlSafeFilename]) }}"
                         type="video/mp4"
                 >
