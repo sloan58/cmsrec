@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class CmsRecordingCard extends Component
 {
     public CmsRecording $recording;
+    public $recordingInPlayback;
     public $editing = false;
     public $newRecordingName;
     public $newRecordingNameError = '';

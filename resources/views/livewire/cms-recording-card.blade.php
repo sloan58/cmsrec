@@ -1,9 +1,15 @@
 <div class="col-auto mb-4">
     <div class="card shadow" style="height: 350px; width: 281px;">
         <div class="card-header card-header-danger">
+        @if($recordingInPlayback)
+            <button class="btn btn-lg btn-success btn-fab btn-icon btn-round" disabled>
+                <i class="fa fa-play"></i>
+            </button>
+        @else
             <button wire:click="$emit('playRecording', '{{ $recording->id }}')" class="btn btn-lg btn-success btn-fab btn-icon btn-round">
                 <i class="fa fa-play"></i>
             </button>
+        @endif
         </div>
         <div class="card-body d-flex flex-column">
             @if($editing)

@@ -19,7 +19,7 @@ class CmsRecordingsPage extends Component
     public $showAll = false;
     public $searchBy = 'Recording Name';
     public $recordingShouldPlay = false;
-    public $recording = null;
+    public $recordingInPlayback = null;
 
 
     /**
@@ -29,7 +29,7 @@ class CmsRecordingsPage extends Component
      */
     public function startPlayback(CmsRecording $cmsRecording)
     {
-        $this->recording = $cmsRecording;
+        $this->recordingInPlayback = $cmsRecording;
         $this->recordingShouldPlay = true;
     }
 
@@ -38,7 +38,7 @@ class CmsRecordingsPage extends Component
      */
     public function stopPlayback()
     {
-        $this->recording = null;
+        $this->recordingInPlayback = null;
         $this->recordingShouldPlay = false;
     }
 
