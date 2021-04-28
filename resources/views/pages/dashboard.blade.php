@@ -17,7 +17,7 @@
                             </div>
                             <div class="col-7 col-md-8">
                                 <div class="numbers">
-                                    <p class="card-category">NFS Spaced Used</p>
+                                    <p class="card-category">NFS Space Used</p>
                                     <p class="card-title">{{ $diskUsage }}
                                         <p>
                                 </div>
