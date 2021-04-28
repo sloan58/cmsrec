@@ -1,5 +1,5 @@
 <div class="col-auto mb-4">
-    <div class="card shadow" style="height: 370px; width: 375px;">
+    <div class="card shadow" style="height: 350px; width: 281px;">
         <div class="card-header card-header-danger">
             <button wire:click="$emit('playRecording', '{{ $recording->id }}')" class="btn btn-lg btn-success btn-fab btn-icon btn-round">
                 <i class="fa fa-play"></i>
@@ -16,16 +16,16 @@
                 @endif
             </div>
             @else
-            <h5 class="card-title text-center">{{ \Str::limit($recording->filename, 20) }}
+            <p class="card-title text-center font-weight-bolder">{{ \Str::limit($recording->filename, 20) }}
                 <i wire:click="loadRecordingNames" class="fa fa-pencil text-info ml-1" style="cursor: pointer;"></i>
-            </h5>
+            </p>
             @endif
             @if($newRecordingNameHasErrors)
             <span class="invalid-feedback text-center mb-2" style="display: block;" role="alert">
                 <strong>{{ $newRecordingNameError }}</strong>
             </span>
             @endif
-            <p class="card-text text-center">in <b>{{ $recording->cmsCoSpace->name }}</b></p>
+            <p class="card-text text-center">in <span class="font-italic">{{ $recording->cmsCoSpace->name }}</span></p>
             <div class="mt-auto">
                 <footer class="blockquote-footer text-left mt-3"><b>Created:</b> {{ $recording->last_modified->toDayDateTimeString() }}</footer>
                 <footer class="blockquote-footer text-left"><b>Size:</b> {{ $recording->friendlySize }}</footer>
