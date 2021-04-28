@@ -22,21 +22,7 @@
     @else
     <div class="row justify-content-center mb-3">
         <div class="col-md-6 col-sm-12">
-            <input wire:model.debounce.500ms="term" class="form-control text-center" type="search" placeholder="Search By {{ $searchBy }}" value="{{ $term }}" aria-label="Search">
-        </div>
-    </div>
-    <div class="row justify-content-center mb-3">
-        <div class="dropdown">
-            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Search By {{ $searchBy }}
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#" wire:click="$set('searchBy', 'Recording Name')">Recording Name</a>
-                <a class="dropdown-item" href="#" wire:click="$set('searchBy', 'Space Name')">Space Name</a>
-                @if(auth()->user()->isAdmin())
-                <a class="dropdown-item" href="#" wire:click="$set('searchBy', 'Owner Name')">Owner Name</a>
-                @endif
-            </div>
+            <input wire:model.debounce.500ms="term" class="form-control text-center" type="search" placeholder="Search By Recording, Space Name {{ !auth()->user()->isAdmin() ?: 'or Owner'}}" value="{{ $term }}" aria-label="Search">
         </div>
     </div>
     <div class="row justify-content-center mt-4">

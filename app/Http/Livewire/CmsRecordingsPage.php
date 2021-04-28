@@ -17,7 +17,6 @@ class CmsRecordingsPage extends Component
     public $term = '';
     public $paginate = 10;
     public $showAll = false;
-    public $searchBy = 'Recording Name';
     public $recordingShouldPlay = false;
     public $recordingInPlayback = null;
 
@@ -45,26 +44,18 @@ class CmsRecordingsPage extends Component
     public function render()
     {
         $cmsRecordings = CmsRecording::with(['cmsCoSpace', 'owner'])->when($this->term, function ($query) {
-            switch($this->searchBy) {
-                case 'Recording Name':
-                    $query->where('filename', 'like', '%' . $this->term . '%');
-                    break;
-                case 'Space Name':
-                    $query->whereHas('cmsCoSpace', function($query) {
-                        $query->where('name', 'like', '%' . $this->term . '%');
-                    });
-                    break;
-                case 'Owner Name':
-                    $query->whereHas('owner', function($query) {
-                        $query->where('name', 'like', '%' . $this->term . '%');
-                    });
-                    break;
+            $query->where('filename', 'like', '%' . $this->term . '%');
+            $query->orWhereHas('cmsCoSpace', function($query) {
+                $query->where('name', 'like', '%' . $this->term . '%');
+            });
+            if(auth()->user()->isAdmin()) {
+                $query->orWhereHas('owner', function($query) {
+                    $query->where('name', 'like', '%' . $this->term . '%');
+                });
             }
         });
 
-        info('there');
         if(!auth()->user()->isAdmin() || (auth()->user()->isAdmin() && !$this->showAll)) {
-            info('here');
             $cmsRecordings = $cmsRecordings->with('owner')->whereHas('owner', function($query) {
                 $query->where('id', auth()->user()->id);
             });
