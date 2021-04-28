@@ -12,13 +12,13 @@
                         <div class="row">
                             <div class="col-5 col-md-4">
                                 <div class="icon-big text-center icon-warning">
-                                    <i class="nc-icon nc-globe text-warning"></i>
+                                    <i class="fa fa-hdd-o text-warning"></i>
                                 </div>
                             </div>
                             <div class="col-7 col-md-8">
                                 <div class="numbers">
-                                    <p class="card-category">Capacity</p>
-                                    <p class="card-title">150GB
+                                    <p class="card-category">NFS Spaced Used</p>
+                                    <p class="card-title">{{ $diskUsage }}
                                         <p>
                                 </div>
                             </div>
@@ -27,7 +27,7 @@
                     <div class="card-footer ">
                         <hr>
                         <div class="stats">
-                            <i class="fa fa-refresh"></i> Update Now
+                            <i class="nc-icon nc-globe"></i> out of {{ $diskSize }}
                         </div>
                     </div>
                 </div>
@@ -38,13 +38,13 @@
                         <div class="row">
                             <div class="col-5 col-md-4">
                                 <div class="icon-big text-center icon-warning">
-                                    <i class="nc-icon nc-money-coins text-success"></i>
+                                    <i class="fa fa-video-camera text-success"></i>
                                 </div>
                             </div>
                             <div class="col-7 col-md-8">
                                 <div class="numbers">
-                                    <p class="card-category">Revenue</p>
-                                    <p class="card-title">$ 1,345
+                                    <p class="card-category">Recordings</p>
+                                    <p class="card-title">{{ $recordingCount }}
                                         <p>
                                 </div>
                             </div>
@@ -53,7 +53,7 @@
                     <div class="card-footer ">
                         <hr>
                         <div class="stats">
-                            <i class="fa fa-calendar-o"></i> Last day
+                            <i class="fa fa-calendar-o"></i> Last recording received {{ $lastRecordingIn }}
                         </div>
                     </div>
                 </div>
@@ -69,8 +69,8 @@
                             </div>
                             <div class="col-7 col-md-8">
                                 <div class="numbers">
-                                    <p class="card-category">Errors</p>
-                                    <p class="card-title">23
+                                    <p class="card-category">Average Recording Size</p>
+                                    <p class="card-title">{{ $averageRecordingSize }}
                                         <p>
                                 </div>
                             </div>
@@ -79,7 +79,7 @@
                     <div class="card-footer ">
                         <hr>
                         <div class="stats">
-                            <i class="fa fa-clock-o"></i> In the last hour
+                            <i class="fa fa-clock-o"></i> Largest: {{ $largestRecordingSize }} | Smallest: {{ $smallestRecordingSize }}
                         </div>
                     </div>
                 </div>
@@ -95,8 +95,8 @@
                             </div>
                             <div class="col-7 col-md-8">
                                 <div class="numbers">
-                                    <p class="card-category">Followers</p>
-                                    <p class="card-title">+45K
+                                    <p class="card-category">Shared Recordings</p>
+                                    <p class="card-title">{{ $sharedRecordings }}
                                         <p>
                                 </div>
                             </div>
@@ -105,7 +105,7 @@
                     <div class="card-footer ">
                         <hr>
                         <div class="stats">
-                            <i class="fa fa-refresh"></i> Update now
+                            <i class="fa fa-refresh"></i> Updated now
                         </div>
                     </div>
                 </div>
