@@ -4,13 +4,43 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\CmsRecording;
+use Livewire\WithPagination;
 
 class CmsRecordingsPage extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+
+    protected $listeners = ['playRecording' => 'startPlayback'];
+
     public $term = '';
     public $paginate = 10;
     public $showAll = false;
     public $searchBy = 'Recording Name';
+    public $recordingShouldPlay = false;
+    public $recording = null;
+
+
+    /**
+     * Start playing the recording in the UI
+     *
+     * @param CmsRecording $cmsRecording
+     */
+    public function startPlayback(CmsRecording $cmsRecording)
+    {
+        $this->recording = $cmsRecording;
+        $this->recordingShouldPlay = true;
+    }
+
+    /**
+     * Stop playing the recording in the UI
+     */
+    public function stopPlayback()
+    {
+        $this->recording = null;
+        $this->recordingShouldPlay = false;
+    }
 
     public function render()
     {

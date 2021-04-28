@@ -1,4 +1,25 @@
 <div>
+    @if($recordingShouldPlay)
+    <div class="row">
+        <div class="col-md-12 justify-content-center d-flex">
+            <h3>{{ $recording->filename }}</h3>
+        </div>
+        <div class="col-md-12 justify-content-center d-flex">
+            <video id="1" preload="none" width="50%" height="100%" controls>
+                <source src="{{ route('recordings.play', ['space' => $recording->cmsCoSpace->space_id, 'file' => $recording->urlSafeFilename]) }}"
+                        type="video/mp4"
+                >
+                Sorry, your browser doesn't support embedded videos.
+            </video>
+        </div>
+        <div class="col-md-12 justify-content-center d-flex">
+            <button wire:click="stopPlayback" class="btn btn-danger btn-fab btn-round">
+                Stop Playback
+            </button>
+        </div>
+    </div>
+    <hr class="my-5">
+    @endif
     <div class="row justify-content-center mb-3">
         <div class="col-md-6 col-sm-12">
             <input wire:model.debounce.500ms="term" class="form-control text-center" type="search" placeholder="Search By {{ $searchBy }}" value="{{ $term }}" aria-label="Search">
@@ -22,7 +43,7 @@
         <div class="row justify-content-between">
             <div class="d-flex">
                 <div class="mr-2">
-                    {{ $cmsRecordings->links('vendor.pagination.bootstrap-4') }}
+                    {{ $cmsRecordings->links() }}
                 </div>
                 <div class="mt-1">
                     Showing {{ $cmsRecordings->firstItem() }} to {{ $cmsRecordings->lastItem() }} of total {{$cmsRecordings->total()}} entries
@@ -53,7 +74,7 @@
             </div>
         </div>
     </div>
-    <div class="row justify-content-left">
+    <div class="row justify-content-center mt-4">
         <div class='col-sm-12 col-md-10 offset-md-1 text-center'>
             <div class='row row-cols-1 row-cols-md-4'>
                 @foreach($cmsRecordings as $recording)

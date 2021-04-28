@@ -1,11 +1,16 @@
-<div class="col mb-4" style="max-width: 400px;">
-    <div class="card h-100 shadow">
-        <video id="{{ $recording->sanitizedFilename }}" preload="none" controls>
-            <source src="{{ route('recordings.play', ['space' => $recording->cmsCoSpace->space_id, 'file' => $recording->urlSafeFilename]) }}"
-                    type="video/mp4"
-            >
-            Sorry, your browser doesn't support embedded videos.
-        </video>
+<div class="col-auto mb-4">
+    <div class="card shadow" style="height: 370px; width: 375px;">
+{{--        <video id="{{ $recording->sanitizedFilename }}" preload="none" controls>--}}
+{{--            <source src="{{ route('recordings.play', ['space' => $recording->cmsCoSpace->space_id, 'file' => $recording->urlSafeFilename]) }}"--}}
+{{--                    type="video/mp4"--}}
+{{--            >--}}
+{{--            Sorry, your browser doesn't support embedded videos.--}}
+{{--        </video>--}}
+        <div class="card-header card-header-danger">
+            <button wire:click="$emit('playRecording', '{{ $recording->id }}')" class="btn btn-lg btn-success btn-fab btn-icon btn-round">
+                <i class="fa fa-play"></i>
+            </button>
+        </div>
         <div class="card-body d-flex flex-column">
             @if($editing)
             <div class="d-flex mb-2">
@@ -17,7 +22,7 @@
                 @endif
             </div>
             @else
-            <h5 class="card-title text-center">{{ $recording->filename }}
+            <h5 class="card-title text-center">{{ \Str::limit($recording->filename, 20) }}
                 <i wire:click="loadRecordingNames" class="fa fa-pencil text-info ml-1" style="cursor: pointer;"></i>
             </h5>
             @endif
@@ -35,10 +40,10 @@
         </div>
         <hr>
         <div class="card-footer text-left d-flex justify-content-between px-2">
-            <button wire:loading.remove wire:click="downloadRecording('{{ $recording->urlSafeFilename }}')" class="btn btn-primary btn-round">
+            <button wire:loading.remove wire:click="downloadRecording('{{ $recording->urlSafeFilename }}')" class="btn btn-info btn-round">
                 <i class="fa fa-download"></i> Download
             </button>
-            <button wire:loading wire:target="downloadRecording" class="btn btn-primary btn-round" type="button" disabled>
+            <button wire:loading wire:target="downloadRecording" class="btn btn-info btn-round" type="button" disabled>
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                 <span class="sr-only">Downloading...</span>
                 Downloading
@@ -46,7 +51,7 @@
             @if($recording->shared)
             <div class="dropdown">
                 <button class="btn btn-warning btn-round dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Share Settings
+                    Shared
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <a x-data="{ input: '{{ $recording->signedRoute }}' }" @click="$clipboard(input)" class="dropdown-item" href="#">
@@ -58,7 +63,7 @@
                 </div>
             </div>
             @else
-            <button wire:click="toggleSharing(true)" class="btn btn-primary btn-round">
+            <button wire:click="toggleSharing(true)" class="btn btn-info btn-round">
                 <i class="fa fa-share"></i> Share
             </button>
             @endif
