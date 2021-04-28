@@ -142,7 +142,6 @@ class LoginController extends Controller
                 $this->ldapSettings->bindDN,
                 $this->ldapSettings->password
             );
-            info("Ldap@bind: LDAP bind succeeded");
 
             return $connection;
 
