@@ -9,11 +9,11 @@ class CmsRecordingsPage extends Component
 {
     public $term = '';
     public $paginate = 10;
+    public $showAll = false;
     public $searchBy = 'Recording Name';
 
     public function render()
     {
-
         $cmsRecordings = CmsRecording::with(['cmsCoSpace', 'owner'])->when($this->term, function ($query) {
             switch($this->searchBy) {
                 case 'Recording Name':
@@ -32,7 +32,9 @@ class CmsRecordingsPage extends Component
             }
         });
 
-        if(!auth()->user()->isAdmin()) {
+        info('there');
+        if(!auth()->user()->isAdmin() || (auth()->user()->isAdmin() && !$this->showAll)) {
+            info('here');
             $cmsRecordings = $cmsRecordings->with('owner')->whereHas('owner', function($query) {
                 $query->where('id', auth()->user()->id);
             });

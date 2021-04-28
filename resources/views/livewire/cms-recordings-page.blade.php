@@ -28,14 +28,27 @@
                     Showing {{ $cmsRecordings->firstItem() }} to {{ $cmsRecordings->lastItem() }} of total {{$cmsRecordings->total()}} entries
                 </div>
             </div>
-            <div class="dropdown">
-                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{ $paginate }}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#" wire:click="$set('paginate', '10')">10</a>
-                    <a class="dropdown-item" href="#" wire:click="$set('paginate', '25')">25</a>
-                    <a class="dropdown-item" href="#" wire:click="$set('paginate', '50')">50</a>
+            <div class="d-flex">
+                @if(auth()->user()->isAdmin())
+                <div class="form-check  mt-3 mr-3">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox">
+                        Show All Users Recordings
+                        <span wire:click="$toggle('showAll')" class="form-check-sign">
+                            <span class="check"></span>
+                        </span>
+                    </label>
+                </div>
+                @endif
+                <div class="dropdown">
+                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Show: {{ $paginate }}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#" wire:click="$set('paginate', '10')">10</a>
+                        <a class="dropdown-item" href="#" wire:click="$set('paginate', '25')">25</a>
+                        <a class="dropdown-item" href="#" wire:click="$set('paginate', '50')">50</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -50,3 +63,4 @@
         </div>
     </div>
 </div>
+

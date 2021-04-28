@@ -114,7 +114,6 @@ class CmsRecordingCard extends Component
         $this->recording->update([
             'shared' => $bool
         ]);
-        info('creating share link');
     }
 
     public function render()
