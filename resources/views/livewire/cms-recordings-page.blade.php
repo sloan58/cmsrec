@@ -1,21 +1,31 @@
 <div>
     @if($recordingShouldPlay)
     <div class="row">
-        <div class="col-md-12 justify-content-center d-flex">
-            <h3>{{ $recordingInPlayback->filename }}</h3>
-        </div>
-        <div class="col-md-12 justify-content-center d-flex">
-            <video id="1" width="75%" height="100%" controls autoplay>
-                <source src="{{ route('recordings.play', ['space' => $recordingInPlayback->cmsCoSpace->space_id, 'file' => $recordingInPlayback->urlSafeFilename]) }}"
-                        type="video/mp4"
-                >
-                Sorry, your browser doesn't support embedded videos.
-            </video>
-        </div>
-        <div class="col-md-12 justify-content-center d-flex">
-            <button wire:click="stopPlayback" class="btn btn-danger btn-fab btn-round">
-                Close
-            </button>
+        <div class="col-md-12">
+            <div class="card bg-dark">
+                <div class="col-md-12 justify-content-center d-flex">
+                    <div class="card-header card-header-warning text-white">
+                        <h3 class="mb-0">{{ $recordingInPlayback->filename }}</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12 justify-content-center d-flex">
+                        <video id="1" width="75%" height="100%" controls autoplay>
+                            <source src="{{ route('recordings.play', ['space' => $recordingInPlayback->cmsCoSpace->space_id, 'file' => $recordingInPlayback->urlSafeFilename]) }}"
+                                    type="video/mp4"
+                            >
+                            Sorry, your browser doesn't support embedded videos.
+                        </video>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="col-md-12 justify-content-center d-flex">
+                        <button wire:click="stopPlayback" class="btn btn-danger btn-fab btn-round">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <hr class="my-5">
