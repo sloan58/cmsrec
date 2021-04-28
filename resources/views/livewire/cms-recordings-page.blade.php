@@ -32,7 +32,7 @@
     @else
     <div class="row justify-content-center mb-3">
         <div class="col-md-6 col-sm-12">
-            <input wire:model.debounce.500ms="term" class="form-control text-center" type="search" placeholder="Search By Recording, Space Name {{ !auth()->user()->isAdmin() ?: 'or Owner'}}" value="{{ $term }}" aria-label="Search">
+            <input wire:model.debounce.500ms="term" class="form-control text-center" type="search" placeholder="Search By {{ auth()->user()->isAdmin() ? 'Owner or ' : ''}}Recording or Space Name" value="{{ $term }}" aria-label="Search">
         </div>
     </div>
     <div class="row justify-content-center mt-4">
