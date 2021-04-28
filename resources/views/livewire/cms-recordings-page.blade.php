@@ -14,7 +14,7 @@
         </div>
         <div class="col-md-12 justify-content-center d-flex">
             <button wire:click="stopPlayback" class="btn btn-danger btn-fab btn-round">
-                Stop Playback
+                Close
             </button>
         </div>
     </div>
