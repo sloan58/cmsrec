@@ -19,7 +19,7 @@
         </div>
     </div>
     <hr class="my-5">
-    @endif
+    @else
     <div class="row justify-content-center mb-3">
         <div class="col-md-6 col-sm-12">
             <input wire:model.debounce.500ms="term" class="form-control text-center" type="search" placeholder="Search By {{ $searchBy }}" value="{{ $term }}" aria-label="Search">
@@ -39,6 +39,7 @@
             </div>
         </div>
     </div>
+    @endif
     <div class="col-10 offset-1">
         <div class="row justify-content-between">
             <div class="d-flex">
