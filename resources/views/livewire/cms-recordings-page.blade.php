@@ -18,9 +18,26 @@
             </div>
         </div>
     </div>
-    <div class="row justify-content-left">
-        <div class='col-sm-12 col-md-10 offset-md-1 text-center'>
-            {{ $cmsRecordings->links('vendor.pagination.bootstrap-4') }}
+    <div class="col-10 offset-1">
+        <div class="row justify-content-between">
+            <div class="d-flex">
+                <div class="mr-2">
+                    {{ $cmsRecordings->links('vendor.pagination.bootstrap-4') }}
+                </div>
+                <div class="mt-1">
+                    Showing {{ $cmsRecordings->firstItem() }} to {{ $cmsRecordings->lastItem() }} of total {{$cmsRecordings->total()}} entries
+                </div>
+            </div>
+            <div class="dropdown">
+                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ $paginate }}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#" wire:click="$set('paginate', '10')">10</a>
+                    <a class="dropdown-item" href="#" wire:click="$set('paginate', '25')">25</a>
+                    <a class="dropdown-item" href="#" wire:click="$set('paginate', '50')">50</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row justify-content-left">

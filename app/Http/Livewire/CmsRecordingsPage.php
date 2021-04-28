@@ -8,6 +8,7 @@ use App\Models\CmsRecording;
 class CmsRecordingsPage extends Component
 {
     public $term = '';
+    public $paginate = 10;
     public $searchBy = 'Recording Name';
 
     public function render()
@@ -37,7 +38,7 @@ class CmsRecordingsPage extends Component
             });
         }
 
-        $cmsRecordings = $cmsRecordings->orderBy('created_at', 'desc')->paginate(10);
+        $cmsRecordings = $cmsRecordings->orderBy('created_at', 'desc')->paginate($this->paginate);
 
         return view('livewire.cms-recordings-page', [
             'cmsRecordings' => $cmsRecordings
