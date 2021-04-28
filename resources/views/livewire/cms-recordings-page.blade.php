@@ -19,13 +19,16 @@
         </div>
     </div>
     <div class="row justify-content-left">
-        <div class="col-md-12 text-center">
-            <div class='col-sm-12 col-md-10 col-lg-12 justify-content-between'>
-                <div class='row row-cols-1 row-cols-md-4 justify-content-center'>
-                    @foreach($cmsRecordings as $recording)
-                        <livewire:cms-recording-card key="{{ now() }}" :recording="$recording"/>
-                    @endforeach
-                </div>
+        <div class='col-sm-12 col-md-10 offset-md-1 text-center'>
+            {{ $cmsRecordings->links('vendor.pagination.bootstrap-4') }}
+        </div>
+    </div>
+    <div class="row justify-content-left">
+        <div class='col-sm-12 col-md-10 offset-md-1 text-center'>
+            <div class='row row-cols-1 row-cols-md-4'>
+                @foreach($cmsRecordings as $recording)
+                    <livewire:cms-recording-card key="{{ now() }}" :recording="$recording"/>
+                @endforeach
             </div>
         </div>
     </div>

@@ -37,9 +37,7 @@ class CmsRecordingsPage extends Component
             });
         }
 
-        $cmsRecordings = $cmsRecordings->get()->sortBy(function ($recording) {
-            return $recording->cmsCoSpace->name;
-        });
+        $cmsRecordings = $cmsRecordings->orderBy('created_at', 'desc')->paginate(5);
 
         return view('livewire.cms-recordings-page', [
             'cmsRecordings' => $cmsRecordings

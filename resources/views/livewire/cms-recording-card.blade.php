@@ -6,32 +6,34 @@
             >
             Sorry, your browser doesn't support embedded videos.
         </video>
-        <div class="card-body mb-0 pb-0">
+        <div class="card-body d-flex flex-column">
             @if($editing)
-                <div class="d-flex mb-2">
-                    <input wire:model="newRecordingName" @if(!$newRecordingNameHasErrors) wire:keydown.enter="saveNewRecordingName" @endif type="text" name="name" class="form-control {{ !$newRecordingNameHasErrors ?: 'is-invalid' }}" value="{{ $recording->filename }}">
-                    @if(!$newRecordingNameHasErrors)
-                        <i wire:click="saveNewRecordingName" class="fa fa-check text-success ml-1 mt-2" style="cursor: pointer;"></i>
-                    @else
-                        <i wire:click="cancelNewRecordingName" class="fa fa-times text-danger ml-1 mt-2" style="cursor: pointer;"></i>
-                    @endif
-                </div>
+            <div class="d-flex mb-2">
+                <input wire:model="newRecordingName" @if(!$newRecordingNameHasErrors) wire:keydown.enter="saveNewRecordingName" @endif type="text" name="name" class="form-control {{ !$newRecordingNameHasErrors ?: 'is-invalid' }}" value="{{ $recording->filename }}">
+                @if(!$newRecordingNameHasErrors)
+                    <i wire:click="saveNewRecordingName" class="fa fa-check text-success ml-1 mt-2" style="cursor: pointer;"></i>
+                @else
+                    <i wire:click="cancelNewRecordingName" class="fa fa-times text-danger ml-1 mt-2" style="cursor: pointer;"></i>
+                @endif
+            </div>
             @else
-                <h5 class="card-title text-center">{{ $recording->filename }}
-                    <i wire:click="loadRecordingNames" class="fa fa-pencil text-info ml-1" style="cursor: pointer;"></i>
-                </h5>
+            <h5 class="card-title text-center">{{ $recording->filename }}
+                <i wire:click="loadRecordingNames" class="fa fa-pencil text-info ml-1" style="cursor: pointer;"></i>
+            </h5>
             @endif
             @if($newRecordingNameHasErrors)
-                <span class="invalid-feedback text-center mb-2" style="display: block;" role="alert">
-                    <strong>{{ $newRecordingNameError }}</strong>
-                </span>
+            <span class="invalid-feedback text-center mb-2" style="display: block;" role="alert">
+                <strong>{{ $newRecordingNameError }}</strong>
+            </span>
             @endif
             <p class="card-text text-center">in <b>{{ $recording->cmsCoSpace->name }}</b></p>
-            <footer class="blockquote-footer text-left mt-3"><b>Created:</b> {{ $recording->last_modified->toDayDateTimeString() }}</footer>
-            <footer class="blockquote-footer text-left"><b>Size:</b> {{ $recording->friendlySize }}</footer>
-            <footer class="blockquote-footer text-left"><b>Owner:</b> {{ $recording->owner->name }}</footer>
+            <div class="mt-auto">
+                <footer class="blockquote-footer text-left mt-3"><b>Created:</b> {{ $recording->last_modified->toDayDateTimeString() }}</footer>
+                <footer class="blockquote-footer text-left"><b>Size:</b> {{ $recording->friendlySize }}</footer>
+                <footer class="blockquote-footer text-left"><b>Owner:</b> {{ $recording->owner->name }}</footer>
+            </div>
         </div>
-        <hr class="mt-0">
+        <hr>
         <div class="card-footer text-left d-flex justify-content-between px-2">
             <button wire:loading.remove wire:click="downloadRecording('{{ $recording->urlSafeFilename }}')" class="btn btn-primary btn-round">
                 <i class="fa fa-download"></i> Download
