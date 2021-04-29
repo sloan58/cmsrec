@@ -35,7 +35,7 @@
                 </div>
                 <div class="d-flex">
                     <div class="dropdown">
-                        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-info dropdown-toggle mt-0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Show: {{ $paginate }}
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
