@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\CmsRecordingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +12,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// node.js filesystem API endpoints
+Route::group(['middleware' => ['comesFromLocalhost']], function () {
+    Route::prefix('fs')->group(function () {
+        Route::post('added', [App\Http\Controllers\CmsRecordingController::class, 'store']);
+    });
+});
 
 // Authentication Routes
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
@@ -48,8 +54,4 @@ Route::group(['middleware' => ['auth', 'hasCoSpacesOrIsAdmin']], function () {
     Route::get('settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
     Route::put('ldap-settings', [App\Http\Controllers\SettingController::class, 'updateLdapSettings'])->name('ldap.settings.update');
 });
-
-//Route::group(['middleware' => 'auth'], function () {
-//	Route::get('{page}', ['as' => 'page.index', 'uses' => 'App\Http\Controllers\PageController@index']);
-//});
 

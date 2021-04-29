@@ -64,5 +64,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'hasCoSpacesOrIsAdmin' => \App\Http\Middleware\HasCoSpacesOrIsAdmin::class,
         'canAccessRecording' => \App\Http\Middleware\CanAccessRecording::class,
+        'comesFromLocalhost' => \App\Http\Middleware\ComesFromLocalhost::class,
     ];
 }

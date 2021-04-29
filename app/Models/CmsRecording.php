@@ -19,6 +19,9 @@ class CmsRecording extends Model
     protected $fillable = [
         'filename',
         'shared',
+        'size',
+        'shared',
+        'last_modified',
         'cms_co_space_id',
         'user_id'
     ];

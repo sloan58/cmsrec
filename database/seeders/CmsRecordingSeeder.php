@@ -55,17 +55,9 @@ class CmsRecordingSeeder extends Seeder
                 $videoDownload = file_get_contents($demoVideos[$i]);
                 $disk->put($storeTo, $videoDownload);
 
-                $size = $disk->size($storeTo);
-                $last_modified = $disk->lastModified($storeTo);
-
-                CmsRecording::create([
-                    'filename' => basename($demoVideos[$i]),
-                    'size' => $size,
-                    'last_modified' => $last_modified,
-                    'cms_co_space_id' => $space->id,
-                    'shared' => false,
-                    'user_id' => $space->owner->id
-                ]);
+                // node.js file watcher notifies over API
+                // to persist CmsRecordings to the DB
+                // ./node-fs-watcher.js
             }
         });
     }
