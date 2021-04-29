@@ -44,7 +44,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'ui_state' => 'array'
+        'ui_state' => 'json'
     ];
 
     /**
@@ -94,6 +94,7 @@ class User extends Authenticatable
      */
     public function updateUiState($key, $val)
     {
+        $stateStructure = explode('.', $key);
         $newUiState = array_replace(auth()->user()->ui_state ?? [], [$key => $val]);
 
         auth()->user()->update([

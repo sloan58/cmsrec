@@ -27,9 +27,9 @@ class CmsRecordingsPage extends Component
      */
     public function mount()
     {
-        $this->showAll = auth()->user()->ui_state['showAllRecordings'] ?? $this->showAll;
-        $this->term = auth()->user()->ui_state['recordingsSearchTerm'] ?? $this->term;
-        $this->paginate = auth()->user()->ui_state['recordingsPaginate'] ?? $this->paginate;
+        $this->showAll = auth()->user()->ui_state['recordings->showAll'] ?? $this->showAll;
+        $this->term = auth()->user()->ui_state['recordings->term'] ?? $this->term;
+        $this->paginate = auth()->user()->ui_state['recordings->paginate'] ?? $this->paginate;
     }
 
     /**
@@ -37,7 +37,7 @@ class CmsRecordingsPage extends Component
      */
     public function updatedTerm()
     {
-        auth()->user()->updateUiState('recordingsSearchTerm', $this->term);
+        auth()->user()->updateUiState('recordings->term', $this->term);
     }
 
     /**
@@ -45,7 +45,7 @@ class CmsRecordingsPage extends Component
      */
     public function updatedShowAll()
     {
-        auth()->user()->updateUiState('showAllRecordings', $this->showAll);
+        auth()->user()->updateUiState('recordings->showAll', $this->showAll);
     }
 
     /**
@@ -53,7 +53,7 @@ class CmsRecordingsPage extends Component
      */
     public function updatedPaginate()
     {
-        auth()->user()->updateUiState('recordingsPaginate', $this->paginate);
+        auth()->user()->updateUiState('recordings->paginate', $this->paginate);
     }
 
     /**
