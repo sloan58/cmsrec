@@ -23,7 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'cms_owner_id'
+        'cms_owner_id',
+        'ui_state'
     ];
 
     /**
@@ -43,6 +44,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'ui_state' => 'array'
     ];
 
     /**
@@ -82,5 +84,20 @@ class User extends Authenticatable
             auth()->user()->email,
             env('ADMIN_USERS') ? explode(',', env('ADMIN_USERS')) : [])
             ;
+    }
+
+    /**
+     * Update the User's UI state data
+     *
+     * @param $key
+     * @param $val
+     */
+    public function updateUiState($key, $val)
+    {
+        $newUiState = array_replace(auth()->user()->ui_state, [$key => $val]);
+
+        auth()->user()->update([
+            'ui_state' => $newUiState
+        ]);
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\CmsRecording;
 use Livewire\WithPagination;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class CmsRecordingsPage extends Component
 {
@@ -20,6 +22,39 @@ class CmsRecordingsPage extends Component
     public $recordingShouldPlay = false;
     public $recordingInPlayback = null;
 
+    /**
+     * Set initial component values
+     */
+    public function mount()
+    {
+        $this->showAll = auth()->user()->ui_state['showAllRecordings'] ?? $this->showAll;
+        $this->term = auth()->user()->ui_state['recordingsSearchTerm'] ?? $this->term;
+        $this->paginate = auth()->user()->ui_state['recordingsPaginate'] ?? $this->paginate;
+    }
+
+    /**
+     * The $term property has updated
+     */
+    public function updatedTerm()
+    {
+        auth()->user()->updateUiState('recordingsSearchTerm', $this->term);
+    }
+
+    /**
+     * The $showAll property has updated
+     */
+    public function updatedShowAll()
+    {
+        auth()->user()->updateUiState('showAllRecordings', $this->showAll);
+    }
+
+    /**
+     * The $paginate property has updated
+     */
+    public function updatedPaginate()
+    {
+        auth()->user()->updateUiState('recordingsPaginate', $this->paginate);
+    }
 
     /**
      * Start playing the recording in the UI
@@ -43,6 +78,20 @@ class CmsRecordingsPage extends Component
 
     public function render()
     {
+        $results = $this->buildCmsRecordingsSearchHits();
+
+        return view('livewire.cms-recordings-page', [
+            'cmsRecordings' => $results
+        ]);
+    }
+
+    /**
+     * Build the CmsRecordings search results
+     *
+     * @return LengthAwarePaginator|Builder|mixed
+     */
+    private function buildCmsRecordingsSearchHits()
+    {
         $cmsRecordings = CmsRecording::with(['cmsCoSpace', 'owner'])->when($this->term, function ($query) {
             $query->where('filename', 'like', '%' . $this->term . '%');
             $query->orWhereHas('cmsCoSpace', function($query) {
@@ -63,8 +112,6 @@ class CmsRecordingsPage extends Component
 
         $cmsRecordings = $cmsRecordings->orderBy('created_at', 'desc')->paginate($this->paginate);
 
-        return view('livewire.cms-recordings-page', [
-            'cmsRecordings' => $cmsRecordings
-        ]);
+        return $cmsRecordings;
     }
 }
