@@ -4,7 +4,7 @@
 ])
 
 @section('content')
-    <div class="content">
+    <div class="content pt-sm-1">
         <div class="container">
             <div class="col-lg-4 col-md-6 ml-auto mr-auto">
                 <form class="form" method="POST" action="{{ route('login') }}">
