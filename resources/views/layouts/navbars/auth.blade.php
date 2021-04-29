@@ -1,4 +1,4 @@
-<div class="sidebar" data-color="white" data-active-color="danger">
+<div class="sidebar" data-color="black" data-active-color="warning">
     <div class="logo">
         <a href="/" class="simple-text logo-mini">
             <div class="logo-image-small">
