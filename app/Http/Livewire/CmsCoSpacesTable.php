@@ -2,12 +2,33 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\CmsCoSpace;
 use Livewire\Component;
+use App\Models\CmsCoSpace;
+use Livewire\WithPagination;
 
 class CmsCoSpacesTable extends Component
 {
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+
     public $term = '';
+
+    /**
+     * Set initial component values
+     */
+    public function mount()
+    {
+        $this->term = auth()->user()->ui_state['spaces->term'] ?? $this->term;
+    }
+
+    /**
+     * The $term property has updated
+     */
+    public function updatedTerm()
+    {
+        auth()->user()->updateUiState('spaces->term', $this->term);
+    }
 
     public function render()
     {
