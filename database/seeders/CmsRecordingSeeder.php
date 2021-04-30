@@ -57,7 +57,20 @@ class CmsRecordingSeeder extends Seeder
 
                 // node.js file watcher notifies over API
                 // to persist CmsRecordings to the DB
+                // Need SSL in production
                 // ./node-fs-watcher.js
+
+                $size = $disk->size($storeTo);
+                $last_modified = $disk->lastModified($storeTo);
+
+                CmsRecording::create([
+                    'filename' => basename($demoVideos[$i]),
+                    'size' => $size,
+                    'last_modified' => $last_modified,
+                    'cms_co_space_id' => $space->id,
+                    'shared' => false,
+                    'user_id' => $space->owner->id
+                ]);
             }
         });
     }
