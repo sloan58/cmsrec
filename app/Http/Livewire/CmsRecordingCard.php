@@ -102,11 +102,20 @@ class CmsRecordingCard extends Component
      */
     public function downloadRecording($recording)
     {
-        // TODO: Configure proper PHP memory limits!
+        // Prepare system for large downloads
+        ini_set('max_execution_time', '300');
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+
         $downloadUrl = "{$this->recording->cmsCoSpace->space_id}/{$recording}";
+        $path = \Storage::disk('recordings')->path($downloadUrl);
         $this->recording->increment('downloads');
         $this->emit('downloaded');
-        return \Storage::disk('recordings')->download($downloadUrl);
+
+        return response()->streamDownload(function() use ($path) {
+            return readfile($path);
+        }, $this->recording->filename);
     }
 
     /**
