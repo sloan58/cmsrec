@@ -114,7 +114,11 @@ class CmsRecordingCard extends Component
         $this->emit('downloaded');
 
         return response()->streamDownload(function() use ($path) {
-            return readfile($path);
+            $myInputStream = fopen($path, 'rb');
+            $myOutputStream = fopen('php://output', 'wb');
+            stream_copy_to_stream($myInputStream, $myOutputStream);
+            fclose($myOutputStream);
+            fclose($myInputStream);
         }, $this->recording->filename);
     }
 
