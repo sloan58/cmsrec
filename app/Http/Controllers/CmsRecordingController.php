@@ -103,9 +103,8 @@ class CmsRecordingController extends Controller
      *
      * @param CmsRecording $cmsRecording
      */
-    public function play(CmsRecording $cmsRecording)
+    public function play(CmsRecording $cmsRecording, $timeStamp)
     {
-        info('here');
         try {
             $cmsRecording->increment('views');
             return VideoStreamer::streamFile(Storage::disk('recordings')->path($cmsRecording->urlSafeFullPath));
@@ -126,8 +125,7 @@ class CmsRecordingController extends Controller
     public function shared(CmsRecording $cmsRecording)
     {
         if (request()->hasValidSignature() && $cmsRecording->shared) {
-            $cmsRecording->increment('views');
-            return VideoStreamer::streamFile(Storage::disk('recordings')->path($cmsRecording->urlSafeFullPath));
+            return view('recordings.shared', compact('cmsRecording'));
         } else {
             abort(401);
         }

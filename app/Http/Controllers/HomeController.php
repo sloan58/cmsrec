@@ -43,6 +43,8 @@ class HomeController extends Controller
 
             $sharedRecordings = CmsRecording::whereShared(true)->count();
 
+            $views = CmsRecording::whereShared(true)->sum('views');
+
             return view('pages.dashboard', compact(
                 'diskSize',
                 'diskUsage',
@@ -51,7 +53,8 @@ class HomeController extends Controller
                 'averageRecordingSize',
                 'largestRecordingSize',
                 'smallestRecordingSize',
-                'sharedRecordings'
+                'sharedRecordings',
+                'views'
             ));
 
         } else {

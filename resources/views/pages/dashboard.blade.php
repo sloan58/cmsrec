@@ -108,7 +108,7 @@
                     <div class="card-footer ">
                         <hr>
                         <div class="stats">
-                            <i class="fa fa-refresh"></i> Updated now
+                            <i class="fa fa-television"></i> {{ $views }} total viewers
                         </div>
                     </div>
                 </div>
