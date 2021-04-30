@@ -105,7 +105,7 @@ class CmsRecordingCard extends Component
         // Prepare system for large downloads
         ini_set('max_execution_time', '300');
         if (ob_get_level()) {
-            ob_end_clean();
+            ob_end_flush();
         }
 
         $downloadUrl = "{$this->recording->cmsCoSpace->space_id}/{$recording}";
