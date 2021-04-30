@@ -18,6 +18,8 @@ class CreateCmsRecordingsTable extends Migration
             $table->string('filename');
             $table->integer('size');
             $table->dateTime('last_modified');
+            $table->integer('views')->default(0);
+            $table->integer('downloads')->default(0);
             $table->boolean('shared')->default(false);
             $table->unsignedBigInteger('cms_co_space_id')->index();
             $table->foreign('cms_co_space_id')
@@ -30,6 +32,7 @@ class CreateCmsRecordingsTable extends Migration
                 ->on('users')
                 ->onDelete('cascade');
             $table->timestamps();
+            $table->unique(['filename', 'cms_co_space_id']);
         });
     }
 

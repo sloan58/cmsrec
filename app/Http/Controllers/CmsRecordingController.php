@@ -94,20 +94,21 @@ class CmsRecordingController extends Controller
                 }
             }
         }
-        info('CmsRecordingController@store: Request Complete.  Returning 200OK');
+        info('CmsRecordingController@store: Request Complete.  Returning 200 OK');
         return response()->json('ACK', 200);
     }
 
     /**
      * Stream the video recording to the UI
      *
-     * @throws Exception
+     * @param CmsRecording $cmsRecording
      */
-    public function play()
+    public function play(CmsRecording $cmsRecording)
     {
+        info('here');
         try {
-            $streamUrl = request()->get('space') . '/' . request()->get('file');
-            return VideoStreamer::streamFile(Storage::disk('recordings')->path($streamUrl));
+            $cmsRecording->increment('views');
+            return VideoStreamer::streamFile(Storage::disk('recordings')->path($cmsRecording->urlSafeFullPath));
         } catch (Exception $e) {
             logger()->error('Could not play recording', [
                 'errorMessage' => $e->getMessage()
@@ -125,6 +126,7 @@ class CmsRecordingController extends Controller
     public function shared(CmsRecording $cmsRecording)
     {
         if (request()->hasValidSignature() && $cmsRecording->shared) {
+            $cmsRecording->increment('views');
             return VideoStreamer::streamFile(Storage::disk('recordings')->path($cmsRecording->urlSafeFullPath));
         } else {
             abort(401);

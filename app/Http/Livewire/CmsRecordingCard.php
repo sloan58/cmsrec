@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CmsRecordingCard extends Component
 {
+    protected $listeners = ['downloaded' => '$refresh'];
+
     public CmsRecording $recording;
     public $recordingInPlayback;
     public $editing = false;
@@ -102,6 +104,8 @@ class CmsRecordingCard extends Component
     {
         // TODO: Configure proper PHP memory limits!
         $downloadUrl = "{$this->recording->cmsCoSpace->space_id}/{$recording}";
+        $this->recording->increment('downloads');
+        $this->emit('downloaded');
         return \Storage::disk('recordings')->download($downloadUrl);
     }
 
