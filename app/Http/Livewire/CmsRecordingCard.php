@@ -103,6 +103,8 @@ class CmsRecordingCard extends Component
     public function downloadRecording($recording)
     {
         // Prepare system for large downloads
+        // nginx needs to be updated as well: fastcgi_read_timeout 300;
+        ini_set('memory_limit', '1G');
         ini_set('max_execution_time', '300');
         if (ob_get_level()) {
             ob_end_flush();
