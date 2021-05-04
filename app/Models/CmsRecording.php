@@ -79,6 +79,17 @@ class CmsRecording extends Model
     {
         return bytesToHuman($this->size);
     }
+
+    /**
+     * Get the CMS NFS relative path (space ID + filename)
+     *
+     * @return string
+     */
+    public function getRelativeStoragePathAttribute()
+    {
+        return $this->cmsCoSpace->space_id. '/' . $this->filename;
+    }
+
     /**
      * Format filename for URL's
      *

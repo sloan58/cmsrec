@@ -34,7 +34,7 @@ class HomeController extends Controller
             $diskUsage = bytesToHuman($diskSizeInBytes - $diskAvailableInBytes);
 
             $recordingCount = CmsRecording::count();
-            
+
             if($recordingCount) {
                 $lastRecordingIn = CmsRecording::orderBy('created_at', 'desc')->first()->created_at->diffForHumans();
                 $largestRecordingSize = bytesToHuman(CmsRecording::orderBy('size', 'desc')->first()->size);

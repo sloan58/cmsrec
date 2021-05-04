@@ -107,7 +107,7 @@ class CmsRecordingController extends Controller
     {
         try {
             $cmsRecording->increment('views');
-            return VideoStreamer::streamFile(Storage::disk('recordings')->path($cmsRecording->urlSafeFullPath));
+            return VideoStreamer::streamFile(Storage::disk('recordings')->path($cmsRecording->relativeStoragePath));
         } catch (Exception $e) {
             logger()->error('Could not play recording', [
                 'errorMessage' => $e->getMessage()
