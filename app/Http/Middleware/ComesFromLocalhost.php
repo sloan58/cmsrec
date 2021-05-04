@@ -19,6 +19,9 @@ class ComesFromLocalhost
         if(request()->ip() === '127.0.0.1') {
             return $next($request);
         }
+        logger()->error('Received node-fs-watcher request from outside 127.0.0.1', [
+            'from_address' => request()->ip()
+        ]);
         return abort(401);
     }
 }
