@@ -41,7 +41,7 @@
             </ul>
             <hr>
             <div class="d-flex justify-content-between">
-                <button wire:loading.remove wire:click="downloadRecording('{{ $recording->urlSafeFilename }}')" class="btn btn-info btn-round">
+                <button wire:loading.remove wire:click="downloadRecording('{{ $recording->relativeStoragePath }}')" class="btn btn-info btn-round">
                     <i class="fa fa-download"></i> Download
                 </button>
                 <button wire:loading wire:target="downloadRecording" class="btn btn-info btn-round" type="button" disabled>
