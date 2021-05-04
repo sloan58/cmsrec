@@ -1,0 +1,5 @@
+- Bulk delete recordings for admins
+- Video edit (trim start/finish) (optional) https://github.com/protonemedia/laravel-ffmpeg
+- Purge videos after 30 days
+- Notify users of the purge
+- Email notification on new recordings
