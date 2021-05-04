@@ -34,15 +34,18 @@ class HomeController extends Controller
             $diskUsage = bytesToHuman($diskSizeInBytes - $diskAvailableInBytes);
 
             $recordingCount = CmsRecording::count();
-            $lastRecordingIn = CmsRecording::orderBy('created_at', 'desc')->first()->created_at->diffForHumans();
-
+            
+            if($recordingCount) {
+                $lastRecordingIn = CmsRecording::orderBy('created_at', 'desc')->first()->created_at->diffForHumans();
+                $largestRecordingSize = bytesToHuman(CmsRecording::orderBy('size', 'desc')->first()->size);
+                $smallestRecordingSize = bytesToHuman(CmsRecording::orderBy('size', 'asc')->first()->size);
+            } else {
+                $lastRecordingIn = 'Never';
+                $largestRecordingSize = '0 bytes';
+                $smallestRecordingSize = '0 bytes';
+            }
             $averageRecordingSize = bytesToHuman(CmsRecording::sum('size') / $recordingCount);
-
-            $largestRecordingSize = bytesToHuman(CmsRecording::orderBy('size', 'desc')->first()->size);
-            $smallestRecordingSize = bytesToHuman(CmsRecording::orderBy('size', 'asc')->first()->size);
-
             $sharedRecordings = CmsRecording::whereShared(true)->count();
-
             $views = CmsRecording::whereShared(true)->sum('views');
 
             return view('pages.dashboard', compact(
