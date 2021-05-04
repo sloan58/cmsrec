@@ -13,7 +13,7 @@ class SyncCmsSpacesAndUsers extends Command
      *
      * @var string
      */
-    protected $signature = 'cmsrec:sync-cms';
+    protected $signature = 'cmsrec:sync';
 
     /**
      * The console command description.

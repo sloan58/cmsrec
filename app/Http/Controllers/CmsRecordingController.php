@@ -60,7 +60,7 @@ class CmsRecordingController extends Controller
                 if(in_array($fileExtension, ['mp4'])) {
                     info('CmsRecordingController@store: The file is an mp4 file');
 
-                    if(!$cmsCoSpace->cmsRecordings()->where('filename', $recordingName)->first()) {
+                    if(!$cmsCoSpace->cmsRecordings()->where('filename', $recordingName)->exists()) {
                         info('CmsRecordingController@store: The CmsCoSpace does not currently know about this recording');
 
                         $disk = Storage::disk('recordings');
