@@ -110,8 +110,7 @@ class CmsRecordingCard extends Component
             ob_end_flush();
         }
 
-        $downloadUrl = "{$this->recording->cmsCoSpace->space_id}/{$recording}";
-        $path = \Storage::disk('recordings')->path($downloadUrl);
+        $path = \Storage::disk('recordings')->path($recording);
         $this->recording->increment('downloads');
         $this->emit('downloaded');
 
