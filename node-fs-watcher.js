@@ -1,36 +1,27 @@
 const chokidar = require('chokidar');
 const https = require('https');
+const axios = require('axios');
 
 const watcher = chokidar.watch('./storage/app/recordings', {
     awaitWriteFinish: true
 });
 
+const cmsRecApi = axios.create({
+    baseURL: 'https://cmsrec.test',
+    httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+    })
+});
+
 const recordingAdded = (path) => {
     const data = JSON.stringify({ path });
-
-    const options = {
-        hostname: 'cmsrec.test',
-        port: 443,
-        path: '/fs/added',
-        rejectUnauthorized: false,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': data.length
-        }
-    };
-
-    const req = https.request(options, res => {
-        console.log(`statusCode: ${res.statusCode}`);
-        res.on('data', d => {
-            console.log(`data: ${d}`);
+    cmsRecApi.post('/fs/added', data)
+        .then(function (response) {
+            console.log(`${response.status}: ${response.data}`);
         })
-    });
-    req.on('error', error => {
-        console.error(error)
-    });
-    req.write(data);
-    req.end()
+        .catch(function (error) {
+            console.log(error);
+        });
 };
 
 const recordingDeleted = (path) => {
