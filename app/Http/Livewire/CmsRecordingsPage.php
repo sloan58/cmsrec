@@ -14,7 +14,10 @@ class CmsRecordingsPage extends Component
 
     protected $paginationTheme = 'bootstrap';
 
-    protected $listeners = ['startPlayback' => 'startPlayback'];
+    protected $listeners = [
+        'startPlayback' => 'startPlayback',
+        'recordingDeleted' => '$refresh'
+    ];
 
     public $term = '';
     public $paginate = 10;

@@ -18,6 +18,7 @@ class CmsRecordingCard extends Component
     public $newRecordingName;
     public $newRecordingNameError = '';
     public $newRecordingNameHasErrors = false;
+    public $promptForDelete = false;
 
     /**
      * Set the current filename being edited
@@ -97,10 +98,9 @@ class CmsRecordingCard extends Component
     /**
      * Download the recording
      *
-     * @param $recording
      * @return StreamedResponse
      */
-    public function downloadRecording($recording)
+    public function downloadRecording()
     {
         // Prepare system for large downloads
         // nginx needs to be updated as well: fastcgi_read_timeout 300;
@@ -110,7 +110,7 @@ class CmsRecordingCard extends Component
             ob_end_flush();
         }
 
-        $path = \Storage::disk('recordings')->path($recording);
+        $path = \Storage::disk('recordings')->path($this->recording->relativeStoragePath);
         $this->recording->increment('downloads');
         $this->emit('downloaded');
 
@@ -121,6 +121,21 @@ class CmsRecordingCard extends Component
             fclose($myOutputStream);
             fclose($myInputStream);
         }, $this->recording->filename);
+    }
+
+    /**
+     * Delete the CmsRecording
+     */
+    public function deleteRecording()
+    {
+        try {
+            $this->recording->delete();
+            $this->emit('recordingDeleted');
+        } catch(\Exception $e) {
+            logger()->error('Error deleting recording', [
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 
     /**

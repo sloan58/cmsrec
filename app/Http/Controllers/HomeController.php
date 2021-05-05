@@ -39,12 +39,14 @@ class HomeController extends Controller
                 $lastRecordingIn = CmsRecording::orderBy('created_at', 'desc')->first()->created_at->diffForHumans();
                 $largestRecordingSize = bytesToHuman(CmsRecording::orderBy('size', 'desc')->first()->size);
                 $smallestRecordingSize = bytesToHuman(CmsRecording::orderBy('size', 'asc')->first()->size);
+                $averageRecordingSize = bytesToHuman(CmsRecording::sum('size') / $recordingCount);
             } else {
                 $lastRecordingIn = 'Never';
                 $largestRecordingSize = '0 bytes';
                 $smallestRecordingSize = '0 bytes';
+                $averageRecordingSize = '0 bytes';
             }
-            $averageRecordingSize = bytesToHuman(CmsRecording::sum('size') / $recordingCount);
+
             $sharedRecordings = CmsRecording::whereShared(true)->count();
             $views = CmsRecording::whereShared(true)->sum('views');
 
