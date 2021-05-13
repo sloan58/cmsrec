@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Settings\NfsSettings;
 use App\Settings\LdapSettings;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Symfony\Component\Process\Process;
+use App\Http\Requests\NfsSettingRequest;
 use App\Http\Requests\LdapSettingRequest;
 
 class SettingController extends Controller
@@ -14,7 +17,7 @@ class SettingController extends Controller
      */
     public function index()
     {
-        return view('settings');
+        return view('settings.index');
     }
 
     /**
@@ -38,5 +41,58 @@ class SettingController extends Controller
         $settings->save();
         flash()->success('LDAP Settings Updated!');
         return back();
+    }
+
+    /**
+     * @param NfsSettingRequest $request
+     * @param NfsSettings $settings
+     * @return RedirectResponse
+     */
+    public function updateNfsSettings(NfsSettingRequest $request, NfsSettings $settings)
+    {
+        $settings->host = $request->get('host');
+        $settings->path = $request->get('path');
+
+        $settings->save();
+
+        $command = sprintf(
+            '/sbin/mount -t nfs %s:%s %s',
+            $settings->host,
+            $settings->path,
+            \Storage::disk('recordings')->path('')
+        );
+
+        if(!$this->mountExists()) {
+            $process = Process::fromShellCommandline($command);
+
+            try {
+                $process->mustRun();
+            } catch (\Exception $e) {
+                echo $e->getMessage();
+                flash()->success('Error updating NFS Settings: ' . $e->getMessage());
+                return back();
+            }
+        }
+
+        flash()->success('NFS Settings Updated!');
+        return back();
+    }
+
+    private function mountExists()
+    {
+
+        $command = sprintf(
+            'df -h | grep %s',
+            app(NfsSettings::class)->host,
+        );
+
+        $process = Process::fromShellCommandline($command);
+
+        try {
+            $process->mustRun();
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

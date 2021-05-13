@@ -7,7 +7,8 @@ return [
      * put them (manually) here.
      */
     'settings' => [
-        LdapSettings::class
+        LdapSettings::class,
+        NfsStorageSettings::class
     ],
 
     /*

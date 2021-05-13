@@ -53,5 +53,6 @@ Route::group(['middleware' => ['auth', 'hasCoSpacesOrIsAdmin']], function () {
     // Settings Routes
     Route::get('settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
     Route::put('ldap-settings', [App\Http\Controllers\SettingController::class, 'updateLdapSettings'])->name('ldap.settings.update');
+    Route::put('nfs-settings', [App\Http\Controllers\SettingController::class, 'updateNfsSettings'])->name('nfs.settings.update');
 });
 
