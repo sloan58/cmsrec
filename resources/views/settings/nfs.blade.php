@@ -34,6 +34,26 @@
                             @endif
                         </div>
                     </div>
+                    <div class="row mt-5">
+                        <div class="col-10 offset-1">
+                            <table class="table table-dark text-success">
+                                <thead>
+                                <tr>
+                                    @foreach(app(\App\Settings\NfsSettings::class)->mnt_view as $stat => $val)
+                                    <th>{{ $stat }}</th>
+                                    @endforeach
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    @foreach(app(\App\Settings\NfsSettings::class)->mnt_view as $stat => $val)
+                                    <th>{{ $val }}</th>
+                                    @endforeach
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer ">
                     <div class="row">

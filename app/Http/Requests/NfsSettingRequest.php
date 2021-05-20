@@ -25,7 +25,7 @@ class NfsSettingRequest extends FormRequest
     {
         return [
             'host' => ['required'],
-            'path' => ['required'],
+            'path' => ['required', 'regex:/^\//'],
         ];
     }
 }

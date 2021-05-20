@@ -55,18 +55,20 @@ class SettingController extends Controller
 
         $settings->save();
 
-        $command = sprintf(
-            '/sbin/mount -t nfs %s:%s %s',
-            $settings->host,
-            $settings->path,
-            \Storage::disk('recordings')->path('')
-        );
+        if(!$this->mountExists($settings)) {
 
-        if(!$this->mountExists()) {
+            $command = sprintf(
+                'sudo /bin/mount -t nfs %s:%s %s',
+                $settings->host,
+                $settings->path,
+                \Storage::disk('recordings')->path('')
+            );
+
             $process = Process::fromShellCommandline($command);
 
             try {
                 $process->mustRun();
+                $this->updateNfsMntView($settings);
             } catch (\Exception $e) {
                 echo $e->getMessage();
                 flash()->success('Error updating NFS Settings: ' . $e->getMessage());
@@ -78,12 +80,18 @@ class SettingController extends Controller
         return back();
     }
 
-    private function mountExists()
+    /**
+     * Check if the NFS mount exists
+     *
+     * @param NfsSettings $settings
+     * @return bool
+     */
+    private function mountExists(NfsSettings $settings)
     {
 
         $command = sprintf(
             'df -h | grep %s',
-            app(NfsSettings::class)->host,
+            $settings->host,
         );
 
         $process = Process::fromShellCommandline($command);
@@ -94,5 +102,50 @@ class SettingController extends Controller
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * Update the NFS Mount View
+     *
+     * @param NfsSettings $settings
+     * @return bool
+     */
+    private function updateNfsMntView(NfsSettings $settings)
+    {
+        $command = sprintf(
+            'df -h | head -1; df -h | grep %s',
+            $settings->host,
+            );
+
+        $process = Process::fromShellCommandline($command);
+
+        try {
+            $process->mustRun();
+            $output = $process->getOutput();
+            $settings->mnt_view = $this->formatDiskOutput($output);
+            $settings->save();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Format the output from the du -h command
+     *
+     * @param $output
+     * @return void
+     */
+    private function formatDiskOutput($output)
+    {
+        $output = array_filter(explode("\n", $output));
+        $keys = array_filter(explode(' ', $output[0]));
+        $on = array_pop($keys);
+        $mounted = array_pop($keys);
+        $mountedOn = "$mounted $on";
+        $keys[] = $mountedOn;
+        $values = array_filter(explode(' ', $output[1]));
+        $mnt_view = array_combine($keys, $values);
+
+        return $mnt_view;
     }
 }
