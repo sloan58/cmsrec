@@ -1,6 +1,6 @@
 <div class="row justify-content-center">
-    <div class="col-md-8 text-center">
-        <form class="col-md-12" action="{{ route('ldap.settings.update') }}" method="POST">
+    <div class="col-12 text-center">
+        <form action="{{ route('ldap.settings.update') }}" method="POST">
             @csrf
             @method('PUT')
             <div class="card">
@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <div class="row">
                         <label class="col-md-3 col-form-label">{{ __('Name') }}</label>
-                        <div class="col-md-9">
+                        <div class="col-9">
                             <div class="form-group">
                                 <input type="text" name="name" class="form-control" value="{{ app(\App\Settings\LdapSettings::class)->name }}" required>
                             </div>

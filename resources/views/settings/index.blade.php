@@ -7,7 +7,7 @@
     <div class="content">
         @include('components.flash-message')
         @include('settings.ldap')
-        @include('settings.nfs')
+        <livewire:nfs-settings />
     </div>
 
 @endsection
