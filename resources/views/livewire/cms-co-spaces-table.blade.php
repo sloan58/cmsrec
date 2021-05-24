@@ -47,6 +47,11 @@
                     </table>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-12 mx-3">
+                    {{ $cmsCoSpaces->links() }}
+                </div>
+            </div>
         </div>
     </div>
 </div>
