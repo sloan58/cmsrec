@@ -21,7 +21,6 @@ class CmsRecording extends Model
         'shared',
         'size',
         'shared',
-        'views',
         'downloads',
         'last_modified',
         'cms_co_space_id',

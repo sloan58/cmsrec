@@ -1,5 +1,5 @@
 <div class="col-auto mb-4">
-    <div class="card shadow" style="height: 375px; width: 281px;">
+    <div class="card shadow" style="height: 350px; width: 281px;">
         @if(!$promptForDelete)
         <div class="row m-0 justify-content-start">
             <button wire:click="$toggle('promptForDelete')" class="btn btn-sm btn-danger btn-fab btn-icon btn-round mb-0 ml-2">
@@ -55,7 +55,6 @@
             @endif
             <p class="card-text text-center">in <span class="font-italic">{{ $recording->cmsCoSpace->name }}</span></p>
             <ul class="text-left list-unstyled mb-0">
-                <li><b>Views:</b> {{ $recording->views }}</li>
                 <li><b>Downloads:</b> {{ $recording->downloads }}</li>
                 <li><b>Owner:</b> {{ $recording->owner->name }}</li>
                 <li><b>Size:</b> {{ $recording->friendlySize }}</li>
