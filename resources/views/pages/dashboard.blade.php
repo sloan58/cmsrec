@@ -118,44 +118,26 @@
             <h5 class="font-weight-bolder text-info ml-3"><u>Demo Charts</u></h5>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                <div class="card ">
-                    <div class="card-header ">
-                        <h5 class="card-title">CMS Space Participants</h5>
-                        <p class="card-category">24 Hours performance</p>
-                    </div>
-                    <div class="card-body ">
-                        <canvas id=chartHours width="400" height="100"></canvas>
-                    </div>
-                    <div class="card-footer ">
-                        <hr>
-                        <div class="stats">
-                            <i class="fa fa-history"></i> Updated 3 minutes ago
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-md-4">
                 <div class="card ">
                     <div class="card-header ">
-                        <h5 class="card-title">Shared Recordings</h5>
-                        <p class="card-category">Viewership Statistics</p>
+                        <h5 class="card-title">Top CoSpaces by Disk Usage</h5>
+                        <p class="card-category">NFS Statistics</p>
                     </div>
                     <div class="card-body ">
                         <canvas id="chartEmail"></canvas>
                     </div>
                     <div class="card-footer ">
                         <div class="legend">
-                            <i class="fa fa-circle text-primary"></i> Watched
-                            <i class="fa fa-circle text-warning"></i> Favorited
-                            <i class="fa fa-circle text-danger"></i> Commented
-                            <i class="fa fa-circle text-gray"></i> Unwatched
+                            @foreach($topCoSpaceStorageUsages as $key => $topCoSpaceStorageUsage)
+                            <i class="fa fa-circle text-{{ $topCoSpaceStorageUsage['style'] }}"></i>
+                                {{ $topCoSpaceStorageUsage['name'] }} ({{ $topCoSpaceStorageUsage['size'] }})
+                            <br>
+                            @endforeach
                         </div>
                         <hr>
                         <div class="stats">
-                            <i class="fa fa-calendar"></i> Updated every 3hrs
+                            <i class="fa fa-calendar"></i> Updated every hour
                         </div>
                     </div>
                 </div>
@@ -182,11 +164,102 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card ">
+                    <div class="card-header ">
+                        <h5 class="card-title">CMS Space Participants</h5>
+                        <p class="card-category">24 Hours performance</p>
+                    </div>
+                    <div class="card-body ">
+                        <canvas id=chartHours width="400" height="100"></canvas>
+                    </div>
+                    <div class="card-footer ">
+                        <hr>
+                        <div class="stats">
+                            <i class="fa fa-history"></i> Updated 3 minutes ago
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
 @push('scripts')
     <script>
+        $(document).ready(function() {
+            function initDocChart() {
+                chartColor = "#FFFFFF";
+
+                ctx = document.getElementById('chartEmail').getContext("2d");
+
+                myChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: [1, 2, 3],
+                        datasets: [{
+                            label: "Emails",
+                            pointRadius: 0,
+                            pointHoverRadius: 0,
+                            backgroundColor: [
+                                {!! implode(',', array_values(array_column($topCoSpaceStorageUsages, 'chartBackgroundColor'))); !!}
+                            ],
+                            borderWidth: 0,
+                            data: [
+                                {!! implode(',', array_values(array_column($topCoSpaceStorageUsages, 'rawSize'))); !!}
+                            ]
+                        }]
+                    },
+
+                    options: {
+
+                        legend: {
+                            display: false
+                        },
+
+                        pieceLabel: {
+                            render: 'percentage',
+                            fontColor: ['white'],
+                            precision: 2
+                        },
+
+                        tooltips: {
+                            enabled: false
+                        },
+
+                        scales: {
+                            yAxes: [{
+
+                                ticks: {
+                                    display: false
+                                },
+                                gridLines: {
+                                    drawBorder: false,
+                                    zeroLineColor: "transparent",
+                                    color: 'rgba(255,255,255,0.05)'
+                                }
+
+                            }],
+
+                            xAxes: [{
+                                barPercentage: 1.6,
+                                gridLines: {
+                                    drawBorder: false,
+                                    color: 'rgba(255,255,255,0.1)',
+                                    zeroLineColor: "transparent"
+                                },
+                                ticks: {
+                                    display: false,
+                                }
+                            }]
+                        },
+                    }
+                });
+            }
+            initDocChart();
+            demo.initChartsPages();
+        });
         $(document).ready(function() {
             function initDocChart() {
                 chartColor = "#FFFFFF";

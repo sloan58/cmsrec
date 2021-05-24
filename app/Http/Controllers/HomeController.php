@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CmsCoSpace;
 use App\Models\CmsRecording;
 
 class HomeController extends Controller
@@ -50,6 +51,17 @@ class HomeController extends Controller
             $sharedRecordings = CmsRecording::whereShared(true)->count();
             $views = CmsRecording::whereShared(true)->sum('views');
 
+            $styles = ['primary', 'warning', 'danger', 'gray'];
+            $chartBackGroundColors = ["'#4acccd'", "'#fcc468'", "'#ef8157'", "'#e3e3e3'"];
+            $topCoSpaceStorageUsages = array_values(CmsCoSpace::take(4)->get()->sortByDesc('size')->each(
+                function ($space, $key) use ($styles, $chartBackGroundColors) {
+                    $space['style'] = $styles[$key];
+                    $space['rawSize'] = (int) $space['size'];
+                    $space['chartBackgroundColor'] = $chartBackGroundColors[$key];
+                    return $space;
+                }
+            )->toArray());
+
             return view('pages.dashboard', compact(
                 'diskSize',
                 'diskUsage',
@@ -59,7 +71,8 @@ class HomeController extends Controller
                 'largestRecordingSize',
                 'smallestRecordingSize',
                 'sharedRecordings',
-                'views'
+                'views',
+                'topCoSpaceStorageUsages',
             ));
 
         } else {

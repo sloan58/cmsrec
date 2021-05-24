@@ -29,6 +29,7 @@ class CmsCoSpace extends Model
      * @var array
      */
     protected $appends = [
+        'size',
         'urlSafeFolder'
     ];
 
@@ -67,7 +68,7 @@ class CmsCoSpace extends Model
      *
      * @return string
      */
-    public function size()
+    public function getSizeAttribute()
     {
         return bytesToHuman($this->cmsRecordings()->sum('size'));
     }
