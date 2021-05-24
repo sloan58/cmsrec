@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Storage;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -40,16 +41,16 @@ class CollectNfsDiskUsage extends Command
     {
         info("CollectNfsDiskUsage@handle: Starting process");
         
-        if (\Storage::missing('stats/dashboard.json')) {
+        if (Storage::missing('stats/dashboard.json')) {
             info("CollectNfsDiskUsage@handle: Output file does not exist.  Creating it now");
-            \Storage::put('stats/dashboard.json', json_encode([]));
+            Storage::put('stats/dashboard.json', json_encode([]));
         }
 
         info("CollectNfsDiskUsage@handle: Opened output file 'stats/dashboard.json");
         $outputFile = (array) json_decode(Storage::get('stats/dashboard.json'));
 
         info("CollectNfsDiskUsage@handle: Setting recordings disk instance");
-        $disk = \Storage::disk('recordings');
+        $disk = Storage::disk('recordings');
 
         info("CollectNfsDiskUsage@handle: Setting disk usage values in bytes and percentage");
         $diskSizeInBytes = disk_total_space($disk->path(''));
@@ -81,7 +82,7 @@ class CollectNfsDiskUsage extends Command
         $outputFile[$time] = $diskUsageInPercentage;
 
         info("CollectNfsDiskUsage@handle: Storing updated stats to dashboard json file");
-        \Storage::put('stats/dashboard.json', json_encode($outputFile));
+        Storage::put('stats/dashboard.json', json_encode($outputFile));
 
         info("CollectNfsDiskUsage@handle: Process complete");
     }
