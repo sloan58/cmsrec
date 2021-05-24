@@ -15,8 +15,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UsersTableSeeder::class,
             CmsSeeder::class,
-            CmsCoSpaceSeeder::class,
-            CmsRecordingSeeder::class
+//            CmsCoSpaceSeeder::class,
+//            CmsRecordingSeeder::class
         ]);
     }
 }
