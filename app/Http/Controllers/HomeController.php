@@ -57,7 +57,6 @@ class HomeController extends Controller
             $topCoSpaceStorageUsages = array_values(CmsCoSpace::take(4)->get()->sortByDesc('size')->each(
                 function ($space, $key) use ($styles, $chartBackGroundColors) {
                     $space['style'] = $styles[$key];
-                    $space['rawSize'] = (int) $space['size'];
                     $space['chartBackgroundColor'] = $chartBackGroundColors[$key];
                     return $space;
                 }
