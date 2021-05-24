@@ -1,5 +1,5 @@
 <div class="col-auto mb-4">
-    <div class="card shadow" style="height: 350px; width: 281px;">
+    <div class="card shadow" style="height: 375px; width: 281px;">
         @if(!$promptForDelete)
         <div class="row m-0 justify-content-start">
             <button wire:click="$toggle('promptForDelete')" class="btn btn-sm btn-danger btn-fab btn-icon btn-round mb-0 ml-2">
@@ -65,8 +65,7 @@
                     <i class="fa fa-download"></i> Download
                 </button>
                 <button wire:loading wire:target="downloadRecording" class="btn btn-info btn-round" type="button" disabled>
-                    <span class="spinner-border spinner-border-sm text-center" role="status" aria-hidden="true"></span>
-                    <span class="sr-only">Downloading...</span>
+                    Downloading
                 </button>
                 @if($recording->shared)
                     <div class="dropdown">
