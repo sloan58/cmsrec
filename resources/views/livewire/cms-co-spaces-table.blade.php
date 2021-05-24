@@ -33,7 +33,7 @@
                                     {{ $cmsCoSpace->name }}
                                 </td>
                                 <td>
-                                    {{ $cmsCoSpace->size() }}
+                                    {{ $cmsCoSpace->size }}
                                 </td>
                                 <td>
                                     {{ $cmsCoSpace->cmsRecordings()->count() }}
