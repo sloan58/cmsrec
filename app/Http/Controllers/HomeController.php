@@ -54,13 +54,13 @@ class HomeController extends Controller
 
             $styles = ['primary', 'warning', 'danger', 'gray'];
             $chartBackGroundColors = ["'#4acccd'", "'#fcc468'", "'#ef8157'", "'#e3e3e3'"];
-            $topCoSpaceStorageUsages = array_values(CmsCoSpace::get()->sortByDesc('rawSize')->take(4)->each(
-                function ($space, $key) use ($styles, $chartBackGroundColors) {
-                    $space['style'] = $styles[$key];
-                    $space['chartBackgroundColor'] = $chartBackGroundColors[$key];
-                    return $space;
-                }
-            )->toArray());
+            $topCoSpaceStorageUsages = array_values(CmsCoSpace::get()->sortByDesc('rawSize')->take(4)->toArray());
+
+            foreach($topCoSpaceStorageUsages as $index => $topCoSpaceStorageUsage) {
+                $topCoSpaceStorageUsage['style'] = $styles[$index];
+                $topCoSpaceStorageUsage['chartBackgroundColor'] = $chartBackGroundColors[$index];
+                $topCoSpaceStorageUsages[$index] = $topCoSpaceStorageUsage;
+            }
 
             if(\Storage::missing('stats/dashboard.json')) {
                 \Storage::put('stats/dashboard.json', json_encode([]));
