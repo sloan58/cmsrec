@@ -54,7 +54,7 @@ class HomeController extends Controller
 
             $styles = ['primary', 'warning', 'danger', 'gray'];
             $chartBackGroundColors = ["'#4acccd'", "'#fcc468'", "'#ef8157'", "'#e3e3e3'"];
-            $topCoSpaceStorageUsages = array_values(CmsCoSpace::take(4)->get()->sortByDesc('rawSize')->each(
+            $topCoSpaceStorageUsages = array_values(CmsCoSpace::get()->sortByDesc('rawSize')->take(4)->each(
                 function ($space, $key) use ($styles, $chartBackGroundColors) {
                     $space['style'] = $styles[$key];
                     $space['chartBackgroundColor'] = $chartBackGroundColors[$key];
