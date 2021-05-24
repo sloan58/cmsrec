@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CmsCoSpace;
 use App\Models\CmsRecording;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -62,7 +63,27 @@ class HomeController extends Controller
                 }
             )->toArray());
 
-            return view('pages.dashboard', compact(
+            if(\Storage::missing('stats/dashboard.json')) {
+                \Storage::put('stats/dashboard.json', json_encode([]));
+            }
+
+            $diskUsageForTimeline = json_decode(\Storage::get('stats/dashboard.json'));
+            $diskUsageForTimeline = collect($diskUsageForTimeline)->sortBy(function ($obj, $key) {
+                return $key;
+            })->toArray();
+
+            $diskUsageForTimelineLabels = implode(',', array_map(
+                function($label) {
+                    return '"' . Carbon::createFromTimestamp($label)->timezone('America/New_York')->format('g a') . '"';
+                }, array_keys($diskUsageForTimeline))
+            );
+            $diskUsageForTimelineValues = implode(',', array_map(
+                function($label) {
+                    return '"' . $label . '"';
+                }, $diskUsageForTimeline)
+            );
+
+            return view('pages.dashboard.dashboard', compact(
                 'diskSize',
                 'diskUsage',
                 'recordingCount',
@@ -73,6 +94,8 @@ class HomeController extends Controller
                 'sharedRecordings',
                 'views',
                 'topCoSpaceStorageUsages',
+                'diskUsageForTimelineLabels',
+                'diskUsageForTimelineValues'
             ));
 
         } else {
