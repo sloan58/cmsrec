@@ -67,7 +67,15 @@ The above copyright notice and this permission notice shall be included in all c
     <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{{ asset('paper') }}/js/paper-dashboard.min.js?v=2.0.0" type="text/javascript"></script>
 
-{{--    <script src="{{ asset('paper') }}/demo/demo.js?v=1"></script>--}}
+    <script>
+        $page = $('.full-page');
+        image_src = $page.data('image');
+
+        if (image_src !== undefined) {
+            image_container = '<div class="full-page-background" style="background-image: url(' + image_src + ') "/>';
+            $page.append(image_container);
+        }
+    </script>
 
     @stack('scripts')
 
