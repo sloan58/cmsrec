@@ -16,7 +16,7 @@ class UsersTableSeeder extends Seeder
     {
         DB::table('users')->insert([
             'name' => 'Admin',
-            'email' => 'admin@cmsrec.com',
+            'email' => 'admin@cmsplayer.com',
             'email_verified_at' => now(),
             'password' => Hash::make('secret'),
             'cms_owner_id' => \Str::uuid(),
@@ -27,7 +27,7 @@ class UsersTableSeeder extends Seeder
         if(env('APP_ENV') === 'local') {
             DB::table('users')->insert([
                 'name' => 'Marty Sloan',
-                'email' => 'marty@cmsrec.com',
+                'email' => 'marty@cmsplayer.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('secret'),
                 'cms_owner_id' => \Str::uuid(),
