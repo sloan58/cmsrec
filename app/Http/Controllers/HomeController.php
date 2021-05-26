@@ -50,7 +50,6 @@ class HomeController extends Controller
             }
 
             $sharedRecordings = CmsRecording::whereShared(true)->count();
-            $views = CmsRecording::whereShared(true)->sum('views');
 
             $styles = ['primary', 'warning', 'danger', 'gray'];
             $chartBackGroundColors = ["'#4acccd'", "'#fcc468'", "'#ef8157'", "'#e3e3e3'"];
@@ -91,7 +90,6 @@ class HomeController extends Controller
                 'largestRecordingSize',
                 'smallestRecordingSize',
                 'sharedRecordings',
-                'views',
                 'topCoSpaceStorageUsages',
                 'diskUsageForTimelineLabels',
                 'diskUsageForTimelineValues'

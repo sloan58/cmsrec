@@ -18,7 +18,7 @@
     <div class="card-footer ">
         <hr>
         <div class="stats">
-            <i class="fa fa-television"></i> {{ $views }} views
+            <i class="fa fa-television"></i> 0 views
         </div>
     </div>
 </div>
