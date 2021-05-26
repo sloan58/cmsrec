@@ -55,11 +55,6 @@ class CmsRecordingSeeder extends Seeder
                 $videoDownload = file_get_contents($demoVideos[$i]);
                 $disk->put($storeTo, $videoDownload);
 
-                // node.js file watcher notifies over API
-                // to persist CmsRecordings to the DB
-                // Need SSL in production
-                // ./node-fs-watcher.js
-
                 $size = $disk->size($storeTo);
                 $last_modified = $disk->lastModified($storeTo);
 

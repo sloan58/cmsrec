@@ -15,8 +15,13 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UsersTableSeeder::class,
             CmsSeeder::class,
-//            CmsCoSpaceSeeder::class,
-//            CmsRecordingSeeder::class
         ]);
+
+        if(env('APP_ENV') === 'local') {
+            $this->call([
+                CmsCoSpaceSeeder::class,
+                CmsRecordingSeeder::class
+            ]);
+        }
     }
 }
