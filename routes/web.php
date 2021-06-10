@@ -13,13 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// node.js filesystem API endpoints
-Route::group(['middleware' => ['comesFromLocalhost']], function () {
-    Route::prefix('fs')->group(function () {
-        Route::post('added', [App\Http\Controllers\CmsRecordingController::class, 'store']);
-    });
-});
-
 // Authentication Routes
 Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
