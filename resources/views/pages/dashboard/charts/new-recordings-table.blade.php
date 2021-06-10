@@ -18,7 +18,7 @@
                 @foreach($latestRecordings as $latestRecording)
                 <tr>
                     <th>{{$latestRecording->filename}}</th>
-                    <td>{{ $latestRecording->size }}</td>
+                    <td>{{ $latestRecording->friendlySize }}</td>
                     <td>{{ $latestRecording->cmsCoSpace->name }}</td>
                     <td>{{ $latestRecording->created_at->diffForHumans() }}</td>
                 </tr>
