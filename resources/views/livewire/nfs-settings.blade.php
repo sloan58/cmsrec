@@ -1,5 +1,5 @@
 <div class="row justify-content-center">
-    <div class="col-12 text-center">
+    <div class="col-12 col-xl-8 offset-xl-1 text-center">
         <div class="card">
             <div class="card-header">
                 <h5 class="title">{{ __('NFS Settings') }}</h5>
