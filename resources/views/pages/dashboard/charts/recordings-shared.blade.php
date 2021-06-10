@@ -18,7 +18,7 @@
     <div class="card-footer ">
         <hr>
         <div class="stats">
-            <i class="fa fa-television"></i> 0 views
+            <i class="fa fa-television"></i> {{ floor(($sharedRecordings / $recordingCount) * 100)}}%
         </div>
     </div>
 </div>
