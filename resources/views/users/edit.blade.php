@@ -7,8 +7,8 @@
     <div class="content">
         @include('components.flash-message')
         <div class="row justify-content-center">
-            <div class="col-md-8 text-center">
-                <form class="col-md-12" action="{{ route('user.update', $user->id) }}" method="POST">
+            <div class="col-12 col-xl-8 offset-xl-1 text-center">
+                <form action="{{ route('user.update', $user->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="card">
@@ -80,7 +80,7 @@
                     </div>
                 </form>
             </div>
-            <div class="col-md-4 text-center">
+            <div class="col-12 col-xl-8 offset-xl-1 text-center">
                 <div class="card">
                     <div class="card-header">
                         <h5 class="title">{{ __('CMS Recordings') }}</h5>
