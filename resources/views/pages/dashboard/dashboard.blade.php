@@ -8,7 +8,7 @@
         @include('pages.dashboard.charts._header-cards')
         <div class="row">
             @include('pages.dashboard.charts.co-spaces-by-usage')
-            @include('pages.dashboard.charts.storage-use-timeline')
+            @include('pages.dashboard.charts.new-recordings-table')
         </div>
     </div>
 @endsection

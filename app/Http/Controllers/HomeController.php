@@ -61,25 +61,7 @@ class HomeController extends Controller
                 $topCoSpaceStorageUsages[$index] = $topCoSpaceStorageUsage;
             }
 
-            if(\Storage::missing('stats/dashboard.json')) {
-                \Storage::put('stats/dashboard.json', json_encode([]));
-            }
-
-            $diskUsageForTimeline = json_decode(\Storage::get('stats/dashboard.json'));
-            $diskUsageForTimeline = collect($diskUsageForTimeline)->sortBy(function ($obj, $key) {
-                return $key;
-            })->toArray();
-
-            $diskUsageForTimelineLabels = implode(',', array_map(
-                function($label) {
-                    return '"' . Carbon::createFromTimestamp($label)->timezone('America/New_York')->format('g a') . '"';
-                }, array_keys($diskUsageForTimeline))
-            );
-            $diskUsageForTimelineValues = implode(',', array_map(
-                function($label) {
-                    return '"' . $label . '"';
-                }, $diskUsageForTimeline)
-            );
+            $latestRecordings = CmsRecording::orderBy('created_at', 'desc')->take(5)->get();
 
             return view('pages.dashboard.dashboard', compact(
                 'diskSize',
@@ -91,8 +73,7 @@ class HomeController extends Controller
                 'smallestRecordingSize',
                 'sharedRecordings',
                 'topCoSpaceStorageUsages',
-                'diskUsageForTimelineLabels',
-                'diskUsageForTimelineValues'
+                'latestRecordings'
             ));
 
         } else {
