@@ -86,14 +86,24 @@
                         <h5 class="title">{{ __('CMS Recordings') }}</h5>
                     </div>
                     <div class="card-body">
-                        <ul class="list-group">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Space Name</th>
+                                <th scope="col">Space ID</th>
+                                <th scope="col">Recordings</th>
+                            </tr>
+                            </thead>
+                            <tbody>
                             @foreach($user->cmsCoSpaces as $coSpace)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>{{ $coSpace->name }}</span>
-                                    <span class="badge badge-primary badge-pill">{{ $coSpace->cmsRecordings()->count() }}</span>
-                                </li>
+                            <tr>
+                                <th>{{ $coSpace->name }}</th>
+                                <td>{{ $coSpace->space_id}}</td>
+                                <td>{{ $coSpace->cmsRecordings()->count() }}</td>
+                            </tr>
                             @endforeach
-                        </ul>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
