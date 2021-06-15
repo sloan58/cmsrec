@@ -55,10 +55,10 @@
             @endif
             <p class="card-text text-center">in <span class="font-italic">{{ $recording->cmsCoSpace->name }}</span></p>
             <ul class="text-left list-unstyled mb-0">
-                <li><b>Downloads:</b> {{ $recording->downloads }}</li>
                 <li><b>Owner:</b> {{ $recording->owner->name }}</li>
                 <li><b>Size:</b> {{ $recording->friendlySize }}</li>
                 <li><b>Created:</b> {{ $recording->last_modified->toDayDateTimeString() }}</li>
+                <li><b>Downloads:</b> {{ $recording->downloads }}</li>
             </ul>
             <div class="d-flex justify-content-between">
                 <a href="{{ route('recordings.download', $recording) }}" class="btn btn-info btn-round">
