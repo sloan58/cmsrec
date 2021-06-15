@@ -94,7 +94,6 @@ class User extends Authenticatable
      */
     public function updateUiState($key, $val)
     {
-        $stateStructure = explode('.', $key);
         $newUiState = array_replace(auth()->user()->ui_state ?? [], [$key => $val]);
 
         auth()->user()->update([

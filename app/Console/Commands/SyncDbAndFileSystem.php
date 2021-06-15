@@ -7,14 +7,14 @@ use App\Models\CmsRecording;
 use Storage;
 use Illuminate\Console\Command;
 
-class ScanForOrphanRecordings extends Command
+class ScanForNewRecordings extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'cmsrec:scan';
+    protected $signature = 'cmsrec:scan-for-new';
 
     /**
      * The console command description.
@@ -44,7 +44,9 @@ class ScanForOrphanRecordings extends Command
             $disk = Storage::disk('recordings');
             $recordings = $disk->files($cmsCoSpace->space_id);
             foreach($recordings as $recording) {
-                $check = CmsRecording::where([['filename', basename($recording)], ['cms_co_space_id', $cmsCoSpace->id]]);
+                $check = CmsRecording::where([
+                    ['filename', basename($recording)], ['cms_co_space_id', $cmsCoSpace->id]
+                ]);
                 if(! $check->exists()) {
                     try {
                         CmsRecording::create([
@@ -56,7 +58,7 @@ class ScanForOrphanRecordings extends Command
                             'user_id' => $cmsCoSpace->owner->id
                         ]);
                     } catch(\Exception $e) {
-                        logger()->error('ScanForOrphanRecordings@handle: Could not store new CmsRecording', [
+                        logger()->error('ScanForNewRecordings@handle: Could not store new CmsRecording', [
                             $e->getMessage()
                         ]);
                     }
