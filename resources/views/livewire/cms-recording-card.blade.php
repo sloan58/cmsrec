@@ -61,12 +61,9 @@
                 <li><b>Created:</b> {{ $recording->last_modified->toDayDateTimeString() }}</li>
             </ul>
             <div class="d-flex justify-content-between">
-                <button wire:loading.remove wire:click="downloadRecording" class="btn btn-info btn-round">
+                <a href="{{ route('recordings.download', $recording) }}" class="btn btn-info btn-round">
                     <i class="fa fa-download"></i> Download
-                </button>
-                <button wire:loading wire:target="downloadRecording" class="btn btn-info btn-round" type="button" disabled>
-                    Downloading
-                </button>
+                </a>
                 @if($recording->shared)
                     <div class="dropdown">
                         <button class="btn btn-warning btn-round dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

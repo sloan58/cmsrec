@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\CmsRecording;
+use Illuminate\Http\Response;
 use Iman\Streamer\VideoStreamer;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Routing\ResponseFactory;
 
 class CmsRecordingController extends Controller
 {
@@ -34,6 +36,20 @@ class CmsRecordingController extends Controller
                 'errorMessage' => $e->getMessage()
             ]);
         }
+    }
+
+    /**
+     * Provide an Nginx-based download of the file
+     * Files are linked in /var/www/html/cms-recordings
+     *
+     * @param CmsRecording $cmsRecording
+     * @return ResponseFactory|Response
+     */
+    public function download(CmsRecording $cmsRecording)
+    {
+        return response(null)
+            ->header('Content-Disposition', 'attachment; filename="' . $cmsRecording->filename . '"')
+            ->header('X-Accel-Redirect', "/protected/{$cmsRecording->cmsCoSpace->space_id}/{$cmsRecording->filename}");
     }
 
     /**

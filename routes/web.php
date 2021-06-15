@@ -38,7 +38,7 @@ Route::group(['middleware' => ['auth', 'hasCoSpacesOrIsAdmin']], function () {
     Route::get('recordings/play/{cmsRecording}/{timeStamp}', [App\Http\Controllers\CmsRecordingController::class, 'play'])
         ->name('recordings.play')
         ->middleware('canAccessRecording');
-    Route::get('recordings/download', [App\Http\Controllers\CmsRecordingController::class, 'download'])
+    Route::get('recordings/download/{cmsRecording}', [App\Http\Controllers\CmsRecordingController::class, 'download'])
         ->name('recordings.download')
         ->middleware('canAccessRecording');
     Route::get('recordings', [App\Http\Controllers\CmsRecordingController::class, 'index'])->name('recordings.index');

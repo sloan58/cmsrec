@@ -16,8 +16,10 @@ class CanAccessRecording
      */
     public function handle(Request $request, Closure $next)
     {
-        if(auth()->user()->isAdmin() || auth()->user()->cmsCoSpaces()->pluck('space_id')->toArray()) {
+        $cmsRecording = $request->route('cmsRecording');
+        if(auth()->user()->isAdmin() || auth()->user()->ownsRecording($cmsRecording)) {
             return $next($request);
         }
+        return abort(401);
     }
 }

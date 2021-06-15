@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Storage;
-use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -99,5 +98,16 @@ class User extends Authenticatable
         auth()->user()->update([
             'ui_state' => $newUiState
         ]);
+    }
+
+    /**
+     * Check if this User owns a CMS Recording
+     *
+     * @param CmsRecording $cmsRecording
+     * @return bool
+     */
+    public function ownsRecording(CmsRecording $cmsRecording)
+    {
+        return in_array($cmsRecording->id, $this->cmsRecordings->pluck('id')->toArray());
     }
 }

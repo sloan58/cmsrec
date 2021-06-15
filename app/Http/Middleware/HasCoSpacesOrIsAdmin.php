@@ -19,9 +19,8 @@ class HasCoSpacesOrIsAdmin
         if(auth()->user()->isAdmin() || auth()->user()->cmsCoSpaces()->count()) {
             return $next($request);
         }
+
         auth()->logout();
-//        flash()->error('Access Denied.  Please contact the system administrator for support.')->important();
-//        return redirect()->route('home');
         return redirect()->route('home')->with('error','Permission Denied!!! You do not have administrative access.');
     }
 }
