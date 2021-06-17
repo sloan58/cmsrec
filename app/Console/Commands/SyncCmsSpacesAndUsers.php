@@ -34,8 +34,6 @@ class SyncCmsSpacesAndUsers extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle()
     {
@@ -44,7 +42,5 @@ class SyncCmsSpacesAndUsers extends Command
             $cmsApi->getCmsUserIds();
             $cmsApi->getCoSpaces();
         });
-
-        return true;
     }
 }
