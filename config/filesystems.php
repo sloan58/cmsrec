@@ -57,6 +57,11 @@ return [
             'root' => storage_path('app/recordings'),
         ],
 
+        'recordings-trash' => [
+            'driver' => 'local',
+            'root' => storage_path('app/recordings-trash'),
+        ],
+
     ],
 
     /*

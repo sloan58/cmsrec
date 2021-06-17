@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\MoveRecordingToTrash;
 use App\Models\CmsRecording;
 
 class CmsRecordingObserver
@@ -14,16 +15,10 @@ class CmsRecordingObserver
      */
     public function deleted(CmsRecording $cmsRecording)
     {
-        info('CmsRecordingObserver@deleted: Model deleted', [
-            $cmsRecording->toArray()
-        ]);
-
         $disk = \Storage::disk('recordings');
+
         if(file_exists($disk->path($cmsRecording->relativeStoragePath))) {
-            $disk->delete($cmsRecording->relativeStoragePath);
-            info('CmsRecordingObserver@deleted: Recording deleted from disk', [
-                'file' => $disk->path($cmsRecording->relativeStoragePath)
-            ]);
+            dispatch(new MoveRecordingToTrash($cmsRecording->relativeStoragePath, $cmsRecording->cmsCoSpace->space_id));
         }
     }
 }

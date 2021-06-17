@@ -33,6 +33,7 @@ class CmsRecordingSeeder extends Seeder
         ];
 
         $disk = \Storage::disk('recordings');
+        $trashDisk = \Storage::disk('recordings-trash');
 
         $coSpaceIds = [
             '529416e8-7a91-4367-8ec2-2ff236ac934e',
@@ -44,6 +45,10 @@ class CmsRecordingSeeder extends Seeder
         foreach($coSpaceIds as $coSpaceId) {
             foreach($disk->files($coSpaceId) as $vidOnDisk) {
                 $disk->delete($vidOnDisk);
+            }
+
+            foreach($trashDisk->files($coSpaceId) as $vidOnDisk) {
+                $trashDisk->delete($vidOnDisk);
             }
         }
 
