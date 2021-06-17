@@ -87,6 +87,7 @@ class CmsRest
     {
         $offset = 0;
         $limit = 1;
+        $now = now();
 
         $response = $this->queryCmsApi("/api/v1/coSpaces?offset={$offset}&limit={$limit}");
 
@@ -104,11 +105,13 @@ class CmsRest
                         'name' => $response['name'],
                         'ownerId' => $response['ownerId']
                     ]
-                );
+                )->touch();
             }
             $offset += $limit;
 
         }
+
+        CmsCoSpace::where('updated_at', '<', $now)->delete();
     }
 
     /**
@@ -118,6 +121,7 @@ class CmsRest
     {
         $offset = 0;
         $limit = 1;
+        $now = now();
 
         $response = $this->queryCmsApi("/api/v1/users?offset={$offset}&limit={$limit}");
 
@@ -139,10 +143,12 @@ class CmsRest
                             'name' => $response['name'],
                             'cms_owner_id' => $response['@attributes']['id']
                         ]
-                    );
+                    )->touch();
                 }
             }
             $offset += $limit;
         }
+
+        User::whereNotNull('cms_owner_id')->where('updated_at', '<', $now)->delete();
     }
 }
