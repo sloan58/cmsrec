@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('cmsrec:collect-disk-usage')->hourly();
+         $schedule->command('cmsrec:scan-for-new')->everyFiveMinutes();
     }
 
     /**
