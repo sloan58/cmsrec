@@ -149,6 +149,6 @@ class CmsRest
             $offset += $limit;
         }
 
-        User::whereNotNull('cms_owner_id')->where('updated_at', '<', $now)->delete();
+        User::where('cms_owner_id', '!=', '')->where('updated_at', '<', $now)->delete();
     }
 }
