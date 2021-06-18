@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use Storage;
 use App\Models\CmsCoSpace;
 use App\Models\CmsRecording;
-use Storage;
 use Illuminate\Console\Command;
 
 class ScanForNewRecordings extends Command
