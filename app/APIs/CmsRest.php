@@ -137,11 +137,6 @@ class CmsRest
             logger()->debug("CmsRest@getCoSpaces ({$this->cms->host}): Iterating offset", [
                 'offset' => $offset
             ]);
-
-            $percentFinished = (int) floor((($i / $iterations) * 100));
-            if($percentFinished % 10 === 0) {
-                info("CmsRest@getCoSpaces ({$this->cms->host}): $percentFinished% done");
-            }
         }
 
         info("CmsRest@queryCmsApi ({$this->cms->host}): Removing stale accounts");
@@ -200,11 +195,6 @@ class CmsRest
             logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Iterating offset", [
                 'offset' => $offset
             ]);
-
-            $percentFinished = (int) floor((($i / $iterations) * 100));
-            if($percentFinished % 10 === 0) {
-                info("CmsRest@getCmsUserIds ({$this->cms->host}): $percentFinished% done");
-            }
         }
 
         info("CmsRest@getCmsUserIds ({$this->cms->host}): Removing stale accounts");
