@@ -40,6 +40,7 @@ class ScanForNewRecordings extends Command
      */
     public function handle()
     {
+        info("ScanForNewRecordings@handle: Scanning NFS for new recordings");
         CmsCoSpace::each(function($cmsCoSpace) {
             $disk = Storage::disk('recordings');
             $recordings = $disk->files($cmsCoSpace->space_id);
@@ -65,5 +66,6 @@ class ScanForNewRecordings extends Command
                 }
             }
         });
+        info("ScanForNewRecordings@handle: Finished");
     }
 }

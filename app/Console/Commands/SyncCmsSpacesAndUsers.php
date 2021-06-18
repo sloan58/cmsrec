@@ -37,10 +37,14 @@ class SyncCmsSpacesAndUsers extends Command
      */
     public function handle()
     {
+        info("SyncCmsSpacesAndUsers@handle: Syncing CMS");
         Cms::each(function($cms) {
+            info("SyncCmsSpacesAndUsers@handle: Working {$cms->name}");
             $cmsApi = new CmsRest($cms);
             $cmsApi->getCmsUserIds();
             $cmsApi->getCoSpaces();
+            info("SyncCmsSpacesAndUsers@handle: Finished {$cms->name}");
         });
+        info("SyncCmsSpacesAndUsers@handle: Finished");
     }
 }
