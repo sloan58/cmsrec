@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('cmsrec:sync')->hourly();
-         $schedule->command('cmsrec:scan-for-new')->everyFiveMinutes();
+         $schedule->command('cmsrec:scan-for-new')->everyMinute();
     }
 
     /**
