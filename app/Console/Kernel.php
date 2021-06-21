@@ -24,8 +24,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('cmsrec:sync')->everyFiveMinutes();
+         // Check for new files on disk not imported into the DB
          $schedule->command('cmsrec:scan-for-new')->everyMinute();
+
+         // Sync with the CMS API to pull in Users and CoSpaces
+         $schedule->command('cmsrec:sync')->everyFiveMinutes();
+
+         // Check that the NFS mount exists (if configured)
+         $schedule->command('cmsrec:monitor-nfs')->hourly();
     }
 
     /**

@@ -94,7 +94,7 @@ class NfsSettings extends Settings
      *
      * @return bool
      */
-    private function mountExists()
+    public function mountExists()
     {
         $command = sprintf(
             'df -h | grep %s | grep %s',
