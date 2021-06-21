@@ -59,10 +59,32 @@ class CmsRecordingController extends Controller
      * @return void
      * @throws Exception
      */
-    public function shared(CmsRecording $cmsRecording)
+    public function sharedLink(CmsRecording $cmsRecording)
     {
         if (request()->hasValidSignature() && $cmsRecording->shared) {
             return view('recordings.shared', compact('cmsRecording'));
+        } else {
+            abort(401);
+        }
+    }
+
+    /**
+     * Stream the shared video recording to the UI
+     *
+     * @param CmsRecording $cmsRecording
+     * @return void
+     * @throws Exception
+     */
+    public function sharedView(CmsRecording $cmsRecording)
+    {
+        if (request()->hasValidSignature() && $cmsRecording->shared) {
+            try {
+                return VideoStreamer::streamFile(Storage::disk('recordings')->path($cmsRecording->relativeStoragePath));
+            } catch (Exception $e) {
+                logger()->error('Could not play recording', [
+                    'errorMessage' => $e->getMessage()
+                ]);
+            }
         } else {
             abort(401);
         }

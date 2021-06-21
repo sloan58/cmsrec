@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CmsRecordingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,8 +19,11 @@ Route::get('login', [App\Http\Controllers\Auth\LoginController::class, 'showLogi
 Route::post('login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
-Route::get('recordings/shared/{cmsRecording}', [App\Http\Controllers\CmsRecordingController::class, 'shared'])
-    ->name('recordings.shared');
+Route::get('recordings/shared-link/{cmsRecording}', [App\Http\Controllers\CmsRecordingController::class, 'sharedLink'])
+    ->name('recordings.shared-link');
+
+Route::get('recordings/shared-view/{cmsRecording}', [App\Http\Controllers\CmsRecordingController::class, 'sharedView'])
+    ->name('recordings.shared-view');
 
 Route::group(['middleware' => ['auth', 'hasCoSpacesOrIsAdmin']], function () {
     // Home Route

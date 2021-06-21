@@ -127,6 +127,6 @@ class CmsRecording extends Model
      */
     public function getSignedRouteAttribute()
     {
-        return URL::signedRoute('recordings.shared', ['cmsRecording' => $this->id]);
+        return URL::signedRoute('recordings.shared-link', ['cmsRecording' => $this->id]);
     }
 }
