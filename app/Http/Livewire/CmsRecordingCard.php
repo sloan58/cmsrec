@@ -96,34 +96,6 @@ class CmsRecordingCard extends Component
     }
 
     /**
-     * Download the recording
-     *
-     * @return StreamedResponse
-     */
-    public function downloadRecording()
-    {
-        // Prepare system for large downloads
-        // nginx needs to be updated as well: fastcgi_read_timeout 300;
-        ini_set('memory_limit', '1G');
-        ini_set('max_execution_time', '300');
-        if (ob_get_level()) {
-            ob_end_flush();
-        }
-
-        $path = \Storage::disk('recordings')->path($this->recording->relativeStoragePath);
-        $this->recording->increment('downloads');
-        $this->emit('downloaded');
-
-        return response()->streamDownload(function() use ($path) {
-            $myInputStream = fopen($path, 'rb');
-            $myOutputStream = fopen('php://output', 'wb');
-            stream_copy_to_stream($myInputStream, $myOutputStream);
-            fclose($myOutputStream);
-            fclose($myInputStream);
-        }, $this->recording->filename);
-    }
-
-    /**
      * Delete the CmsRecording
      */
     public function deleteRecording()
