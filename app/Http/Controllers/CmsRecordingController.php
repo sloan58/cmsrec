@@ -47,9 +47,28 @@ class CmsRecordingController extends Controller
      */
     public function download(CmsRecording $cmsRecording)
     {
-        return response(null)
-            ->header('Content-Disposition', 'attachment; filename="' . $cmsRecording->filename . '"')
-            ->header('X-Accel-Redirect', "/protected/{$cmsRecording->cmsCoSpace->space_id}/{$cmsRecording->filename}");
+//        return response(null)
+//            ->header('Content-Disposition', 'attachment; filename="' . $cmsRecording->filename . '"')
+//            ->header('X-Accel-Redirect', "/protected/{$cmsRecording->cmsCoSpace->space_id}/{$cmsRecording->filename}");
+
+        // Prepare system for large downloads
+        // nginx needs to be updated as well: fastcgi_read_timeout 300;
+        ini_set('memory_limit', '1G');
+        ini_set('max_execution_time', '300');
+        if (ob_get_level()) {
+            ob_end_flush();
+        }
+
+        $path = \Storage::disk('recordings')->path($cmsRecording->relativeStoragePath);
+        $cmsRecording->increment('downloads');
+
+        return response()->streamDownload(function() use ($path) {
+            $myInputStream = fopen($path, 'rb');
+            $myOutputStream = fopen('php://output', 'wb');
+            stream_copy_to_stream($myInputStream, $myOutputStream);
+            fclose($myOutputStream);
+            fclose($myInputStream);
+        }, $cmsRecording->filename);
     }
 
     /**
