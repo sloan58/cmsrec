@@ -19,7 +19,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'admin@cmsplayer.com',
             'email_verified_at' => now(),
             'password' => Hash::make('secret'),
-            'cms_owner_id' => \Str::uuid(),
+            'cms_owner_id' => '',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'marty@cmsplayer.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('secret'),
-                'cms_owner_id' => \Str::uuid(),
+                'cms_owner_id' => '',
                 'created_at' => now(),
                 'updated_at' => now()
             ]);   
