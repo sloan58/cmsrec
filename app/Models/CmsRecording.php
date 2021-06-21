@@ -42,7 +42,8 @@ class CmsRecording extends Model
      * @var array
      */
     protected $appends = [
-        'signedRoute',
+        'signedLinkRoute',
+        'signedViewRoute',
         'friendlySize',
         'urlSafeFilename',
         'urlSafeFullPath',
@@ -125,8 +126,18 @@ class CmsRecording extends Model
      *
      * @return mixed
      */
-    public function getSignedRouteAttribute()
+    public function getSignedLinkRouteAttribute()
     {
         return URL::signedRoute('recordings.shared-link', ['cmsRecording' => $this->id]);
+    }
+
+    /**
+     * Return the signed route for this resource
+     *
+     * @return mixed
+     */
+    public function getSignedViewRouteAttribute()
+    {
+        return URL::signedRoute('recordings.shared-view', ['cmsRecording' => $this->id]);
     }
 }

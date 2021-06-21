@@ -70,7 +70,7 @@
                             Shared
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a x-data="{ input: '{{ $recording->signedRoute }}' }" @click="$clipboard(input)" class="dropdown-item" href="#">
+                            <a x-data="{ input: '{{ $recording->signedLinkRoute }}' }" @click="$clipboard(input)" class="dropdown-item" href="#">
                                 <i class="fa fa-copy mr-2 text-success"></i>Copy Share Link
                             </a>
                             <a wire:click="toggleSharing(false)" class="dropdown-item" href="#">
