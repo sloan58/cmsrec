@@ -50,6 +50,12 @@
                     <p>{{ __('Settings') }}</p>
                 </a>
             </li>
+            <li class="{{ $elementActive == 'logs' ? 'active' : '' }}">
+                <a href="{{ route('logs.index') }}">
+                    <i class="fa fa-code"></i>
+                    <p>{{ __('Logs') }}</p>
+                </a>
+            </li>
             @endif
         </ul>
     </div>
