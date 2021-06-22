@@ -37,12 +37,12 @@ class LogController extends Controller
             $process = Process::fromShellCommandline('tac ' . $filePath);
 
             try {
-                $fileData = $process->mustRun();
+                $process->mustRun();
                 $data = [
                     'last_modified' => new Carbon(File::lastModified($filePath)),
                     'size' => File::size($filePath),
                     'name' => File::basename($filePath),
-                    'file' => $fileData
+                    'file' => $process->getOutput()
                 ];
             } catch (\Exception $e) {
                 logger()->error('LogController@index: Could not run Process ', [ $e->getMessage() ]);
