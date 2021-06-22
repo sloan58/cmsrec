@@ -7,6 +7,7 @@ use Exception;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Contracts\View\Factory;
+use Symfony\Component\Process\Process;
 
 class LogController extends Controller
 {
@@ -33,12 +34,27 @@ class LogController extends Controller
 
         $data = [];
         if(File::exists($filePath)) {
-            $data = [
-                'last_modified' => new Carbon(File::lastModified($filePath)),
-                'size' => File::size($filePath),
-                'name' => File::basename($filePath),
-                'file' => File::get($filePath)
-            ];
+            $process = Process::fromShellCommandline('tac ' . $filePath);
+
+            try {
+                $fileData = $process->mustRun();
+                $data = [
+                    'last_modified' => new Carbon(File::lastModified($filePath)),
+                    'size' => File::size($filePath),
+                    'name' => File::basename($filePath),
+                    'file' => $fileData
+                ];
+            } catch (\Exception $e) {
+                logger()->error('LogController@index: Could not run Process ', [ $e->getMessage() ]);
+                $data = [
+                    'last_modified' => new Carbon(File::lastModified($filePath)),
+                    'size' => File::size($filePath),
+                    'name' => File::basename($filePath),
+                    'file' => File::get($filePath)
+                ];
+            }
+
+
         }
 
         return view('pages.logs', compact('fileList', 'data'));
