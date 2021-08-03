@@ -124,14 +124,16 @@ class CmsRest
                 ]);
                 $response = $this->queryCmsApi("/api/v1/coSpaces/{$coSpace['@attributes']['id']}");
 
+                if(isset($response['name']) && isset($response['ownerId'])) {
                 logger()->debug("CmsRest@getCoSpaces ({$this->cms->host}): Updating model");
-                CmsCoSpace::updateOrCreate([
-                    'space_id' =>  $response['@attributes']['id']],
-                    [
-                        'name' => $response['name'],
-                        'ownerId' => $response['ownerId']
-                    ]
-                )->touch();
+                    CmsCoSpace::updateOrCreate([
+                        'space_id' =>  $response['@attributes']['id']],
+                        [
+                            'name' => $response['name'],
+                            'ownerId' => $response['ownerId']
+                        ]
+                    )->touch();
+                }
             }
             $offset += $limit;
             logger()->debug("CmsRest@getCoSpaces ({$this->cms->host}): Iterating offset", [
