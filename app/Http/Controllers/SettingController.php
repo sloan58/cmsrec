@@ -30,7 +30,9 @@ class SettingController extends Controller
     {
         $settings->name = $request->get('name');
         $settings->host = $request->get('host');
-        $settings->searchBase = $request->get('searchBase');
+        if($request->get('searchBase')) {
+            array_push($settings->searchBase, $request->get('searchBase'));
+        }
         $settings->bindDN = $request->get('bindDN');
         $settings->password = $request->get('password');
         if($request->get('filter')) {

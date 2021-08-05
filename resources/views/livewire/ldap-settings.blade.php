@@ -35,10 +35,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <label class="col-md-3 col-form-label">{{ __('Search Base') }}</label>
+                        <label class="col-md-3 col-form-label">{{ __('Add Search Base') }}</label>
                         <div class="col-md-9">
                             <div class="form-group">
-                                <input type="text" name="searchBase" class="form-control" value="{{ app(\App\Settings\LdapSettings::class)->searchBase }}" required>
+{{--                                <input type="text" name="searchBase" class="form-control" value="{{ app(\App\Settings\LdapSettings::class)->searchBase }}" required>--}}
+                                <input type="text" name="searchBase" class="form-control" value="">
                             </div>
                             @if ($errors->has('searchBase'))
                                 <span class="invalid-feedback text-left" style="display: block;" role="alert">
@@ -46,6 +47,17 @@
                                         </span>
                             @endif
                         </div>
+                    </div>
+                    <div class="row">
+                        <label class="col-md-3 col-form-label">Current Search Bases</label>
+                            @foreach(app(\App\Settings\LdapSettings::class)->searchBase as $searchBase)
+                            <div class="pl-2">
+                                <div class="float-left pl-2" style="cursor: pointer;">
+                                    <div class="btn btn-warning text-dark p-3" style="cursor: default;">{{ $searchBase }}</div>
+                                    <i wire:click="removeSearchBase('{{ $searchBase }}')" class="fa fa-times pl-1"></i>
+                                </div>
+                            </div>
+                            @endforeach
                     </div>
                     <div class="row">
                         <label class="col-md-3 col-form-label">{{ __('Bind DN') }}</label>
