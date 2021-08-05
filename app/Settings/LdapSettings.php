@@ -8,7 +8,7 @@ class LdapSettings extends Settings
 {
     public string $name;
     public string $host;
-    public string $searchBase;
+    public array $searchBase;
     public string $bindDN;
     public string $password;
     public string $filter;
