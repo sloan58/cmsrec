@@ -18,7 +18,7 @@
     <div class="card-footer ">
         <hr>
         <div class="stats">
-            <i class="fa fa-television"></i> {{ floor(($sharedRecordings / $recordingCount) * 100)}}%
+            <i class="fa fa-television"></i>{{ $recordingCount ? floor(($sharedRecordings / $recordingCount) * 100) : '0'}}%
         </div>
     </div>
 </div>

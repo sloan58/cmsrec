@@ -22,7 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'cms_owner_id',
+        'cms_ownerIds',
         'ui_state'
     ];
 
@@ -43,7 +43,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'ui_state' => 'json'
+        'ui_state' => 'json',
+        'cms_ownerIds' => 'json'
     ];
 
     /**
@@ -53,23 +54,17 @@ class User extends Authenticatable
      */
     public function cmsCoSpaces()
     {
-        return $this->hasMany(CmsCoSpace::class, 'ownerId', 'cms_owner_id');
+        return CmsCoSpace::whereIn('ownerId', $this->cms_ownerIds)->get();
     }
 
     /**
-     * A User Has Many CmsRecordings Through a CmsCoSpace
+     * A User Has Many CmsRecordings
      *
-     * @return HasManyThrough
+     * @return HasMany
      */
     public function cmsRecordings()
     {
-        return $this->hasManyThrough(
-            CmsRecording::class,
-            CmsCoSpace::class,
-            'ownerId',
-            'cms_co_space_id',
-            'cms_owner_id'
-        );
+        return $this->hasMany(CmsRecording::class);
     }
 
     /**

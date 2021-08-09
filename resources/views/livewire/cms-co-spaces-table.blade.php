@@ -39,7 +39,7 @@
                                     {{ $cmsCoSpace->cmsRecordings()->count() }}
                                 </td>
                                 <td>
-                                    {{ $cmsCoSpace->owner->name ?? '' }}
+                                    {{ $cmsCoSpace->owner()->name ?? '' }}
                                 </td>
                             </tr>
                         @endforeach

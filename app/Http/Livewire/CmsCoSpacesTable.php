@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\User;
 use Livewire\Component;
 use App\Models\CmsCoSpace;
 use Livewire\WithPagination;
@@ -32,10 +33,14 @@ class CmsCoSpacesTable extends Component
 
     public function render()
     {
-        $cmsCoSpaces = CmsCoSpace::with('owner')->when($this->term, function($query) {
-            return $query->where('name', 'like', '%'.$this->term.'%')->orWhereHas('owner', function($query) {
-                $query->where('name', 'like', '%'.$this->term.'%');
-            });
+        $userFilter = array_merge(
+            ...User::where('name', 'like', '%'.$this->term.'%')
+            ->pluck('cms_ownerIds')
+            ->toArray()
+        );
+
+        $cmsCoSpaces = CmsCoSpace::when($this->term, function($query) use ($userFilter) {
+            return $query->where('name', 'like', '%'.$this->term.'%')->orWhereIn('ownerId', $userFilter);
         })->paginate(10);
 
         return view('livewire.cms-co-spaces-table', [

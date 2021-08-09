@@ -3,14 +3,14 @@
 
 namespace App\ApiClients;
 
-use App\Models\Cms;
-use App\Models\CmsCoSpace;
-use App\Models\User;
 use Exception;
+use App\Models\Cms;
+use App\Models\User;
 use GuzzleHttp\Client;
 use App\Models\CmsStat;
+use App\Models\CmsCoSpace;
+use App\Settings\LdapSettings;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Support\Facades\Cache;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ConnectException;
@@ -26,6 +26,16 @@ class CmsRest
      * @var Client
      */
     private $client;
+
+    /**
+     * @var LdapSettings
+     */
+    private $ldapSettings;
+
+    /**
+     * @var bool|resource
+     */
+    private $ldapConnection;
 
     /**
      * CmsRest constructor.
@@ -50,6 +60,13 @@ class CmsRest
                 $cms->password
             ],
         ]);
+
+        $this->ldapSettings = app(\App\Settings\LdapSettings::class);
+        if ($this->ldapSettings->name) {
+            $this->ldapConnection = $this->getLdapConnection();
+        } else {
+            $this->ldapConnection = null;
+        }
     }
 
     /**
@@ -181,15 +198,71 @@ class CmsRest
                     'coSpace' => $user
                 ]);
                 $response = $this->queryCmsApi("/api/v1/users/{$user['@attributes']['id']}");
-                if($response['email']) {
-                    logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Updating model");
-                    User::updateOrCreate(
-                        ['email' => $response['email']],
-                        [
-                            'name' => $response['name'],
-                            'cms_owner_id' => $response['@attributes']['id']
-                        ]
-                    )->touch();
+                logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Updating model", [
+                    'response' => $response
+                ]);
+
+                $email = null;
+                $dontUpdateName = false;
+                if(empty($response['email'])) {
+                    $dontUpdateName = true;
+                    logger()->info("CmsRest@getCmsUserIds ({$this->cms->host}): Checking LDAP for user info.  No email available in CMS API response", [
+                        $response
+                    ]);
+                    if ($this->ldapConnection) {
+                        foreach($this->ldapSettings->searchBase as $searchbase) {
+                            $result = ldap_search(
+                                $this->ldapConnection,
+                                $searchbase,
+                                "(sAMAccountName=$response[name])",
+                                ['extensionAttribute1']
+                            );
+
+                            $userExtensionAttribute1 = ldap_get_entries($this->ldapConnection, $result);
+
+                            if (isset($userExtensionAttribute1['count'])) {
+                                if(isset($userExtensionAttribute1[0])) {
+                                    if(isset($userExtensionAttribute1[0]['extensionattribute1'])) {
+                                        if(isset($userExtensionAttribute1[0]['extensionattribute1'][0])) {
+                                            $email = $userExtensionAttribute1[0]['extensionattribute1'][0];
+                                            logger()->info("CmsRest@getCmsUserIds ({$this->cms->host}): Found email in LDAP", [
+                                                $email
+                                            ]);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    $email = $response['email'];
+                }
+                if($email) {
+                    $localUser = User::whereEmail($email)->first();
+                    if($localUser) {
+                        $cms_ownerIds = array_unique(array_merge($localUser->cms_ownerIds, [ $response['@attributes']['id'] ]));
+                        $name = $dontUpdateName ? $localUser->name : $response['name'];
+                    } else {
+                        $cms_ownerIds = [ $response['@attributes']['id'] ];
+                        $name = $response['name'];
+                    }
+
+                    try {
+                        User::updateOrCreate(
+                            ['email' => $email],
+                            [
+                                'name' => $name,
+                                'cms_ownerIds' => $cms_ownerIds
+                            ]
+                        )->touch();
+                    } catch(Exception $e) {
+                        logger()->error('CmsRest@getCmsUserIds: Could not updateOrCreate', [
+                            'error' => $e->getMessage(),
+                        ]);
+                    }
+                } else {
+                    logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): No email available in CMS API or LDAP");
                 }
             }
 
@@ -200,6 +273,29 @@ class CmsRest
         }
 
         info("CmsRest@getCmsUserIds ({$this->cms->host}): Removing stale accounts");
-        User::where('cms_owner_id', '!=', '')->where('updated_at', '<', $now)->delete();
+        User::where('cms_ownerIds', '!=', null)->where('updated_at', '<', $now)->delete();
+    }
+
+    private function getLdapConnection()
+    {
+        $connection = ldap_connect($this->ldapSettings->host);
+
+        ldap_set_option($connection, LDAP_OPT_PROTOCOL_VERSION, 3);
+        ldap_set_option($connection, LDAP_OPT_NETWORK_TIMEOUT, 3);
+
+        try {
+            ldap_bind(
+                $connection,
+                $this->ldapSettings->bindDN,
+                $this->ldapSettings->password
+            );
+
+            return $connection;
+
+        } catch (Exception $e) {
+            logger()->error("Ldap@bind: LDAP bind unsuccessful", [$e->getMessage()]);
+
+            return false;
+        }
     }
 }

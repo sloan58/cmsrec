@@ -31,17 +31,17 @@ class CmsCoSpace extends Model
     protected $appends = [
         'size',
         'rawSize',
-        'urlSafeFolder'
+        'urlSafeFolder',
     ];
 
     /**
      * A CMS CoSpace belongs to a User
-     *
-     * @return BelongsTo
      */
     public function owner()
     {
-        return $this->belongsTo(User::class, 'ownerId', 'cms_owner_id');
+        return \DB::table('users')
+            ->whereJsonContains('cms_ownerIds', $this->ownerId)
+            ->first();
     }
 
     /**

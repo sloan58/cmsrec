@@ -95,7 +95,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($user->cmsCoSpaces as $coSpace)
+                            @foreach($user->cmsCoSpaces() as $coSpace)
                             <tr>
                                 <th>{{ $coSpace->name }}</th>
                                 <td>{{ $coSpace->space_id}}</td>

@@ -58,12 +58,12 @@ class ScanForNewRecordings extends Command
                                 'last_modified' => $disk->lastModified($recording),
                                 'cms_co_space_id' => $cmsCoSpace->id,
                                 'shared' => false,
-                                'user_id' => $cmsCoSpace->owner->id
+                                'user_id' => $cmsCoSpace->owner()->id
                             ]);
 
                             \Mail::raw('Please login to ' . env('APP_URL') . ' to view or download your recording', function($message) use ($cmsCoSpace) {
                                 $message->subject('Your CMS Recording is available');
-                                $message->to($cmsCoSpace->owner->email);
+                                $message->to($cmsCoSpace->owner()->email);
                             });
                         } catch(\Exception $e) {
                             logger()->error('ScanForNewRecordings@handle: Could not store new CmsRecording', [
