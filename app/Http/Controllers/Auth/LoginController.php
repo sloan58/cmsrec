@@ -96,28 +96,31 @@ class LoginController extends Controller
             }
 
             if ($this->ldapConnection) {
-                $result = ldap_search(
-                    $this->ldapConnection,
-                    $this->ldapSettings->searchBase,
-                    "(mail=$credentials[email])",
-                    ['distinguishedname']
-                );
+                foreach($this->ldapSettings->searchBase as $searchbase) {
+                    $result = ldap_search(
+                        $this->ldapConnection,
+                        $searchbase,
+                        "(mail=$credentials[email])",
+                        ['distinguishedname']
+                    );
 
-                $userDistinguishedName = ldap_get_entries($this->ldapConnection, $result);
+                    $userDistinguishedName = ldap_get_entries($this->ldapConnection, $result);
 
-                if (!$userDistinguishedName['count']) {
-                    return $this->sendFailedLoginResponse($request, 'These credentials do not match our records');
+                    if (!$userDistinguishedName['count']) {
+                        continue;
+                    }
+
+                    ldap_set_option($this->ldapConnection, LDAP_OPT_PROTOCOL_VERSION, 3);
+                    ldap_set_option($this->ldapConnection, LDAP_OPT_NETWORK_TIMEOUT, 3);
+                    try {
+                        ldap_bind($this->ldapConnection, $userDistinguishedName[0]['distinguishedname'][0], $credentials['password']);
+                        Auth::login($user);
+                        return $this->sendLoginResponse($request);
+                    } catch (Exception $e) {
+                        $message = substr($e->getMessage(), strrpos($e->getMessage(), ':') + 1);
+                    }
                 }
-
-                ldap_set_option($this->ldapConnection, LDAP_OPT_PROTOCOL_VERSION, 3);
-                ldap_set_option($this->ldapConnection, LDAP_OPT_NETWORK_TIMEOUT, 3);
-                try {
-                    ldap_bind($this->ldapConnection, $userDistinguishedName[0]['distinguishedname'][0], $credentials['password']);
-                    Auth::login($user);
-                    return $this->sendLoginResponse($request);
-                } catch (Exception $e) {
-                    $message = substr($e->getMessage(), strrpos($e->getMessage(), ':') + 1);
-                }
+                return $this->sendFailedLoginResponse($request, 'These credentials do not match our records');
             }
         }
 
