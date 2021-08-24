@@ -54,7 +54,7 @@ class ScanForNewRecordings extends Command
                         info('ScanForNewRecordings@handle: New recording found', [
                             'recording' => $recording,
                             'cmsCoSpace' => $cmsCoSpace
-                        ])
+                        ]);
                         try {
                             CmsRecording::create([
                                 'filename' => basename($recording),
