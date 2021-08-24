@@ -51,6 +51,10 @@ class ScanForNewRecordings extends Command
                         ['filename', basename($recording)], ['cms_co_space_id', $cmsCoSpace->id]
                     ]);
                     if(! $check->exists()) {
+                        info('ScanForNewRecordings@handle: New recording found', [
+                            'recording' => $recording,
+                            'cmsCoSpace' => $cmsCoSpace
+                        ])
                         try {
                             CmsRecording::create([
                                 'filename' => basename($recording),
