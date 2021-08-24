@@ -206,7 +206,7 @@ class CmsRest
                 $dontUpdateName = false;
                 if(empty($response['email'])) {
                     $dontUpdateName = true;
-                    logger()->info("CmsRest@getCmsUserIds ({$this->cms->host}): Checking LDAP for user info.  No email available in CMS API response", [
+                    logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Checking LDAP for user info.  No email available in CMS API response", [
                         $response
                     ]);
                     if ($this->ldapConnection) {
@@ -225,7 +225,7 @@ class CmsRest
                                     if(isset($userExtensionAttribute1[0]['extensionattribute1'])) {
                                         if(isset($userExtensionAttribute1[0]['extensionattribute1'][0])) {
                                             $email = $userExtensionAttribute1[0]['extensionattribute1'][0];
-                                            logger()->info("CmsRest@getCmsUserIds ({$this->cms->host}): Found email in LDAP", [
+                                            logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Found email in LDAP", [
                                                 $email
                                             ]);
                                             break;
