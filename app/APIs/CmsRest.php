@@ -211,17 +211,18 @@ class CmsRest
                     ]);
                     if ($this->ldapConnection) {
                         foreach($this->ldapSettings->searchBase as $searchbase) {
-                            logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Checking $searchbase for user " . $response['name']);
+                            $sAMAccountName = explode('@', $response['userJid']);
+                            logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Checking $searchbase for user " . $sAMAccountName);
                             $result = ldap_search(
                                 $this->ldapConnection,
                                 $searchbase,
-                                "(sAMAccountName=$response[name])",
+                                "(sAMAccountName=$sAMAccountName)",
                                 ['extensionAttribute1']
                             );
 
                             $userExtensionAttribute1 = ldap_get_entries($this->ldapConnection, $result);
 
-                            logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Received response in $searchbase for user " . $response['name'], [
+                            logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Received response in $searchbase for user " . $sAMAccountName, [
                                 $userExtensionAttribute1
                             ]);
 
