@@ -211,7 +211,7 @@ class CmsRest
                     ]);
                     if ($this->ldapConnection) {
                         foreach($this->ldapSettings->searchBase as $searchbase) {
-                            $sAMAccountName = explode('@', $response['userJid']);
+                            $sAMAccountName = explode('@', $response['userJid'])[0];
                             logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Checking $searchbase for user " . $sAMAccountName);
                             $result = ldap_search(
                                 $this->ldapConnection,
