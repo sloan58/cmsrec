@@ -221,6 +221,10 @@ class CmsRest
 
                             $userExtensionAttribute1 = ldap_get_entries($this->ldapConnection, $result);
 
+                            logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Received response in $searchbase for user " . $response['name'], [
+                                $userExtensionAttribute1
+                            ]);
+
                             if (isset($userExtensionAttribute1['count'])) {
                                 if(isset($userExtensionAttribute1[0])) {
                                     if(isset($userExtensionAttribute1[0]['extensionattribute1'])) {
