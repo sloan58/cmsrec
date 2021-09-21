@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateCmsRecordingsTable extends Migration
+class CreateCmsCoSpaceUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,20 @@ class CreateCmsRecordingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('cms_recordings', function (Blueprint $table) {
+        Schema::create('cms_co_space_user', function (Blueprint $table) {
             $table->id();
-            $table->string('filename');
-            $table->integer('size');
-            $table->dateTime('last_modified');
-            $table->integer('downloads')->default(0);
-            $table->boolean('shared')->default(false);
             $table->unsignedBigInteger('cms_co_space_id')->index();
             $table->foreign('cms_co_space_id')
                 ->references('id')
                 ->on('cms_co_spaces')
                 ->onDelete('cascade');
+            $table->unsignedBigInteger('user_id')->index();
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+            $table->boolean('admin_assigned')->default(false);
             $table->timestamps();
-            $table->unique(['filename', 'cms_co_space_id']);
         });
     }
 
@@ -37,6 +37,6 @@ class CreateCmsRecordingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cms_recordings');
+        Schema::dropIfExists('cms_co_space_user');
     }
 }

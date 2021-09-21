@@ -55,7 +55,7 @@
             @endif
             <p class="card-text text-center">in <span class="font-italic">{{ $recording->cmsCoSpace->name }}</span></p>
             <ul class="text-left list-unstyled mb-0">
-                <li><b>Owner:</b> {{ $recording->owner->name }}</li>
+                <li><b>Owner(s):</b> {{ implode(', ', $recording->cmsCoSpace->owners->pluck('name')->toArray() )}}</li>
                 <li><b>Size:</b> {{ $recording->friendlySize }}</li>
                 <li><b>Created:</b> {{ $recording->last_modified->toDayDateTimeString() }}</li>
                 <li><b>Downloads:</b> {{ $recording->downloads }}</li>

@@ -93,6 +93,7 @@ class CmsRest
             return json_decode($json, true);
 
         } catch (RequestException $e) {
+            dd($e->getMessage());
             if ($e instanceof ClientException) {
                 logger()->error('Cms@queryCmsApi: Authentication Exception', [$e->getMessage()]);
             } elseif ($e instanceof ConnectException) {
@@ -105,6 +106,8 @@ class CmsRest
     }
 
     /**
+     * Get the CMS CoSpaces
+     *
      * @throws GuzzleException
      */
     public function getCoSpaces()
@@ -143,13 +146,16 @@ class CmsRest
 
                 if(isset($response['name']) && isset($response['ownerId'])) {
                 logger()->debug("CmsRest@getCoSpaces ({$this->cms->host}): Updating model");
-                    CmsCoSpace::updateOrCreate([
-                        'space_id' =>  $response['@attributes']['id']],
-                        [
-                            'name' => $response['name'],
-                            'ownerId' => $response['ownerId']
-                        ]
-                    )->touch();
+                    $coSpace = CmsCoSpace::updateOrCreate(
+                        ['space_id' =>  $response['@attributes']['id']],
+                        ['name' => $response['name']]
+                    );
+
+                    if($user = User::where('cms_owner_id', $response['ownerId'])->first()) {
+                        $coSpace->owners()->attach($user);
+                    }
+
+                    $coSpace->touch();
                 }
             }
             $offset += $limit;
@@ -163,6 +169,8 @@ class CmsRest
     }
 
     /**
+     * Get the CMS User accounts
+     *
      * @throws GuzzleException
      */
     public function getCmsUserIds()
@@ -192,83 +200,36 @@ class CmsRest
 
         info("CmsRest@getCmsUserIds ({$this->cms->host}): Iterating API");
         for($i = 1; $i <= $iterations; $i++) {
+
             $response = $this->queryCmsApi("/api/v1/users?offset={$offset}&limit={$limit}");
+
             foreach($response['user'] as $user) {
                 logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Collecting User details", [
-                    'coSpace' => $user
+                    'user' => $user
                 ]);
                 $response = $this->queryCmsApi("/api/v1/users/{$user['@attributes']['id']}");
                 logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Updating model", [
                     'response' => $response
                 ]);
 
-                $email = null;
-                $dontUpdateName = false;
-                if(empty($response['email'])) {
-                    $dontUpdateName = true;
-                    logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Checking LDAP for user info.  No email available in CMS API response", [
+                $email = $response['email'];
+
+                if(empty($email)) {
+                    logger()->info("CmsRest@getCmsUserIds ({$this->cms->host}): Checking LDAP for user info.  No email available in CMS API response", [
                         $response
                     ]);
-                    if ($this->ldapConnection) {
-                        foreach($this->ldapSettings->searchBase as $searchbase) {
-                            $sAMAccountName = explode('@', $response['userJid'])[0];
-                            logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Checking $searchbase for user " . $sAMAccountName);
-                            $result = ldap_search(
-                                $this->ldapConnection,
-                                $searchbase,
-                                "(sAMAccountName=$sAMAccountName)",
-                                ['extensionAttribute1']
-                            );
-
-                            $userExtensionAttribute1 = ldap_get_entries($this->ldapConnection, $result);
-
-                            logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Received response in $searchbase for user " . $sAMAccountName, [
-                                $userExtensionAttribute1
-                            ]);
-
-                            if (isset($userExtensionAttribute1['count'])) {
-                                if(isset($userExtensionAttribute1[0])) {
-                                    if(isset($userExtensionAttribute1[0]['extensionattribute1'])) {
-                                        if(isset($userExtensionAttribute1[0]['extensionattribute1'][0])) {
-                                            $email = $userExtensionAttribute1[0]['extensionattribute1'][0];
-                                            logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Found email in LDAP", [
-                                                $email
-                                            ]);
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    $email = $response['email'];
+                    $email = $this->queryLdapForEmail($response);
                 }
-                if($email) {
-                    $localUser = User::whereEmail($email)->first();
-                    if($localUser) {
-                        $cms_ownerIds = array_unique(array_merge($localUser->cms_ownerIds, [ $response['@attributes']['id'] ]));
-                        $name = $dontUpdateName ? $localUser->name : $response['name'];
-                    } else {
-                        $cms_ownerIds = [ $response['@attributes']['id'] ];
-                        $name = $response['name'];
-                    }
 
-                    try {
-                        User::updateOrCreate(
-                            ['email' => $email],
-                            [
-                                'name' => $name,
-                                'cms_ownerIds' => $cms_ownerIds
-                            ]
-                        )->touch();
-                    } catch(Exception $e) {
-                        logger()->error('CmsRest@getCmsUserIds: Could not updateOrCreate', [
-                            'error' => $e->getMessage(),
-                        ]);
-                    }
-                } else {
-                    logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): No email available in CMS API or LDAP");
+                try {
+                    User::updateOrCreate(
+                        ['cms_owner_id' => $response['@attributes']['id']],
+                        ['name' => $response['name'], 'email' => $email]
+                    )->touch();
+                } catch(Exception $e) {
+                    logger()->error('CmsRest@getCmsUserIds: Could not updateOrCreate', [
+                        'error' => $e->getMessage(),
+                    ]);
                 }
             }
 
@@ -279,9 +240,14 @@ class CmsRest
         }
 
         info("CmsRest@getCmsUserIds ({$this->cms->host}): Removing stale accounts");
-        User::where('cms_ownerIds', '!=', null)->where('updated_at', '<', $now)->delete();
+        User::whereNotIn('email', explode(',', env('ADMIN_USERS')))->where('updated_at', '<', $now)->delete();
     }
 
+    /**
+     * Get the LDAP Connection to query user data
+     *
+     * @return bool|resource
+     */
     private function getLdapConnection()
     {
         $connection = ldap_connect($this->ldapSettings->host);
@@ -303,5 +269,45 @@ class CmsRest
 
             return false;
         }
+    }
+
+    /**
+     * Check if the user's email address
+     * can be located in the LDAP database
+     *
+     * @param array $response
+     * @return string|null
+     */
+    private function queryLdapForEmail(array $response)
+    {
+        if(!$this->ldapConnection) {
+            return null;
+        }
+
+        foreach($this->ldapSettings->searchBase as $searchbase) {
+            $sAMAccountName = explode('@', $response['userJid'])[0];
+            logger()->debug("CmsRest@queryLdapForEmail ({$this->cms->host}): Checking $searchbase for user " . $sAMAccountName);
+            $result = ldap_search(
+                $this->ldapConnection,
+                $searchbase,
+                "(sAMAccountName=$sAMAccountName)",
+                ['extensionAttribute1']
+            );
+
+            $userExtensionAttribute1 = ldap_get_entries($this->ldapConnection, $result);
+
+            logger()->debug("CmsRest@queryLdapForEmail ({$this->cms->host}): Received response in $searchbase for user " . $sAMAccountName, [
+                $userExtensionAttribute1
+            ]);
+
+            if (isset($userExtensionAttribute1[0]['extensionattribute1'][0])) {
+                $email = $userExtensionAttribute1[0]['extensionattribute1'][0];
+                logger()->debug("CmsRest@queryLdapForEmail ({$this->cms->host}): Found email in LDAP", [
+                    $email
+                ]);
+                return $email;
+            }
+        }
+        return null;
     }
 }

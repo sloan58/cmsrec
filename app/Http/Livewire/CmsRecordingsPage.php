@@ -95,26 +95,25 @@ class CmsRecordingsPage extends Component
      */
     private function buildCmsRecordingsSearchHits()
     {
-        $cmsRecordings = CmsRecording::with(['cmsCoSpace', 'owner'])->when($this->term, function ($query) {
-            $query->where('filename', 'like', '%' . $this->term . '%');
-            $query->orWhereHas('cmsCoSpace', function($query) {
-                $query->where('name', 'like', '%' . $this->term . '%');
+        if(auth()->user()->isAdmin() && $this->showAll) {
+            $cmsRecordings = CmsRecording::with('cmsCoSpace')->when($this->term, function ($query) {
+                $query->where('filename', 'like', '%' . $this->term . '%');
+                $query->orWhereHas('cmsCoSpace', function ($query) {
+                    $query->where('name', 'like', '%' . $this->term . '%');
+                    $query->orWhereHas('owners', function($query) {
+                        $query->where('name', 'like', '%' . $this->term . '%');
+                    });
+                });
             });
-            if(auth()->user()->isAdmin()) {
-                $query->orWhereHas('owner', function($query) {
+        } else {
+            $cmsRecordings = auth()->user()->cmsRecordings()->with('cmsCoSpace')->when($this->term, function ($query) {
+                $query->where('filename', 'like', '%' . $this->term . '%');
+                $query->orWhereHas('cmsCoSpace', function ($query) {
                     $query->where('name', 'like', '%' . $this->term . '%');
                 });
-            }
-        });
-
-        if(!auth()->user()->isAdmin() || (auth()->user()->isAdmin() && !$this->showAll)) {
-            $cmsRecordings = $cmsRecordings->with('owner')->whereHas('owner', function($query) {
-                $query->where('id', auth()->user()->id);
             });
         }
 
-        $cmsRecordings = $cmsRecordings->orderBy('created_at', 'desc')->paginate($this->paginate);
-
-        return $cmsRecordings;
+        return $cmsRecordings->orderBy('created_at', 'desc')->paginate($this->paginate);
     }
 }

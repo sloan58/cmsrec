@@ -20,7 +20,6 @@ class CmsCoSpace extends Model
     protected $fillable = [
         'space_id',
         'name',
-        'ownerId',
     ];
 
     /**
@@ -35,13 +34,21 @@ class CmsCoSpace extends Model
     ];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'managerIds' => 'json',
+    ];
+
+    /**
      * A CMS CoSpace belongs to a User
      */
-    public function owner()
+    public function owners()
     {
-        return \DB::table('users')
-            ->whereJsonContains('cms_ownerIds', $this->ownerId)
-            ->first();
+        return $this->belongsToMany(User::class, 'cms_co_space_user', 'cms_co_space_id', 'user_id')
+            ->withPivot('admin_assigned');
     }
 
     /**

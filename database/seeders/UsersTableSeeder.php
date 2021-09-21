@@ -19,7 +19,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'admin@cmsplayer.com',
             'email_verified_at' => now(),
             'password' => Hash::make('secret'),
-            'cms_ownerIds' => json_encode(['559416e8-7a91-4367-8ec2-2ff236ac934e']),
+            'cms_owner_id' => '559416e8-7a91-4367-8ec2-2ff236ac934e',
             'created_at' => now(),
             'updated_at' => now()
         ]);
@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'marty@cmsplayer.com',
                 'email_verified_at' => now(),
                 'password' => Hash::make('secret'),
-                'cms_ownerIds' => json_encode(['559416e8-7a91-4367-8ec2-2ff236ac934f']),
+                'cms_owner_id' => '559416e8-7a91-4367-8ec2-2ff236ac934f',
                 'created_at' => now(),
                 'updated_at' => now()
             ]);   

@@ -17,7 +17,6 @@ class CreateCmsCoSpacesTable extends Migration
             $table->id();
             $table->string('space_id')->unique();
             $table->string('name');
-            $table->string('ownerId');
             $table->timestamps();
         });
     }

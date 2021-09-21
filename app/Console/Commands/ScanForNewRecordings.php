@@ -50,41 +50,44 @@ class ScanForNewRecordings extends Command
                     $check = CmsRecording::where([
                         ['filename', basename($recording)], ['cms_co_space_id', $cmsCoSpace->id]
                     ]);
-                    if(! $check->exists()) {
+                    if(!$check->exists()) {
                         info('ScanForNewRecordings@handle: New recording found', [
                             'recording' => $recording,
                             'cmsCoSpace' => $cmsCoSpace
                         ]);
-                        info('ScanForNewRecordings@handle: Checking if this CmsCoSpace has an owner');
-                        if($cmsCoSpace->owner()) {
-                            info('ScanForNewRecordings@handle: This CmsCoSpace does have an owner.  Storing new recording');
-                            try {
-                                CmsRecording::create([
-                                    'filename' => basename($recording),
-                                    'size' => $disk->size($recording),
-                                    'last_modified' => $disk->lastModified($recording),
-                                    'cms_co_space_id' => $cmsCoSpace->id,
-                                    'shared' => false,
-                                    'user_id' => $cmsCoSpace->owner()->id
+                        info('ScanForNewRecordings@handle: Storing new recording');
+                        try {
+                            CmsRecording::create([
+                                'filename' => basename($recording),
+                                'size' => $disk->size($recording),
+                                'last_modified' => $disk->lastModified($recording),
+                                'cms_co_space_id' => $cmsCoSpace->id,
+                                'shared' => false,
+                            ]);
+
+                            info('ScanForNewRecordings@handle: Sending notifications if this space has any owners');
+                            $toAddresses = array_filter($cmsCoSpace->owners()->pluck('email')->toArray());
+
+                            foreach($toAddresses as $toAddress) {
+                                info('ScanForNewRecordings@handle: Sending notification to address', [
+                                    $toAddress
                                 ]);
-    
-                                \Mail::raw('Please login to ' . env('APP_URL') . ' to view or download your recording', function($message) use ($cmsCoSpace) {
+                                info('ScanForNewRecordings@handle: Sending notification email');
+                                \Mail::raw('Please login to ' . env('APP_URL') . ' to view or download your recording', function($message) use ($cmsCoSpace, $toAddress) {
                                     $message->subject('Your CMS Recording is available');
-                                    $message->to($cmsCoSpace->owner()->email);
+                                    $message->to($toAddress);
                                     $message->bcc('martin_sloan@ao.uscourts.gov');
                                 });
-                            } catch(\Exception $e) {
-                                logger()->error('ScanForNewRecordings@handle: Could not store new CmsRecording', [
-                                    $e->getMessage()
-                                ]);
-                                \Mail::raw($e->getMessage(), function($message) use ($cmsCoSpace) {
-                                    $message->setPriority(\Swift_Message::PRIORITY_HIGH);
-                                    $message->subject('Error importing new CMS recording');
-                                    $message->to(explode(',', env('MAIL_TO_ADMINS')));
-                                });
                             }
-                        } else {
-                            info('ScanForNewRecordings@handle: This CmsCoSpace does NOT have an owner.  Could not store new recording');
+                        } catch(\Exception $e) {
+                            logger()->error('ScanForNewRecordings@handle: Could not store new CmsRecording', [
+                                $e->getMessage()
+                            ]);
+                            \Mail::raw($e->getMessage(), function($message) use ($cmsCoSpace) {
+                                $message->setPriority(\Swift_Message::PRIORITY_HIGH);
+                                $message->subject('Error importing new CMS recording');
+                                $message->to(explode(',', env('MAIL_TO_ADMINS')));
+                            });
                         }
                     }
                 }

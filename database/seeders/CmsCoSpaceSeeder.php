@@ -26,8 +26,9 @@ class CmsCoSpaceSeeder extends Seeder
             $coSpace = CmsCoSpace::create([
                 'space_id' => $coSpaceId,
                 'name' => 'Demo Space ' . ($index + 1),
-                'ownerId' => User::find(1)->cms_ownerIds[0]
             ]);
+
+            $coSpace->owners()->attach(1);
 
             $storagePath = Storage::disk('recordings')->path($coSpace->space_id);
             if(!file_exists($storagePath)) {
@@ -43,8 +44,9 @@ class CmsCoSpaceSeeder extends Seeder
             $coSpace = CmsCoSpace::create([
                 'space_id' => $coSpaceId,
                 'name' => 'Demo Space ' . ($index + 3),
-                'ownerId' => User::find(2)->cms_ownerIds[0]
             ]);
+
+            $coSpace->owners()->attach(2);
 
             $storagePath = Storage::disk('recordings')->path($coSpace->space_id);
             if(!file_exists($storagePath)) {

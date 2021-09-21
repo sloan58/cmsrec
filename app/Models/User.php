@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Storage;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRelationships;
 
     /**
      * The attributes that are mass assignable.
@@ -19,10 +18,11 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'jid',
         'name',
         'email',
         'password',
-        'cms_ownerIds',
+        'cms_owner_id',
         'ui_state'
     ];
 
@@ -44,27 +44,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'ui_state' => 'json',
-        'cms_ownerIds' => 'json'
     ];
 
     /**
      * A User Has Many CMS CoSpaces
-     *
-     * @return HasMany
      */
     public function cmsCoSpaces()
     {
-        return CmsCoSpace::whereIn('ownerId', $this->cms_ownerIds)->get();
+        return $this->belongsToMany(CmsCoSpace::class, 'cms_co_space_user', 'user_id','cms_co_space_id' )
+            ->withPivot('admin_assigned');
     }
 
     /**
      * A User Has Many CmsRecordings
      *
-     * @return HasMany
      */
     public function cmsRecordings()
     {
-        return $this->hasMany(CmsRecording::class);
+        return $this->hasManyDeep('App\Models\CmsRecording', ['cms_co_space_user', 'App\Models\CmsCoSpace']);
     }
 
     /**

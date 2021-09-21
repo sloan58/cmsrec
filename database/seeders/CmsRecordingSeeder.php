@@ -69,7 +69,6 @@ class CmsRecordingSeeder extends Seeder
                     'last_modified' => $last_modified,
                     'cms_co_space_id' => $space->id,
                     'shared' => false,
-                    'user_id' => $space->owner()->id
                 ]);
             }
         });
