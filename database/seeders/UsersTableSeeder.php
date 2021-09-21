@@ -15,6 +15,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
+            'username' => 'Admin',
             'name' => 'Admin',
             'email' => 'admin@cmsplayer.com',
             'email_verified_at' => now(),
@@ -26,6 +27,7 @@ class UsersTableSeeder extends Seeder
 
         if(env('APP_ENV') === 'local') {
             DB::table('users')->insert([
+                'username' => 'Marty Sloan',
                 'name' => 'Marty Sloan',
                 'email' => 'marty@cmsplayer.com',
                 'email_verified_at' => now(),

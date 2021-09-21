@@ -66,7 +66,7 @@ class ScanForNewRecordings extends Command
                             ]);
 
                             info('ScanForNewRecordings@handle: Sending notifications if this space has any owners');
-                            $toAddresses = array_filter($cmsCoSpace->owners()->pluck('email')->toArray());
+                            $toAddresses = array_unique(array_filter($cmsCoSpace->owners()->pluck('email')->toArray()));
 
                             foreach($toAddresses as $toAddress) {
                                 info('ScanForNewRecordings@handle: Sending notification to address', [

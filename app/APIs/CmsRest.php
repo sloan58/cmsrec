@@ -215,7 +215,7 @@ class CmsRest
                 $email = $response['email'];
 
                 if(empty($email)) {
-                    logger()->info("CmsRest@getCmsUserIds ({$this->cms->host}): Checking LDAP for user info.  No email available in CMS API response", [
+                    logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Checking LDAP for user info.  No email available in CMS API response", [
                         $response
                     ]);
                     $email = $this->queryLdapForEmail($response);
@@ -224,7 +224,11 @@ class CmsRest
                 try {
                     User::updateOrCreate(
                         ['cms_owner_id' => $response['@attributes']['id']],
-                        ['name' => $response['name'], 'email' => $email]
+                        [
+                            'username' => explode('@', $response['userJid'])[0] ?? null,
+                            'name' => $response['name'],
+                            'email' => $email
+                        ]
                     )->touch();
                 } catch(Exception $e) {
                     logger()->error('CmsRest@getCmsUserIds: Could not updateOrCreate', [

@@ -66,6 +66,16 @@ class LoginController extends Controller
     }
 
     /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return 'username';
+    }
+
+    /**
      * Handle a login request to the application.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -77,8 +87,8 @@ class LoginController extends Controller
     {
         $this->validateLogin($request);
 
-        $credentials = $request->only('email', 'password');
-        $user = User::where('email', $credentials['email'])->first();
+        $credentials = $request->only('username', 'password');
+        $user = User::where('username', $credentials['username'])->first();
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
@@ -100,7 +110,7 @@ class LoginController extends Controller
                     $result = ldap_search(
                         $this->ldapConnection,
                         $searchbase,
-                        "(mail=$credentials[email])",
+                        "(samaccountname=$credentials[username])",
                         ['distinguishedname']
                     );
 
