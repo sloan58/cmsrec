@@ -20,6 +20,7 @@ class UserEditPage extends Component
     {
         $this->user->cmsCoSpaces()->attach($coSpaceId, ['admin_assigned' => true]);
         $this->addingCoSpaceToUser = false;
+        $this->term = '';
     }
 
     public function removeCoSpaceFromUser($coSpaceId)
