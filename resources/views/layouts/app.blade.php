@@ -28,7 +28,7 @@ The above copyright notice and this permission notice shall be included in all c
     <!-- Extra details for Live View on GitHub Pages -->
     
     <title>
-        {{ __('CMS Rec') }}
+        {{ env('APP_NAME') }}
     </title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
         name='viewport' />

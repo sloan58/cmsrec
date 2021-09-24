@@ -6,7 +6,7 @@
             </div>
         </a>
         <a href="/" class="simple-text logo-normal">
-            {{ __('CMS Rec') }}
+            {{ env('APP_NAME') }}
         </a>
     </div>
     <div class="sidebar-wrapper">
