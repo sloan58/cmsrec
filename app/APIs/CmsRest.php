@@ -152,9 +152,10 @@ class CmsRest
                     );
 
                     if($user = User::where('cms_owner_id', $response['ownerId'])->first()) {
-                        $coSpace->owners()->attach($user);
+                        if(!$coSpace->owners()->where('user_id', $user->id)->exists()) {
+                            $coSpace->owners()->attach($user);
+                        }
                     }
-
                     $coSpace->touch();
                 }
             }

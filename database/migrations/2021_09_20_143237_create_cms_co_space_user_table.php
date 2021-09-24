@@ -26,6 +26,7 @@ class CreateCmsCoSpaceUserTable extends Migration
                 ->on('users')
                 ->onDelete('cascade');
             $table->boolean('admin_assigned')->default(false);
+            $table->unique(['cms_co_space_id', 'user_id']);
             $table->timestamps();
         });
     }
