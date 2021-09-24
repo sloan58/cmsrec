@@ -221,11 +221,14 @@ class CmsRest
                     $email = $this->queryLdapForEmail($response);
                 }
 
+                $username = explode('@', $response['userJid'])[0] ?? null;
+                $username = preg_replace('/\./', ' ', $username);
+
                 try {
                     User::updateOrCreate(
                         ['cms_owner_id' => $response['@attributes']['id']],
                         [
-                            'username' => explode('@', $response['userJid'])[0] ?? null,
+                            'username' => $username,
                             'name' => $response['name'],
                             'email' => $email
                         ]
