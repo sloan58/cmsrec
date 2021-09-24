@@ -74,14 +74,14 @@ class ScanForNewRecordings extends Command
                                 ]);
                                 info('ScanForNewRecordings@handle: Sending notification email');
 
-                                $messageBody = "A new recording is available in CMS Player.\n" .
-                                               'Please login at ' . env('APP_URL') . ' to view or download your recording.' . "\n\n" .
-                                               "User your JENIE username or group account username along with your password to login.";
-                                \Mail::raw($messageBody, function($message) use ($cmsCoSpace, $toAddress) {
-                                    $message->subject('Your CMS Recording is available');
-                                    $message->to($toAddress);
-                                    $message->bcc('martin_sloan@ao.uscourts.gov');
-                                });
+//                                $messageBody = "A new recording is available in CMS Player.\n" .
+//                                               'Please login at ' . env('APP_URL') . ' to view or download your recording.' . "\n\n" .
+//                                               "User your JENIE username or group account username along with your password to login.";
+//                                \Mail::raw($messageBody, function($message) use ($cmsCoSpace, $toAddress) {
+//                                    $message->subject('Your CMS Recording is available');
+//                                    $message->to($toAddress);
+//                                    $message->bcc('martin_sloan@ao.uscourts.gov');
+//                                });
                             }
                         } catch(\Exception $e) {
                             logger()->error('ScanForNewRecordings@handle: Could not store new CmsRecording', [
