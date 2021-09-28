@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          // Check for new files on disk not imported into the DB
-         $schedule->command('cmsrec:scan-for-new')->everyMinute();
+         $schedule->command('cmsrec:scan-for-new')->everyFiveMinutes();
 
          // Sync with the CMS API to pull in Users and CoSpaces
          $schedule->command('cmsrec:sync')->everyFiveMinutes();
