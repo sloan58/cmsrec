@@ -82,7 +82,7 @@ class ScanForNewRecordings extends Command
                                     $message->to($toAddress);
                                     $message->bcc('martin_sloan@ao.uscourts.gov');
                                 });
-                                sleep(2);
+                                sleep(5);
                             }
                         } catch(\Exception $e) {
                             logger()->error('ScanForNewRecordings@handle: Could not store new CmsRecording', [
