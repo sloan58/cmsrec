@@ -16,7 +16,7 @@ class CreateCmsRecordingsTable extends Migration
         Schema::create('cms_recordings', function (Blueprint $table) {
             $table->id();
             $table->string('filename');
-            $table->integer('size');
+            $table->bigInteger('size');
             $table->dateTime('last_modified');
             $table->integer('downloads')->default(0);
             $table->boolean('shared')->default(false);
