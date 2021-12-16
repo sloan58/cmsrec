@@ -107,12 +107,19 @@ class LoginController extends Controller
 
             if ($this->ldapConnection) {
                 foreach($this->ldapSettings->searchBase as $searchbase) {
-                    $result = ldap_search(
-                        $this->ldapConnection,
-                        $searchbase,
-                        "(samaccountname=$credentials[username])",
-                        ['distinguishedname']
-                    );
+                    try {
+                        $result = ldap_search(
+                            $this->ldapConnection,
+                            $searchbase,
+                            "(samaccountname=$credentials[username])",
+                            ['distinguishedname']
+                        );
+                    } catch(Exception $e) {
+                        logger()->error(__METHOD__ . ': Could not perform ldap_search', [
+                            'error' => $e
+                        ]);
+                        continue;
+                    }
 
                     $userDistinguishedName = ldap_get_entries($this->ldapConnection, $result);
 
