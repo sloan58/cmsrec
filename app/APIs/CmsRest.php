@@ -93,7 +93,6 @@ class CmsRest
             return json_decode($json, true);
 
         } catch (RequestException $e) {
-            dd($e->getMessage());
             if ($e instanceof ClientException) {
                 logger()->error('Cms@queryCmsApi: Authentication Exception', [$e->getMessage()]);
             } elseif ($e instanceof ConnectException) {
@@ -101,7 +100,7 @@ class CmsRest
             } else {
                 logger()->error('Cms@queryCmsApi: Unknown Exception', [$e->getMessage()]);
             }
-            die();
+            exit;
         }
     }
 
@@ -142,21 +141,24 @@ class CmsRest
                 logger()->debug("CmsRest@getCoSpaces ({$this->cms->host}): Collecting CoSpace details", [
                     'coSpace' => $coSpace
                 ]);
-                $response = $this->queryCmsApi("/api/v1/coSpaces/{$coSpace['@attributes']['id']}");
+                
+                if(isset($coSpace['@attributes'])) {
+                    $response = $this->queryCmsApi("/api/v1/coSpaces/{$coSpace['@attributes']['id']}");
 
-                if(isset($response['name']) && isset($response['ownerId'])) {
-                logger()->debug("CmsRest@getCoSpaces ({$this->cms->host}): Updating model");
-                    $coSpace = CmsCoSpace::updateOrCreate(
-                        ['space_id' =>  $response['@attributes']['id']],
-                        ['name' => $response['name']]
-                    );
+                    if(isset($response['name']) && isset($response['ownerId'])) {
+                    logger()->debug("CmsRest@getCoSpaces ({$this->cms->host}): Updating model");
+                        $coSpace = CmsCoSpace::updateOrCreate(
+                            ['space_id' =>  $response['@attributes']['id']],
+                            ['name' => $response['name']]
+                        );
 
-                    if($user = User::where('cms_owner_id', $response['ownerId'])->first()) {
-                        if(!$coSpace->owners()->where('user_id', $user->id)->exists()) {
-                            $coSpace->owners()->attach($user);
+                        if($user = User::where('cms_owner_id', $response['ownerId'])->first()) {
+                            if(!$coSpace->owners()->where('user_id', $user->id)->exists()) {
+                                $coSpace->owners()->attach($user);
+                            }
                         }
+                        $coSpace->touch();
                     }
-                    $coSpace->touch();
                 }
             }
             $offset += $limit;
