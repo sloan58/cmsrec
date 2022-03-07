@@ -72,9 +72,12 @@ class User extends Authenticatable
     public function isAdmin()
     {
         return in_array(
-            auth()->user()->email,
-            env('ADMIN_USERS') ? explode(',', env('ADMIN_USERS')) : [])
-            ;
+            strtolower(auth()->user()->email),
+            array_map(
+                'strtolower',
+                env('ADMIN_USERS') ? explode(',', env('ADMIN_USERS')) : []
+            )
+        );
     }
 
     /**

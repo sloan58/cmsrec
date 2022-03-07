@@ -141,7 +141,7 @@ class CmsRest
                 logger()->debug("CmsRest@getCoSpaces ({$this->cms->host}): Collecting CoSpace details", [
                     'coSpace' => $coSpace
                 ]);
-                
+
                 if(isset($coSpace['@attributes'])) {
                     $response = $this->queryCmsApi("/api/v1/coSpaces/{$coSpace['@attributes']['id']}");
 
