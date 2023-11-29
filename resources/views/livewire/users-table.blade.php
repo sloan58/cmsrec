@@ -56,7 +56,7 @@
                     </table>
                     <div class="row">
                         <div class="col-12">
-                            {{ $users->links('vendor.pagination.bootstrap-4') }}
+                            {{ $users->links() }}
                         </div>
                     </div>
                 </div>
