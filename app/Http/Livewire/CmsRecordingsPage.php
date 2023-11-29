@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Psy\Util\Str;
 use Livewire\Component;
 use App\Models\CmsRecording;
 use Livewire\WithPagination;
@@ -107,9 +108,11 @@ class CmsRecordingsPage extends Component
             });
         } else {
             $cmsRecordings = auth()->user()->cmsRecordings()->with('cmsCoSpace')->when($this->term, function ($query) {
-                $query->where('filename', 'like', '%' . $this->term . '%');
-                $query->orWhereHas('cmsCoSpace', function ($query) {
-                    $query->where('name', 'like', '%' . $this->term . '%');
+                $query->where(function ($query) {
+                    $query->where('filename', 'like', '%' . $this->term . '%');
+                    $query->orWhereHas('cmsCoSpace', function ($query) {
+                        $query->where('name', 'like', '%' . $this->term . '%');
+                    });
                 });
             });
         }
