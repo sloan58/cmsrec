@@ -1,24 +1,22 @@
-<div class="col-md-4">
-    <div class="card ">
-        <div class="card-header ">
-            <h5 class="card-title">Top CoSpaces by Disk Usage</h5>
-            <p class="card-category">NFS Statistics</p>
+<div class="card">
+    <div class="card-header ">
+        <h5 class="card-title">Top CoSpaces by Disk Usage</h5>
+        <p class="card-category">NFS Statistics</p>
+    </div>
+    <div class="card-body ">
+        <canvas id="coSpaceUsage"></canvas>
+    </div>
+    <div class="card-footer ">
+        <div class="legend">
+            @foreach($topCoSpaceStorageUsages as $key => $topCoSpaceStorageUsage)
+                <i class="fa fa-circle text-{{ $topCoSpaceStorageUsage['style'] }}"></i>
+                {{ $topCoSpaceStorageUsage['name'] }} ({{ $topCoSpaceStorageUsage['size'] }})
+                <br>
+            @endforeach
         </div>
-        <div class="card-body ">
-            <canvas id="coSpaceUsage"></canvas>
-        </div>
-        <div class="card-footer ">
-            <div class="legend">
-                @foreach($topCoSpaceStorageUsages as $key => $topCoSpaceStorageUsage)
-                    <i class="fa fa-circle text-{{ $topCoSpaceStorageUsage['style'] }}"></i>
-                    {{ $topCoSpaceStorageUsage['name'] }} ({{ $topCoSpaceStorageUsage['size'] }})
-                    <br>
-                @endforeach
-            </div>
-            <hr>
-            <div class="stats">
-                <i class="fa fa-calendar"></i> Updated every hour
-            </div>
+        <hr>
+        <div class="stats">
+            <i class="fa fa-calendar"></i> Updated every hour
         </div>
     </div>
 </div>

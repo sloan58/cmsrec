@@ -1,4 +1,4 @@
-<div class="card card-stats">
+<div class="card card-stats w-25">
     <div class="card-body ">
         <div class="row">
             <div class="col-5 col-md-4">
