@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" style="min-width: 33%">
     <div class="card-header ">
         <h5 class="card-title">Top CoSpaces by Disk Usage</h5>
         <p class="card-category">NFS Statistics</p>
