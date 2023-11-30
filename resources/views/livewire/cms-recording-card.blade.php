@@ -1,39 +1,31 @@
-<div class="col-auto mb-4">
-    <div class="card shadow" style="height: 375px; width: 281px;">
-        @if(!$promptForDelete)
-        <div class="row m-0 justify-content-start">
-            <button wire:click="$toggle('promptForDelete')" class="btn btn-sm btn-danger btn-fab btn-icon btn-round mb-0 ml-2">
-                <i class="fa fa-times"></i>
+<div class="card shadow m-2 w-25">
+    @if($promptForDelete)
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <button wire:click="deleteRecording" class="btn btn-danger btn-round my-auto">
+                Delete
+            </button>
+            <button wire:click="$toggle('promptForDelete')" class="btn btn-default btn-round">
+                Cancel
             </button>
         </div>
-        @endif
-
-        @if($promptForDelete)
-        <div class="row h-100">
-            <div class="col-12 my-auto d-flex justify-content-center">
-                <div class="card-body">
-                    <button wire:click="deleteRecording" class="btn btn-danger btn-round my-auto">
-                        Delete
+    @else
+        <div class="card-header card-header-danger pt-0">
+            <div class="d-flex justify-content-between">
+                @if($recordingInPlayback)
+                    <button class="btn btn-sm btn-success btn-fab btn-icon btn-round" disabled>
+                        <i class="fa fa-play"></i>
                     </button>
-                    <button wire:click="$toggle('promptForDelete')" class="btn btn-default btn-round">
-                        Cancel
+                @else
+                    <button wire:click="$emit('startPlayback', '{{ $recording->id }}')" class="btn btn-sm btn-success btn-fab btn-icon btn-round">
+                        <i class="fa fa-play"></i>
                     </button>
-                </div>
+                @endif
+                <button wire:click="$toggle('promptForDelete')" class="btn btn-sm btn-danger btn-fab btn-icon btn-round">
+                    <i class="fa fa-times"></i>
+                </button>
             </div>
         </div>
-        @else
-        <div class="card-header card-header-danger pt-0">
-            @if($recordingInPlayback)
-                <button class="btn btn-lg btn-success btn-fab btn-icon btn-round" disabled>
-                    <i class="fa fa-play"></i>
-                </button>
-            @else
-                <button wire:click="$emit('startPlayback', '{{ $recording->id }}')" class="btn btn-lg btn-success btn-fab btn-icon btn-round">
-                    <i class="fa fa-play"></i>
-                </button>
-            @endif
-        </div>
-        <div class="card-body pb-0">
+        <div class="card-body d-flex flex-column justify-content-between">
             @if($editing)
                 <div class="d-flex mb-2">
                     <input wire:model="newRecordingName" @if(!$newRecordingNameHasErrors) wire:keydown.enter="saveNewRecordingName" @endif type="text" name="name" class="form-control {{ !$newRecordingNameHasErrors ?: 'is-invalid' }}" value="{{ $recording->filename }}">
@@ -85,6 +77,5 @@
                 @endif
             </div>
         </div>
-        @endif
-    </div>
+    @endif
 </div>

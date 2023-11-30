@@ -58,13 +58,11 @@
         </div>
     </div>
     @endif
-    <div class="row justify-content-center mt-4">
-        <div class='col-sm-12 col-md-10 offset-md-1 text-center'>
-            <div class='row row-cols-1 row-cols-md-4'>
-                @foreach($cmsRecordings as $recording)
-                    <livewire:cms-recording-card key="{{ now() }}" :recording="$recording" :recordingInPlayback="$recordingInPlayback"/>
-                @endforeach
-            </div>
+    <div class="d-flex justify-content-center mt-4">
+        <div class="row justify-content-center w-100">
+            @foreach($cmsRecordings as $recording)
+                <livewire:cms-recording-card key="{{ now() }}" :recording="$recording" :recordingInPlayback="$recordingInPlayback"/>
+            @endforeach
         </div>
     </div>
 </div>
