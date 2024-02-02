@@ -123,6 +123,11 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="row mx-auto mt-2">
+                    <div class="col-12">
+                        {{ $currentAssignedCoSpaces->links() }}
+                    </div>
+                </div>
             </div>
         </div>
         @endif
