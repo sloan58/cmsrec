@@ -1,13 +1,12 @@
 <?php
 
 
-namespace App\ApiClients;
+namespace App\APIs;
 
 use Exception;
 use App\Models\Cms;
 use App\Models\User;
 use GuzzleHttp\Client;
-use App\Models\CmsStat;
 use App\Models\CmsCoSpace;
 use App\Settings\LdapSettings;
 use GuzzleHttp\Exception\GuzzleException;
@@ -207,6 +206,12 @@ class CmsRest
             $response = $this->queryCmsApi("/api/v1/users?offset={$offset}&limit={$limit}");
 
             foreach($response['user'] as $user) {
+                if (!isset($user['@attributes'])) {
+                    logger()->info("CmsRest@getCmsUserIds ({$this->cms->host}): User has no attributes", [
+                        'user' => $user
+                    ]);
+                    continue;
+                }
                 logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Collecting User details", [
                     'user' => $user
                 ]);

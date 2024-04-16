@@ -48,6 +48,7 @@ class MoveRecordingToTrash implements ShouldQueue
             \File::move($sourcePath, $destinationPath);
         } catch(\Exception $e) {
             logger()->error('MoveRecordingToTrash@handle: Could not move recording to trash', [
+                'errorMessage' => $e->getMessage(),
                 'sourcePath' => $sourcePath,
                 'destinationPath' => $destinationPath
             ]);
