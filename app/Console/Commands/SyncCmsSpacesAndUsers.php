@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Cms;
-use App\ApiClients\CmsRest;
+use App\APIs\CmsRest;
 use Illuminate\Console\Command;
 
 class SyncCmsSpacesAndUsers extends Command
