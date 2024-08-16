@@ -75,13 +75,13 @@ class CmsRest
      * @return array|mixed
      * @throws GuzzleException
      */
-    private function queryCmsApi($uri)
+    private function queryCmsApi($uri, $method = 'get', $body = [])
     {
         logger()->debug("CmsRest@queryCmsApi ({$this->cms->host}): Initiating query", [
             'uri' => $uri
         ]);
         try {
-            $response = $this->client->get($uri);
+            $response = $this->client->{$method}($uri, $body);
             $xml = simplexml_load_string($response->getBody()->getContents());
             $json = json_encode($xml);
 
@@ -125,7 +125,7 @@ class CmsRest
 
         $total = $response['@attributes']['total'];
         $limit = 20;
-        $iterations = (int) ceil((int) $total / $limit);
+        $iterations = (int)ceil((int)$total / $limit);
 
         info("CmsRest@getCoSpaces ({$this->cms->host}): Calculated query iterations", [
             'total' => $total,
@@ -134,28 +134,39 @@ class CmsRest
         ]);
 
         info("CmsRest@getCoSpaces ({$this->cms->host}): Iterating API");
-        for($i = 1; $i <= $iterations; $i++) {
+        for ($i = 1; $i <= $iterations; $i++) {
             $response = $this->queryCmsApi("/api/v1/coSpaces?offset={$offset}&limit={$limit}");
-            foreach($response['coSpace'] as $coSpace) {
+            foreach ($response['coSpace'] as $coSpace) {
                 logger()->debug("CmsRest@getCoSpaces ({$this->cms->host}): Collecting CoSpace details", [
                     'coSpace' => $coSpace
                 ]);
 
-                if(isset($coSpace['@attributes'])) {
+                if (isset($coSpace['@attributes'])) {
                     $response = $this->queryCmsApi("/api/v1/coSpaces/{$coSpace['@attributes']['id']}");
 
-                    if(isset($response['name']) && isset($response['ownerId'])) {
-                    logger()->debug("CmsRest@getCoSpaces ({$this->cms->host}): Updating model");
+                    if (isset($response['name']) && isset($response['ownerId'])) {
+                        logger()->debug("CmsRest@getCoSpaces ({$this->cms->host}): Updating model");
+
+                        $currentSpaceTag = $response['spaceTag'] ?? null;
+
                         $coSpace = CmsCoSpace::updateOrCreate(
-                            ['space_id' =>  $response['@attributes']['id']],
-                            ['name' => $response['name']]
+                            ['space_id' => $response['@attributes']['id']],
+                            ['name' => $response['name'], 'space_tag' => $currentSpaceTag]
                         );
 
-                        if($user = User::where('cms_owner_id', $response['ownerId'])->first()) {
-                            if(!$coSpace->owners()->where('user_id', $user->id)->exists()) {
+                        if ($user = User::where('cms_owner_id', $response['ownerId'])->first()) {
+                            // Get the first subdomain of the email address
+                            // Ex: martin_sloan@ao.uscourts.gov -> returns "ao"
+                            $desiredSpaceTag = explode('.', explode('@', $user->email)[1])[0];
+                            if ($currentSpaceTag != $desiredSpaceTag) {
+                                $this->applyCoSpaceTag($response['@attributes']['id'], $desiredSpaceTag);
+                                $coSpace->update(['space_tag' => $desiredSpaceTag]);
+                            }
+                            if (!$coSpace->owners()->where('user_id', $user->id)->exists()) {
                                 $coSpace->owners()->attach($user);
                             }
                         }
+
                         $coSpace->touch();
                     }
                 }
@@ -192,7 +203,7 @@ class CmsRest
 
         $total = $response['@attributes']['total'];
         $limit = 20;
-        $iterations = (int) ceil((int) $total / $limit);
+        $iterations = (int)ceil((int)$total / $limit);
 
         info("CmsRest@getCmsUserIds ({$this->cms->host}): Calculated query iterations", [
             'total' => $total,
@@ -201,11 +212,11 @@ class CmsRest
         ]);
 
         info("CmsRest@getCmsUserIds ({$this->cms->host}): Iterating API");
-        for($i = 1; $i <= $iterations; $i++) {
+        for ($i = 1; $i <= $iterations; $i++) {
 
             $response = $this->queryCmsApi("/api/v1/users?offset={$offset}&limit={$limit}");
 
-            foreach($response['user'] as $user) {
+            foreach ($response['user'] as $user) {
                 if (!isset($user['@attributes'])) {
                     logger()->info("CmsRest@getCmsUserIds ({$this->cms->host}): User has no attributes", [
                         'user' => $user
@@ -222,7 +233,7 @@ class CmsRest
 
                 $email = $response['email'];
 
-                if(empty($email)) {
+                if (empty($email)) {
                     logger()->debug("CmsRest@getCmsUserIds ({$this->cms->host}): Checking LDAP for user info.  No email available in CMS API response", [
                         $response
                     ]);
@@ -241,7 +252,7 @@ class CmsRest
                             'email' => $email
                         ]
                     )->touch();
-                } catch(Exception $e) {
+                } catch (Exception $e) {
                     logger()->error('CmsRest@getCmsUserIds: Could not updateOrCreate', [
                         'error' => $e->getMessage(),
                     ]);
@@ -256,6 +267,21 @@ class CmsRest
 
         info("CmsRest@getCmsUserIds ({$this->cms->host}): Removing stale accounts");
         User::whereNotIn('email', explode(',', env('ADMIN_USERS')))->where('updated_at', '<', $now)->delete();
+    }
+
+    /**
+     * Apply tag to CMS CoSpace
+     *
+     * @throws GuzzleException
+     */
+    public function applyCoSpaceTag($spaceId, $tag)
+    {
+        info("CmsRest@getCmsUserIds ({$this->cms->host}): Applying tag $tag to spaceId $spaceId");
+        return $this->queryCmsApi("api/v1/coSpaces/$spaceId", 'put', [
+            'form_params' => [
+                'spaceTag' => $tag
+            ]
+        ]);
     }
 
     /**
@@ -295,11 +321,11 @@ class CmsRest
      */
     private function queryLdapForEmail(array $response)
     {
-        if(!$this->ldapConnection) {
+        if (!$this->ldapConnection) {
             return null;
         }
 
-        foreach($this->ldapSettings->searchBase as $searchbase) {
+        foreach ($this->ldapSettings->searchBase as $searchbase) {
             $sAMAccountName = explode('@', $response['userJid'])[0];
             logger()->debug("CmsRest@queryLdapForEmail ({$this->cms->host}): Checking $searchbase for user " . $sAMAccountName);
             $result = ldap_search(

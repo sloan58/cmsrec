@@ -20,6 +20,7 @@ class CmsCoSpace extends Model
     protected $fillable = [
         'space_id',
         'name',
+        'space_tag'
     ];
 
     /**

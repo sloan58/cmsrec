@@ -17,3 +17,14 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+Artisan::command('tag', function () {
+    echo "CoSpaceName,CoSpaceID,Tag\n";
+    \App\Models\CmsCoSpace::whereHas('owners')->each(function ($coSpace) {
+        $tag = explode(
+            '@',
+            $coSpace->owners()->first()->email
+        )[1] ?? '';
+        echo sprintf('"%s","%s","%s"', $coSpace->name,$coSpace->space_id,$tag);
+    });
+});
