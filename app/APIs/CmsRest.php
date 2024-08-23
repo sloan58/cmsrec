@@ -157,8 +157,8 @@ class CmsRest
                         if ($user = User::where('cms_owner_id', $response['ownerId'])->first()) {
                             // Get the first subdomain of the email address
                             // Ex: martin_sloan@ao.uscourts.gov -> returns "ao"
-                            $desiredSpaceTag = explode('.', explode('@', $user->email)[1])[0];
-                            if ($currentSpaceTag != $desiredSpaceTag) {
+                            $desiredSpaceTag = strtolower(explode('.', explode('@', $user->email)[1])[0]);
+                            if ($currentSpaceTag !== $desiredSpaceTag) {
                                 $this->applyCoSpaceTag($response['@attributes']['id'], $desiredSpaceTag);
                                 $coSpace->update(['space_tag' => $desiredSpaceTag]);
                             }
