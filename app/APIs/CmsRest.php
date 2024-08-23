@@ -157,10 +157,17 @@ class CmsRest
                         if ($user = User::where('cms_owner_id', $response['ownerId'])->first()) {
                             // Get the first subdomain of the email address
                             // Ex: martin_sloan@ao.uscourts.gov -> returns "ao"
-                            $desiredSpaceTag = strtolower(explode('.', explode('@', $user->email)[1])[0]);
-                            if ($currentSpaceTag !== $desiredSpaceTag) {
-                                $this->applyCoSpaceTag($response['@attributes']['id'], $desiredSpaceTag);
-                                $coSpace->update(['space_tag' => $desiredSpaceTag]);
+                            try {
+                                $desiredSpaceTag = strtolower(explode('.', explode('@', $user->email)[1])[0]);
+                                if ($currentSpaceTag !== $desiredSpaceTag) {
+                                    $this->applyCoSpaceTag($response['@attributes']['id'], $desiredSpaceTag);
+                                    $coSpace->update(['space_tag' => $desiredSpaceTag]);
+                                }
+                            } catch (\Exception $e) {
+                                logger()->error('CmsRest@getCoSpaces ({$this->cms->host}): Could not determine tag', [
+                                    'error' => $e->getMessage(),
+                                    'user' => $user->toArray()
+                                ]);
                             }
                             if (!$coSpace->owners()->where('user_id', $user->id)->exists()) {
                                 $coSpace->owners()->attach($user);
