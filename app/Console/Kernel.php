@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
          $schedule->command('cmsrec:scan-for-new')->everyFiveMinutes();
 
          // Sync with the CMS API to pull in Users and CoSpaces
-         $schedule->command('cmsrec:sync')->everyFiveMinutes();
+         $schedule->command('cmsrec:sync')->everyThirtyMinutes();
 
          // Check that the NFS mount exists (if configured)
          $schedule->command('cmsrec:monitor-nfs')->hourly();
