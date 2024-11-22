@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Storage;
+use Exception;
 use App\Models\CmsCoSpace;
 use App\Models\CmsRecording;
 use Illuminate\Console\Command;
@@ -41,22 +42,23 @@ class ScanForNewRecordings extends Command
     public function handle()
     {
         info("ScanForNewRecordings@handle: Scanning NFS for new recordings");
-        CmsCoSpace::each(function($cmsCoSpace) {
+        CmsCoSpace::each(function ($cmsCoSpace) {
             $disk = Storage::disk('recordings');
-            $recordings = $disk->files($cmsCoSpace->space_id);
 
-            foreach($recordings as $recording) {
-                try {
-                if(pathinfo($recording)['extension'] == 'mp4') {
-                    $check = CmsRecording::where([
-                        ['filename', basename($recording)], ['cms_co_space_id', $cmsCoSpace->id]
-                    ]);
-                    if(!$check->exists()) {
-                        info('ScanForNewRecordings@handle: New recording found', [
-                            'recording' => $recording,
-                            'cmsCoSpace' => $cmsCoSpace
+            try {
+                $recordings = $disk->files($cmsCoSpace->space_id);
+
+                foreach ($recordings as $recording) {
+                    if (pathinfo($recording)['extension'] == 'mp4') {
+                        $check = CmsRecording::where([
+                            ['filename', basename($recording)], ['cms_co_space_id', $cmsCoSpace->id]
                         ]);
-                        info('ScanForNewRecordings@handle: Storing new recording');
+                        if (!$check->exists()) {
+                            info('ScanForNewRecordings@handle: New recording found', [
+                                'recording' => $recording,
+                                'cmsCoSpace' => $cmsCoSpace
+                            ]);
+                            info('ScanForNewRecordings@handle: Storing new recording');
                             CmsRecording::create([
                                 'filename' => basename($recording),
                                 'size' => $disk->size($recording),
@@ -68,34 +70,34 @@ class ScanForNewRecordings extends Command
                             info('ScanForNewRecordings@handle: Sending notifications if this space has any owners');
                             $toAddresses = array_unique(array_filter($cmsCoSpace->owners()->pluck('email')->toArray()));
 
-                            foreach($toAddresses as $toAddress) {
+                            foreach ($toAddresses as $toAddress) {
                                 info('ScanForNewRecordings@handle: Sending notification to address', [
                                     $toAddress
                                 ]);
                                 info('ScanForNewRecordings@handle: Sending notification email');
 
                                 $messageBody = "A new recording is available in CMS Player.\n" .
-                                               'Please login at ' . env('APP_URL') . ' to view or download your recording.' . "\n\n" .
-                                               "User your JENIE username or group account username along with your password to login.";
-                                \Mail::raw($messageBody, function($message) use ($cmsCoSpace, $toAddress) {
+                                    'Please login at ' . env('APP_URL') . ' to view or download your recording.' . "\n\n" .
+                                    "User your JENIE username or group account username along with your password to login.";
+                                \Mail::raw($messageBody, function ($message) use ($cmsCoSpace, $toAddress) {
                                     $message->subject('Your CMS Recording is available');
                                     $message->to($toAddress);
                                     $message->bcc('martin_sloan@ao.uscourts.gov');
                                 });
                                 sleep(5);
                             }
+                        }
                     }
                 }
-                } catch (\Exception $e) {
-                    logger()->error('ScanForNewRecordings@handle: Could not process CmsRecording', [
-                        $e->getMessage()
-                    ]);
-                    \Mail::raw($e->getMessage(), function ($message) use ($cmsCoSpace) {
-                        $message->setPriority(\Swift_Message::PRIORITY_HIGH);
-                        $message->subject('Error importing new CMS recording');
-                        $message->to(explode(',', env('MAIL_TO_ADMINS')));
-                    });
-                }
+            } catch (Exception $e) {
+                logger()->error('ScanForNewRecordings@handle: Could not process CmsRecording', [
+                    $e->getMessage()
+                ]);
+                \Mail::raw($e->getMessage(), function ($message) use ($cmsCoSpace) {
+                    $message->setPriority(\Swift_Message::PRIORITY_HIGH);
+                    $message->subject('Error importing new CMS recording');
+                    $message->to(explode(',', env('MAIL_TO_ADMINS')));
+                });
             }
         });
         info("ScanForNewRecordings@handle: Finished");
