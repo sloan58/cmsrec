@@ -46,6 +46,7 @@ class ScanForNewRecordings extends Command
             $recordings = $disk->files($cmsCoSpace->space_id);
 
             foreach($recordings as $recording) {
+                try {
                 if(pathinfo($recording)['extension'] == 'mp4') {
                     $check = CmsRecording::where([
                         ['filename', basename($recording)], ['cms_co_space_id', $cmsCoSpace->id]
@@ -56,7 +57,6 @@ class ScanForNewRecordings extends Command
                             'cmsCoSpace' => $cmsCoSpace
                         ]);
                         info('ScanForNewRecordings@handle: Storing new recording');
-                        try {
                             CmsRecording::create([
                                 'filename' => basename($recording),
                                 'size' => $disk->size($recording),
@@ -84,17 +84,17 @@ class ScanForNewRecordings extends Command
                                 });
                                 sleep(5);
                             }
-                        } catch(\Exception $e) {
-                            logger()->error('ScanForNewRecordings@handle: Could not store new CmsRecording', [
-                                $e->getMessage()
-                            ]);
-                            \Mail::raw($e->getMessage(), function($message) use ($cmsCoSpace) {
-                                $message->setPriority(\Swift_Message::PRIORITY_HIGH);
-                                $message->subject('Error importing new CMS recording');
-                                $message->to(explode(',', env('MAIL_TO_ADMINS')));
-                            });
-                        }
                     }
+                }
+                } catch (\Exception $e) {
+                    logger()->error('ScanForNewRecordings@handle: Could not process CmsRecording', [
+                        $e->getMessage()
+                    ]);
+                    \Mail::raw($e->getMessage(), function ($message) use ($cmsCoSpace) {
+                        $message->setPriority(\Swift_Message::PRIORITY_HIGH);
+                        $message->subject('Error importing new CMS recording');
+                        $message->to(explode(',', env('MAIL_TO_ADMINS')));
+                    });
                 }
             }
         });
